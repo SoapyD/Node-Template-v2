@@ -1,0 +1,323 @@
+
+.name-box {
+	margin-bottom: 40px;
+	height: 100px;
+}
+
+body {
+	font-family: 'Brush Script MT', cursive;
+	background: #272238;
+  }
+/* img {
+	margin: auto;
+} */
+
+input[type="number"]{
+	height: 100%;
+}
+
+input[type="number"],
+input[type="text"],
+h2,
+h3, 
+h4{
+	text-align: center;
+	font-size: 4em;
+	color: white;
+}
+
+input[type="number"],
+input[type="text"]{
+	color: black;
+}
+
+ .rounded_borders {
+	background: #B73F34;	 
+	border-radius: 15px;
+	border: 6px solid white;
+}
+
+.rounded_borders_only {
+	border-radius: 15px;
+	border: 6px solid white;
+}
+
+.width-50-percent {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+}
+
+.left-margin-5 {
+	margin-left: 5px;
+}
+
+.left-button {
+	display: inline
+}
+
+.left {
+	float: left;
+}
+
+.right-button,
+.inline-button {
+	display: inline;
+}
+
+.right-button {
+	float: right;
+}
+
+.no-padding {
+	padding: 0;
+}
+
+.no-margin {
+    margin: 0
+}
+
+.btn-100 {
+    width: 100%;
+}
+
+.left {
+	display: inline-block
+}
+
+.float-left {
+    float: left;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+.row {
+	margin: auto
+}
+
+.disable-form {
+
+	/* Make form elements appear disabled against grey background */
+	background-color: gray;
+	opacity:0.75; 
+ 
+	/* Prevent user interaction with form while disabled */
+	pointer-events:none;
+ }
+
+
+#messages {
+    display: block;
+}
+
+#fname {
+    width: 100%;
+}
+
+canvas {
+    width: 100%;
+    height: 85vh;
+}
+
+#messages {
+    margin: 5px 20px;
+    padding: 0;   
+}
+
+#message-box{
+    overflow: auto;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#message-input {
+    position: absolute;
+    bottom: 0;    
+    width: 100%;
+}
+
+.width-100 {
+    width: 100%;
+}
+
+
+.sidebar {
+	width: 20%;
+    border: 1px black dotted;
+    height: 90%;
+    /* position:absolute; */
+    /* display: flex;
+    flex-wrap: wrap; */
+    padding: 0;
+	position: absolute;
+    right: 0px;		
+}
+
+#gameContainer {
+  position: absolute;
+  /* top: 5%; */
+  left: 0;
+  width: 80%;
+  /* height: 95%; */
+  /* Not sure that last part is actually usefull */
+  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+.jumbotron{
+	background-color: #ebebeb;
+	/* background-image: url('../../img/banner.jpg'); */
+	/* background-image: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.9) 100%), url('../../img/banner.jpg'); */
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+}
+.container{
+	padding: 0;
+	width: 95%;
+}
+
+a { 
+	color: black;
+	font-weight: 700; 
+	font-size: 1.0em;
+} 
+
+a:focus, a:hover {
+	color: black; 
+}
+
+.text-block-limit {
+	min-height: 30px;
+	max-height: 30px;
+}
+
+.thumbnail {
+	box-shadow: 2px 2px 2px #C0C0C0;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+	background-color: #FA4616;
+	border-color: #FA4616;
+	box-shadow: 2px 2px 2px #C0C0C0;
+}
+
+.btn-primary:active:hover {
+	background-color: #ab2603;
+	border-color: #ab2603;
+	box-shadow: none;
+}
+
+.navbar-custom,
+.panel-primary>.panel-heading { 
+	background-color: #B73F34; 
+	border-color: #B73F34;
+	/* background: linear-gradient(#FA4616, #ab2603); */
+} 
+
+.panel-primary {
+	border-color: #B73F34;
+}
+
+.navbar-custom li a,
+.navbar-brand {
+	color: white;
+	
+}
+
+.nav>li>a:focus, 
+.nav>li>a:hover {
+    background-color: #ab2603;
+}
+
+
+.sortable { 
+	list-style-type: none; 
+	margin: 0; 
+	padding: 0; 
+	width: 100%; 
+}
+.sortable li { 
+	margin: 0 3px 3px 3px; 
+	padding: 0.4em; 
+	padding-left: 10px; 
+	height: 100%;
+	float: left;
+}
+
+.army-builder,
+.squad,
+.upgrade {
+	border-radius: 10px;
+	border: 1px solid #ccc;
+	margin-top: 10px;
+	padding: 3px;
+	background: white;
+}
+
+.army-builder {
+	background: white;
+}
+
+.squad {
+	background: #b6e19f;
+	border: 2px solid #7ac952;
+	width: 100%;
+	padding: 2px;
+}
+
+.upgrade {
+	background: #b5e1ee;
+	border: 1px solid #62bfdb;
+	width: 32.5%;
+}
+
+
+
+.test {
+	min-width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+
+.form-group {
+	padding: 2px;
+}
+
+
+.top-padding {
+	padding: 10px 0;
+}
+
+table {
+	width: 100%;
+}
+
+#table-wrapper {
+	height: 200px;
+	overflow: auto;
+	width: 100px;
+}
+
+
+th,
+td {
+    border: 1px solid #333;
+	padding: 5px;
+}
+
+.tr-grab {
+	cursor: grab;
+}
+
+.td-no-border {
+    border: none
+}

@@ -1,0 +1,45 @@
+
+<%- include("../partials/header") %>
+
+
+<div class="container">
+	
+	<header class="jumbotron">
+		<div class="container">
+			
+			<h1>
+				Admin Info
+			</h1>
+
+		</div>
+	</header>
+
+
+    <div class="panel panel-primary">
+
+        <div class="panel-heading">
+            <h4>Data Types</h4>
+        </div>
+    
+        <% route_info.forEach((item, i) => { %>
+    
+            <div class="panel-body">
+                <a href="/admin/<%- i %>">
+                    <h3><%- item.model %>:</h3>
+                    <p><%- item.description %></p>
+                </a>
+            </div>
+    
+        <% }) %>
+    </div>
+    
+    <div class="top-padding">
+        <a href="/">Go Back</a>
+    </div>	
+
+	
+	
+</div>
+
+
+<%- include("../partials/footer") %>

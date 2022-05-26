@@ -1,0 +1,167 @@
+
+<%- include("../partials/header") %>
+
+<div class="container">
+
+    <header class="jumbotron">
+
+    
+        <div class="container">
+            
+            <h1>
+                <%= route.model %> Data
+            </h1>
+    
+            <!-- <p>
+                List of reports
+            </p> -->
+    
+            <p>
+    
+            </p>
+    
+        </div>
+    </header>    
+
+
+<div class="panel panel-primary">
+
+    <div class="panel-heading">
+        <h4 id="datatype_header">Find Items
+            <input id="myInput" type="text" placeholder="Search..">
+        </h4>
+    </div>
+
+    
+    <div class="panel-body">
+
+        <table id="measurement-form" class="center">
+            
+            <colgroup>
+                <% route.index.forEach((route_item) => { %>
+                    <col span="1" style="width: <%= route_item.column_width %>%;"> 
+                <% }) %>      
+                
+                <% if(route.editable) { %>
+                    <col span="1" style="width: 5%;">
+                <% } %> 
+            </colgroup>
+
+            <thead>
+                <tr>
+                    <% route.index.forEach((route_item) => { %>
+                        <th><span class="text"><%= route_item.column_name %></span></th>   
+                    <% }) %>
+                    
+                    <% if(route.editable) { %>
+                        <th><span class="text"></span></th>
+                        <% } %>
+                </tr>
+            </thead>
+
+            <tbody>	
+                <% data.forEach((item) =>  { %>
+                    <tr class="row_data">
+
+                        <% route.index.forEach((route_item) => { %>
+
+                            <% 
+                            //GET THE COLUMN TYPE THAT'LL BE USED IN THE FIELD FORMATTING
+                            let column_type = '';
+                            if(route_item.element_type){
+                                column_type = route_item.element_type
+                            }
+
+                            //GET THE VALUE THAT'LL BE PRINTED, WHICH MAY BE NESTED WITHIN AN OBJECT
+                            let column_value = item;
+                            route_item.value.forEach((e) => {
+
+                                if(column_value[e]  !== undefined){
+                                    column_value = column_value[e];
+                                }
+                                else{
+                                    column_value = ''
+                                }
+                            })
+
+                            let print_value = column_value
+
+                            //CHECK TO SEE IF THERE'S A FOREACH LOOP, IF SO, FIND ELEMENT AND LOOP THROUGH IT ADDING OUTPUT TO THE PRINT VALUE
+                            if(route_item.foreach.length > 0){
+                                print_value = ""
+
+                                column_value.forEach((foreach_item) => {
+
+                                    let foreach_value = foreach_item;
+                                    route_item.foreach.forEach((e) => {
+                                        if(foreach_value[e]  !== undefined){
+                                            foreach_value = foreach_value[e];
+                                        }
+                                        else{
+                                            foreach_value = ''
+                                        }
+                                    })
+
+                                    
+                                    if(foreach_value != ''){
+                                        if(column_type === ""){
+                                            print_value+=foreach_value+'<br>'
+                                        }
+                                    
+                                        if(column_type === "date"){
+                                            print_value+=foreach_value.toGMTString()+'<br>'
+                                        }
+                                    }
+                                })
+                            }
+                            %>
+                        
+                            <% let element_set = false %>
+
+                            <% if(column_type === "date"){ element_set = true %>
+                                <td><%- print_value.toGMTString() %> </td>
+                            <% } %>
+
+                            <% if(element_set === false){ %>
+                                <td><%- print_value %> </td>
+                            <% } %>
+
+                        <% }) %>  
+                        
+                        <% if(route.editable) { %>
+                            <td><a class="btn btn-primary" href="/admin/<%= route_id %>/<%= item.id %>/edit">Edit</a></td>
+                        <% } %>
+                    </tr>
+                <% }) %>
+
+
+        </tbody>
+
+        </table>
+
+
+
+        </div>
+
+
+</div>
+
+<div class="top-padding">
+    <a href="/">Go Back</a>
+</div>
+
+</div>
+
+
+<script>
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".row_data").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+</script>
+
+<%- include("../partials/footer") %>

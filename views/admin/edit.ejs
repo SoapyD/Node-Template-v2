@@ -1,0 +1,184 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+
+    <header class="jumbotron">
+
+        <div class="container">
+			<h1 style="text-align:center;">
+				Edit <%= data.name.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase()))); %>
+			</h1>
+		
+        </div>
+    </header>    
+
+
+	<div class="row">		
+	
+		<form action="/admin/<%= route_id %>/<%= data._id %>?_method=PUT" method="POST">
+
+			<% route.index.forEach((route_item) => { %>
+
+				<% if(route_item.header){ %>
+					<h2 class="rounded_borders"><%= route_item.header %></h2>	
+				<% } %>
+				
+
+				<% if(route_item.startrow){ %>
+					<div class="row">
+				<% } %>
+
+					<% 
+					//GET THE COLUMN TYPE THAT'LL BE USED IN THE FIELD FORMATTING
+					let column_type = '';
+					if(route_item.element_type){
+						column_type = route_item.element_type
+					}
+
+					//GET THE VALUE THAT'LL BE PRINTED, WHICH MAY BE NESTED WITHIN AN OBJECT
+					let column_value = data;
+					route_item.value.forEach((e) => {
+
+						if(column_value[e]  !== undefined){
+							column_value = column_value[e];
+						}
+						else{
+							column_value = ''
+						}
+					})
+
+					let print_value = column_value
+
+					//CHECK TO SEE IF THERE'S A FOREACH LOOP, IF SO, FIND ELEMENT AND LOOP THROUGH IT ADDING OUTPUT TO THE PRINT VALUE
+					if(route_item.foreach.length > 0){
+						print_value = []
+						let selected = []
+						column_value.forEach((foreach_item) => {
+
+							let foreach_value = foreach_item;
+							route_item.foreach.forEach((e) => {
+								if(foreach_value[e]  !== undefined){
+									foreach_value = foreach_value[e];
+								}
+								else{
+									foreach_value = ''
+								}
+							})
+
+							if(foreach_value != ''){
+								print_value.push(foreach_value)
+							}
+						})
+
+						let options = ''
+						sub_data.forEach((dataset) => {
+							if(dataset.model === route_item.sub_data){
+								dataset.forEach((item) => {
+
+									let selected = '';
+									if(print_value.includes(item.name)){
+										selected = 'SELECTED'
+									}
+
+									options += '<option value="'+item.id+'" '+selected+'>'+item.name+'</option>\n'
+								})
+							}
+						})
+					%>
+						<div class="col-xs-<% if(route_item.edit_field_width){ %> <%= route_item.edit_field_width %> <% }else{ %>3<% } %>">
+							<div class="form-group">
+								<p><%= route_item.column_name %>:</p>
+								<select class="form-control" size="3" name="<% if(route_item.save_name) { %> <%=route_item.save_name%> <% }else{ %><%=route_item.value[0]%><% } %>[]" multiple>
+									<%- options %>
+								  </select>
+							</div>		
+						</div>	
+					<%
+					}
+					else{
+					%>
+
+					<div class="col-xs-<% if(route_item.edit_field_width){ %><%= route_item.edit_field_width %><% }else{ %>3<% } %>">
+						<div class="form-group">
+							<p><%= route_item.column_name %>:</p>
+
+							<% let element_set = false %>
+
+							<% if(route_item.element_type === "select") { element_set = true %>
+
+							<%
+								let options = ''
+								sub_data.forEach((dataset) => {
+									if(dataset.model === route_item.sub_data){
+										dataset.forEach((item) => {
+		
+											let selected = '';
+											if(column_value === item.name){
+												selected = 'SELECTED'
+											}
+		
+											options += '<option value="'+item.id+'" '+selected+'>'+item.name+'</option>\n'
+										})
+									}
+								})
+							%>
+
+							<select class="form-control" size="3" name="<% if(route_item.save_name) { %><%=route_item.save_name%> <% }else{ %><%=route_item.value[0]%><% } %>">
+								<%- options %>
+							</select>
+
+							<% } %>
+
+							<% if(route_item.element_type === "textarea") { element_set = true %>
+								<textarea class="form-control" 
+								style="resize: none; height:100px"
+								type="text"
+								<% if(route_item.readonly) { %>
+									readonly
+								<% }else{ %>
+									name="<% if(route_item.save_name) { %><%=route_item.save_name%> <% }else{ %><%=route_item.value[0]%><% } %>"
+								<% } %>
+								><%= print_value %></textarea>
+							<% } %>
+
+
+							<% if(element_set === false ) { %>
+								<input class="form-control" type="text" value="<%= print_value %>" required
+								
+								<% if(route_item.readonly) { %>
+									readonly
+								<% }else{ %>
+									name="<% if(route_item.save_name) { %><%=route_item.save_name%> <% }else{ %><%=route_item.value[0]%><% } %>"
+								<% } %>
+								>
+								
+							<% } %>
+
+						</div>			
+					</div>				
+
+					<% } %>
+
+				<% if(route_item.endrow){ %>
+					</div>
+				<% } %>	
+
+			<% }) %>				
+
+			<div class="form-group">					
+				<button class="btn btn-primary right-button" name="action" type="submit">
+					Save
+				</button>					
+			</div>				
+
+        </form>
+        
+		<a href="/admin/<%= route_id %>">Go Back</a>
+
+		
+	</div>
+	
+</div>
+
+
+<%- include("../partials/footer") %>
