@@ -1,7 +1,8 @@
 
 
-
-
+-liveMessage alert is spawning for a second or two, causing a stutter
+-Grey out the offscene menu when a room is succesfully join or created then close it after the message bar is removed
+-modernize the login and register input fields
 
 
 

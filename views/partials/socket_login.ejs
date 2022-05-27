@@ -1,0 +1,93 @@
+
+
+<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Join / Create Room</button>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel">Join or Create Room</h5>    
+
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div>
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingRoom" placeholder="Room Name">
+            <label for="floatingInput">Room Name</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingInput">Password</label>
+        </div>
+        
+        <select class="form-select" onchange="getRoom(this)" id="connectionOptions">
+            <option value="" selected>Submit</option>
+            <option value="create">Create Room</option>
+            <option value="join">Join Room</option>
+        </select>
+
+        <input class="form-control" type="hidden" id="userID" 
+        value=
+        <% if(user){ %>
+            "<%= user._id %>" 
+        <% }else{ %>
+            ""
+        <% } %>
+        disabled>
+
+        <div class="alert alert-danger" role="alert" id="connectionMessage">
+            TEST	
+        </div>		
+        <script type="text/javascript">window.setTimeout("document.getElementById('connectionMessage').style.display='none';", 0); </script>
+
+    </div>    
+</div>
+
+
+<script>
+    getRoom = (e) => {
+
+        let action = e.value;
+        if(action !== ""){
+
+            let room_name = document.getElementById('floatingRoom').value;
+            let password = document.getElementById('floatingPassword').value;
+            let user = document.getElementById('userID').value;
+
+            let options = {
+                functionGroup: "core",  
+                function: "checkRoom",
+                message: action+" room",
+                data: {
+                    room_name: room_name
+                    ,password: password
+                    ,user: user
+                    ,action: action
+                }     
+            }       
+            socketHandler.messageServer(options)            
+        }
+    }
+
+</script>
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/classes/socket_handler.js"></script>
+
+<script>
+
+    //SHOW THE OFFCANVAS LOGIN TAB
+    let myOffcanvas = document.getElementById('offcanvasRight')
+    var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+    bsOffcanvas.show();
+
+    socket_address = "<%= data.address %>";
+
+    const socketHandler = new socket_handler({
+        socket_address: socket_address
+    });
+
+</script>
+

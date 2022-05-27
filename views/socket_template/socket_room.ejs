@@ -1,95 +1,11 @@
 <%- include("../partials/header") %>
 
+<%- include("../partials/socket_login") %>
 
-<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Join / Create Room</button>
-
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasRightLabel">Join or Create Room</h5>    
-
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-
-    <div>
-        <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingRoom" placeholder="Room Name">
-            <label for="floatingInput">Room Name</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingPassword" placeholder="Password">
-            <label for="floatingInput">Password</label>
-        </div>
-        
-        <select class="form-select" onchange="getRoom(this)">
-            <option value="" elected>Submit</option>
-            <option value="create">Create Room</option>
-            <option value="join">Join Room</option>
-        </select>
-
-        <div class="alert alert-danger" role="alert" id="connectionMessage">
-            TEST	
-        </div>		
-        <script type="text/javascript">window.setTimeout("document.getElementById('connectionMessage').style.display='none';", 0); </script>
-
-    </div>    
-</div>
 
 
 <script>
-    getRoom = (e) => {
-
-        let action = e.value;
-        if(action !== ""){
-
-            let room_name = document.getElementById('floatingRoom').value;
-            let password = document.getElementById('floatingPassword').value;
-
-
-            let options = {
-                functionGroup: "core",  
-                function: "createRoom",
-                message: action+" room",
-                data: {
-                    room_name: room_name
-                    ,password: password
-                }     
-            }       
-            socketHandler.messageServer(options)            
-        }
-
-        
-
-    }
-
-</script>
-
-
-<script src="/js/classes/error_handler.js"></script>
-<script src="/js/classes/socket_handler.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-
-<script>
-
-    socket_address = "<%= data.address %>";
 	instance_type = "<%= data.instance_type %>";
-
-    const errorHandler = new error_handler();
-    const socketHandler = new socket_handler({
-        socket_address: socket_address
-    });
-
-        		
-    // socketHandler.messageServer({
-    //     functionGroup: "core",  
-    //     function: "messageUser",
-    //     message: "Update this is a test",
-    //     data: {
-    //         name: "test name",
-    //         functionGroup: "core",  
-    //         function: "test",
-    //     }
-    // }) 
 </script>
 
 <%- include("../partials/footer") %>

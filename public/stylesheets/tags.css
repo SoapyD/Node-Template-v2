@@ -31,15 +31,6 @@ td {
 }
 
 
-input[type="number"],
-input[type="text"],
-h2,
-h3, 
-h4{
-	text-align: center;
-	font-size: 4em;
-	color: white;
-}
 
 input[type="number"],
 input[type="text"]{

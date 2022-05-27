@@ -57,7 +57,6 @@ const socket_handler = class {
 
     checkConnectionStatus = () => {
         this.socket.on('disconnect', () => { 
-
             this.disconnected = true;
             this.disconnectedHandler()
         });
@@ -65,8 +64,6 @@ const socket_handler = class {
         this.socket.on('connect', () => { 
         
             if(this.disconnected === true){		
-                console.log(this)
-
                 this.disconnected = false;
                 this.reconnectedHandler()
             }
@@ -74,11 +71,19 @@ const socket_handler = class {
     }
 
     disconnectedHandler = () => {
-        console.log("Disconnected from Server")
+        this.showAlert('liveMessage', 
+            {
+                message: "Disconnected from Server"
+            }
+        )        
     }
 
     reconnectedHandler = () => {
-        console.log("Re-Connected to Server")
+        this.showAlert('liveMessage', 
+            {
+                message: "Re-Connected to Server"
+                ,success: true
+            })            
     }    
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -126,11 +131,12 @@ const socket_handler = class {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    showAlert = (el, options) => {
+    showAlert = (id, options) => {
+        let el = document.getElementById(id)
         el.style.display='block' //make visible
 
         //TOGGLE IF IT'S GOING TO BE A SUCCESS OR DANGER MESSAGE
-        if(options.data.success){
+        if(options.success){
             el.classList.remove("alert-danger");
             el.classList.add("alert-success");
         }else{
@@ -139,14 +145,17 @@ const socket_handler = class {
         }
 
         //SET INNER HTML TO RETURNED MESSAGE
-        el.innerHTML = options.data.message
-        window.setTimeout("document.getElementById('connectionMessage').style.display='none';", 4000); //set timeout
+        el.innerHTML = options.message
+        window.setTimeout("document.getElementById('"+id+"').style.display='none';", 4000); //set timeout        
     }
 
     //SELECT THE CONNECTION MESSAGE ALERT IN THE JOIN AND CREATE TAB
     printConnectionStatus = (options) => {
-        let el = document.getElementById('connectionMessage')
-        this.showAlert(el, options)
+        // let el = document.getElementById('connectionMessage')
+        this.showAlert('connectionMessage', options.data)
+
+        //unselect connection option
+        document.getElementById('connectionOptions').value = ""        
     }
 
 
