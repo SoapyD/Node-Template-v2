@@ -1,0 +1,15 @@
+
+	<div class="container">
+		<% if(error && error.length > 0) { %>
+			<div class="alert alert-danger" role="alert" id="errorMessage">
+				<%= error %>	
+			</div>	
+			<script type="text/javascript">window.setTimeout("document.getElementById('errorMessage').style.display='none';", 8000); </script>
+		<% } %>
+		<% if(success && success.length > 0) { %>	
+			<div class="alert alert-success" role="alert" id="successMessage">
+				<%= success %>	
+			</div>		
+			<script type="text/javascript">window.setTimeout("document.getElementById('successMessage').style.display='none';", 8000); </script>
+		<% } %>	
+	</div>	

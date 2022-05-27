@@ -23,7 +23,7 @@ const socket_handler = class {
                 }
                 catch(e){
                     let options = {
-                        "class": "socket",
+                        "class": "socket_handler",
                         "function": "message_server",
                         "e": e
                     }
@@ -51,7 +51,7 @@ const socket_handler = class {
                 }
                 catch(e){
                     let options = {
-                        "class": "socket",
+                        "class": "socket_handler",
                         "function": "disconnect",
                         "e": e
                     }
@@ -88,7 +88,8 @@ const socket_handler = class {
 
     defineCoreFunctions = () => {
         this.functions.core.test = this.test;
-        this.functions.core.messageAll = this.messageAll;
+        this.functions.core.createRoom = this.createRoom;        
+        this.functions.core.messageRoom = this.messageRoom;
         this.functions.core.messageUser = this.messageUser;                
     }
 
@@ -106,16 +107,145 @@ const socket_handler = class {
 
     test = async(socket, options)  => {
 
-        console.log(options)
-
-        this.sendMessage({
-            type: "source",
-            id: socket.id,
-            functionGroup: "connFunctions",
-            function: "test",
-            message: options.message
-        })
+        try{
+            console.log(options)
+    
+            this.sendMessage({
+                type: "source",
+                id: socket.id,
+                functionGroup: "core",
+                function: "test",
+                message: options.message
+            })
+        }
+        catch(e){
+            let options = {
+                "class": "socket_handler",
+                "function": "test",
+                "e": e
+            }
+            errorHandler.log(options)
+        }        
     }
+
+
+
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
+	//  ██████ ██████  ███████  █████  ████████ ███████       ██████   ██████   ██████  ███    ███ 
+	// ██      ██   ██ ██      ██   ██    ██    ██            ██   ██ ██    ██ ██    ██ ████  ████ 
+	// ██      ██████  █████   ███████    ██    █████   █████ ██████  ██    ██ ██    ██ ██ ████ ██ 
+	// ██      ██   ██ ██      ██   ██    ██    ██            ██   ██ ██    ██ ██    ██ ██  ██  ██ 
+	//  ██████ ██   ██ ███████ ██   ██    ██    ███████       ██   ██  ██████   ██████  ██      ██ 
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
+
+    createRoom = async(socket, options)  => {
+
+        //SEE IF ROOM EXISTS ALREADY
+        let rooms;
+        try{
+            // rooms = await database_handler.findRooms(options.room_name)
+
+            rooms = await database_handler.findData({
+                model: "Room"
+                ,search_type: "findOne"
+                ,params: {
+                    room_name: options.data.room_name
+                }
+            })
+
+        }
+        catch(e){
+            let options = {
+                "class": "socket_handler",
+                "function": "createRoom findRoom",
+                "e": e
+            }
+            errorHandler.log(options)
+        }			
+    
+        try{
+            //IF ROOM DOES EXIST
+            if (rooms[0] !== null){
+    
+    
+                let return_options = {
+                    type: "source",
+                    id: socket.id,
+                    functionGroup: "core",
+                    function: "printConnectionStatus",
+                    data: {
+                        user_name: "SERVER",
+                        message: ""
+                    }  
+                }
+    
+                //CHECK TO SEE IF THE USER IS ALREADY IN THE ROOM OR NOT IN THE ROOM BUT ABLE TO JOIN IT
+                let room = rooms[0];
+                if(room.users.indexOf(options.user) > -1){
+                    if(room.sockets.indexOf(socket.id) > -1){
+                        return_options.data.message = "You're already in this room";							
+                    }else{
+                        return_options.data.message = "Room already exists, please use join button to rejoin it";								
+                    }
+                }
+                else{
+                    return_options.data.message = 'Creation failed, please choose another room name and try again';							
+                }
+                
+                //RETURN THE MESSAGE BACK TO THE USER
+                this.sendMessage(return_options)
+    
+            }
+            else{
+                let room = await database_handler.createData({
+                    model: "Room"
+                    ,params: [
+                        {
+                            room_name: options.data.room_name,
+                            password: options.data.password,
+                            // users: [{options.data.user}],
+                            sockets: [socket.id]
+                        }
+                    ]
+                })
+
+                room = room[0]
+                
+                
+                //SEND THE CORE GAME DATA OT THE PLAYER
+                let return_options = {
+                    type: "source"
+                    ,id: socket.id
+                    ,functionGroup: "core"
+                    ,function: "printConnectionStatus"
+                    ,data: {
+                        message: "Room Created"
+                        ,success: true
+                        ,room_name: options.data.room_name
+                        ,room_id: room._id
+                    }
+                }
+                socket.join(options.data.room_name)
+
+                this.sendMessage(return_options)
+             
+            }
+        }
+        catch(e){
+            let options = {
+                "class": "socket_handler",
+                "function": "createRoom",
+                "e": e
+            }
+            errorHandler.log(options)
+        }				
+    }
+    
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,7 +273,7 @@ const socket_handler = class {
         }
         catch(e){
             let options = {
-                "class": "socket",
+                "class": "socket_handler",
                 "function": "messageAll",
                 "e": e
             }
@@ -178,7 +308,7 @@ const socket_handler = class {
         }
         catch(e){
             let options = {
-                "class": "socket",
+                "class": "socket_handler",
                 "function": "messageUser",
                 "e": e
             }

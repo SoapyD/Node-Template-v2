@@ -17,8 +17,6 @@ router.post("/login", controllers.login.loginUser)
 
 router.get("/logout", controllers.login.logoutUser)
 
-router.get("/room", middleware.user_access, controllers.login.getRoom)
-
 
 
 module.exports = router;

@@ -62,22 +62,7 @@ exports.logoutUser = (req,res) => {
 }
 
 
-exports.getRoom = async(req,res) => {
 
-	let data = {
-		address: process.env.SOCKET_ADDRESS,
-		instance_type: process.env.INSTANCE_TYPE,
-	}
-
-	let countries = await database_handler.findData({
-		model: "Country"
-		,search_type: "find"
-		,sort: {order: "asc"}
-	})	
-
-
-	res.render("room", {countries: countries[0], data: data});
-}
 
 
 

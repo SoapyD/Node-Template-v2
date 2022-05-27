@@ -1,0 +1,56 @@
+
+.navbar-custom,
+.panel-primary>.panel-heading { 
+	background-color: #B73F34; 
+	border-color: #B73F34;
+	/* background: linear-gradient(#FA4616, #ab2603); */
+} 
+
+.panel-primary {
+	border-color: #B73F34;
+}
+
+.navbar-custom li a,
+.navbar-brand {
+	color: white;
+	
+}
+
+.nav-link { 
+	color: black;
+	font-weight: 700; 
+	font-size: 1.0em;
+} 
+
+.nav-link:focus, 
+.nav-link:hover {
+    background-color: #ab2603;
+}
+
+
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+	background-color: #FA4616;
+	border-color: #FA4616;
+	box-shadow: 2px 2px 2px #C0C0C0;
+}
+
+.btn-primary:active:hover {
+	background-color: #ab2603;
+	border-color: #ab2603;
+	box-shadow: none;
+}
+
+
+.container{
+	padding: 0;
+	width: 95%;
+}
+
+.row {
+	margin: auto
+}
+
+.thumbnail {
+	box-shadow: 2px 2px 2px #C0C0C0;
+}

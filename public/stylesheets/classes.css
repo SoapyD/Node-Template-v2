@@ -1,0 +1,89 @@
+
+/* BORDERS */
+
+.rounded_borders {
+	background: #B73F34;	 
+	border-radius: 15px;
+	border: 6px solid white;
+}
+
+.rounded_borders_only {
+	border-radius: 15px;
+	border: 6px solid white;
+}
+
+/* ALIGNMENT */
+
+.left-button {
+	display: inline
+}
+
+.left {
+	display: inline-block
+}
+
+.float-left {
+    float: left;
+}
+
+.right-button,
+.inline-button {
+	display: inline;
+}
+
+.right-button {
+	float: right;
+}
+
+/* HIDE AND DISABLE */
+
+.hide {
+    visibility: hidden;
+}
+
+.disable-form {
+
+	/* Make form elements appear disabled against grey background */
+	background-color: gray;
+	opacity:0.75; 
+ 
+	/* Prevent user interaction with form while disabled */
+	pointer-events:none;
+ }
+
+
+/* PADDING AND MARGINS */
+
+ .no-padding {
+	padding: 0;
+}
+
+.no-margin {
+    margin: 0
+}
+
+.width-100 {
+    width: 100%;
+}
+
+.top-padding {
+	padding: 10px 0;
+}
+
+
+/* MISC */
+
+.text-block-limit {
+	min-height: 30px;
+	max-height: 30px;
+}
+
+
+.jumbotron {
+	padding: 2rem 1rem;
+	margin-bottom: 2rem;
+	border-radius: .3rem;
+	background-color: #ebebeb;
+	background-size: 100% auto;
+	background-repeat: no-repeat;	
+  }
