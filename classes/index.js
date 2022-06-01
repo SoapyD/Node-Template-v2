@@ -1,6 +1,6 @@
 
 
-exports.error_handler = require("./error_handler");
-exports.socket_handler = require("./socket_handler");
+exports.server_error_handler = require("./server_error_handler");
+exports.server_socket_handler = require("./server_socket_handler");
 exports.mongoose_db_handler = require("./mongoose_db_handler");
 

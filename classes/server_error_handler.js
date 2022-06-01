@@ -1,5 +1,5 @@
 
-const error_handler = class {
+const server_error_handler = class {
 	constructor(options) {	
 
         this.errors = [];
@@ -31,30 +31,21 @@ const error_handler = class {
             }
 
             console.log(error_message)
-            //set the e value
 
-            //repackage the error as it doesn't transfer over sockets
-            let message = options.e.message;
-            let stack = options.e.stack;
-            options.e = {
-                "message": message,
-                "stack": stack
-            };
-
+            // if(options.e.stack){
+            //     options.e = options.e.stack;
+            // }
             if(!options.detail){
-                options.detail = ''
+                options.detail = "";
             }
-              
 
-            if(GameScene.online === true){
-                let data = {
-                    functionGroup: "socketFunctions",  
-                    function: "logClientError",
-                    message: "log error",
-                    options: options 
-                }				
-                connFunctions.messageServer(data)
-            }
+            database_handler.createData({
+                model: "Error"
+                ,params: [
+                    options
+                ]
+            })
+
 
         }catch(e){
             console.log("error handler has errored")
@@ -63,3 +54,6 @@ const error_handler = class {
 
     }
 }
+
+
+module.exports = server_error_handler

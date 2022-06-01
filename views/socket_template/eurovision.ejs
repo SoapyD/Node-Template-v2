@@ -121,8 +121,8 @@
     socket_address = "<%= data.address %>";
 	instance_type = "<%= data.instance_type %>";
 
-    const errorHandler = new error_handler();
-    const socketHandler = new socket_handler({
+    const errorHandler = new client_error_handler();
+    const socketHandler = new client_socket_handler({
         socket_address: socket_address
     });
 

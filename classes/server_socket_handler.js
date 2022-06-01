@@ -1,6 +1,6 @@
 
 
-const socket_handler = class {
+const server_socket_handler = class {
 	constructor(options) {	
 
         this.io = options.io
@@ -99,7 +99,8 @@ const socket_handler = class {
         this.functions.core.test = this.test;
         this.functions.core.checkRoom = this.checkRoom;        
         this.functions.core.messageRoom = this.messageRoom;
-        this.functions.core.messageUser = this.messageUser;                
+        this.functions.core.messageUser = this.messageUser;    
+        this.functions.core.sendRoomData  = this.sendRoomData;             
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -152,12 +153,57 @@ const socket_handler = class {
 	// ##################################################################################
 	// ##################################################################################
 
+    sendToWaitingRoom = (socket, room_name) => {
+        let return_options = {
+            type: "source",
+            id: socket.id,
+            functionGroup: "core",
+            function: "joinWaitingRoom",
+            data: {
+                user_name: "SERVER",
+                message: "",
+                room_name: room_name
+            }  
+        }        
+
+        this.sendMessage(return_options)  
+        this.sendRoomData(room_name) 
+    }
+
+    sendRoomData = async(room_name) => {
+
+        let rooms = await database_handler.findData({
+            model: "Room"
+            ,search_type: "findOne"
+            ,params: {
+                room_name: room_name
+            }
+        })
+
+        if (rooms[0] !== null){
+            let room = rooms[0];
+
+            let return_options = {
+                type: "room",
+                id: room_name,
+                functionGroup: "core",
+                function: "updateRoomData",
+                data: {
+                    users: room.users
+                }  
+            }        
+    
+            this.sendMessage(return_options)        
+        }
+    }
+
     checkRoom = async(socket, options)  => {
 
         //SEE IF ROOM EXISTS ALREADY
         let rooms;
         let room;
         let saved_room;
+        let room_joined = false;
 
         try{
             rooms = await database_handler.findData({
@@ -255,13 +301,15 @@ const socket_handler = class {
                         ,data: {
                             message: "Room Created"
                             ,success: true
-                            ,room_name: options.data.room_name
-                            ,room_id: room._id
+                            // ,room_name: options.data.room_name
+                            // ,room_id: room._id
                         }
                     }
                     socket.join(options.data.room_name)
     
                     this.sendMessage(return_options)
+
+                    room_joined = true;
                  
                 }
             }
@@ -300,6 +348,7 @@ const socket_handler = class {
                                 socket.join(options.data.room_name) 
                                 room.sockets.push(socket.id);
                                 saved_room = await room.save()
+                                room_joined = true;                                
                             }
                         }
                         else{
@@ -310,6 +359,7 @@ const socket_handler = class {
                             saved_room = returned_rooms[0];
                 
                             return_options.data.message = "Room Joined"
+                            room_joined = true;
                         }
                     }                                      
                 }
@@ -319,6 +369,11 @@ const socket_handler = class {
                 }              
                 //RETURN THE MESSAGE BACK TO THE USER
                 this.sendMessage(return_options)                    
+            }
+
+
+            if(room_joined === true){
+                this.sendToWaitingRoom(socket, options.data.room_name)                
             }
 
         }
@@ -406,4 +461,4 @@ const socket_handler = class {
 
 }
 
-module.exports = socket_handler
+module.exports = server_socket_handler

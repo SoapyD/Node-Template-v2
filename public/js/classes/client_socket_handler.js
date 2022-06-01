@@ -1,5 +1,5 @@
 
-const socket_handler = class {
+const client_socket_handler = class {
 	constructor(options) {	
 
         this.socket_address = options.socket_address;
@@ -100,7 +100,9 @@ const socket_handler = class {
 
     defineCoreFunctions = () => {
         this.functions.core.test = this.test;  
-        this.functions.core.printConnectionStatus = this.printConnectionStatus;                      
+        this.functions.core.printConnectionStatus = this.printConnectionStatus;
+        this.functions.core.joinWaitingRoom = this.joinWaitingRoom;  
+        this.functions.core.updateRoomData = this.updateRoomData;                      
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -158,5 +160,38 @@ const socket_handler = class {
         document.getElementById('connectionOptions').value = ""        
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    //       # ####### ### #     #       #     #    #    ### ####### ### #     #  #####        ######  ####### ####### #     # 
+    //       # #     #  #  ##    #       #  #  #   # #    #     #     #  ##    # #     #       #     # #     # #     # ##   ## 
+    //       # #     #  #  # #   #       #  #  #  #   #   #     #     #  # #   # #             #     # #     # #     # # # # # 
+    //       # #     #  #  #  #  # ##### #  #  # #     #  #     #     #  #  #  # #  #### ##### ######  #     # #     # #  #  # 
+    // #     # #     #  #  #   # #       #  #  # #######  #     #     #  #   # # #     #       #   #   #     # #     # #     # 
+    // #     # #     #  #  #    ##       #  #  # #     #  #     #     #  #    ## #     #       #    #  #     # #     # #     # 
+    //  #####  ####### ### #     #        ## ##  #     # ###    #    ### #     #  #####        #     # ####### ####### #     # 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    joinWaitingRoom = (options) => {  
+
+        clientRoomHandler.updateRoom(options.data)
+
+        window.setTimeout(() => {
+            let myOffcanvas = document.getElementById('offcanvasRight')
+            var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
+            bsOffcanvas.hide();            
+        }, 4000)
+
+        window.setTimeout(() => {
+            let myOffcanvas = document.getElementById('waiting_offcanvasRight')
+            var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
+            bsOffcanvas.show();            
+        }, 4000)        
+        
+    }
+
+    updateRoomData = (options) => {
+        clientRoomHandler.updateUsers(options.data)
+    }
 
 }

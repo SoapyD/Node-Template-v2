@@ -1,6 +1,6 @@
 
 
-<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Join / Create Room</button>
+<button class="btn btn-primary socket__join_button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Join / Create Room</button>
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
@@ -35,10 +35,10 @@
         <% } %>
         disabled>
 
-        <div class="alert alert-danger" role="alert" id="connectionMessage">
+        <div class="alert alert-danger hide-display" role="alert" id="connectionMessage">
             TEST	
         </div>		
-        <script type="text/javascript">window.setTimeout("document.getElementById('connectionMessage').style.display='none';", 0); </script>
+        <!-- <script type="text/javascript">window.setTimeout("document.getElementById('connectionMessage').style.display='none';", 0); </script> -->
 
     </div>    
 </div>
@@ -65,7 +65,7 @@
                     ,action: action
                 }     
             }       
-            socketHandler.messageServer(options)            
+            clientSocketHandler.messageServer(options)            
         }
     }
 
@@ -74,20 +74,26 @@
 
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/classes/socket_handler.js"></script>
+<script src="/js/classes/client_socket_handler.js"></script>
+<script src="/js/classes/client_room_handler.js"></script>
 
 <script>
 
     //SHOW THE OFFCANVAS LOGIN TAB
-    let myOffcanvas = document.getElementById('offcanvasRight')
-    var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
-    bsOffcanvas.show();
+    const show_login = () => {
+        let myOffcanvas = document.getElementById('offcanvasRight')
+        var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+        bsOffcanvas.show();
+    }
+    show_login();
 
     socket_address = "<%= data.address %>";
 
-    const socketHandler = new socket_handler({
+    const clientSocketHandler = new client_socket_handler({
         socket_address: socket_address
     });
+
+    const clientRoomHandler = new client_room_handler();
 
 </script>
 

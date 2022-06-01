@@ -1,0 +1,52 @@
+
+<!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#waiting_offcanvasRight" aria-controls="waiting_offcanvasRight">Waiting Room</button> -->
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="waiting_offcanvasRight" aria-labelledby="waiting_offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="waiting_offcanvasRightLabel">Waiting Room</h5>    
+
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div>
+
+        <input class="form-control" type="hidden" id="userID" 
+        value=
+        <% if(user){ %>
+            "<%= user._id %>" 
+        <% }else{ %>
+            ""
+        <% } %>
+        disabled>
+
+        <div class="offcanvas-body">
+            <h6 class="offcanvas-title" id="waiting_offcanvasRightLabel">User List</h6>
+            <ul id="user_list">
+
+            </ul>
+        </div>
+
+        <div class="alert alert-danger hide-display" role="alert" id="connectionMessage">
+            TEST	
+        </div>		
+        <!-- <script type="text/javascript">window.setTimeout("document.getElementById('connectionMessage').style.display='none';", 0); </script> -->
+
+    </div>    
+</div>
+
+
+<script>
+
+    //SHOW THE OFFCANVAS LOGIN TAB
+    // let myOffcanvas = document.getElementById('waiting_offcanvasRight')
+    // var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+    // bsOffcanvas.show();
+
+    const setup_waiting = () => {
+        let myOffcanvas = document.getElementById('waiting_offcanvasRight')
+        var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+        // bsOffcanvas.hide();
+    }
+    setup_waiting();
+
+</script>

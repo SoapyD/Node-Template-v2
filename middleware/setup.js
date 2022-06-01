@@ -12,6 +12,7 @@ const strategies = require('./strategies')
 
 const classes = require('../classes');
 global.database_handler = new classes.mongoose_db_handler();
+global.errorHandler = new classes.server_error_handler();
 
 exports.run = async(app) => {
     //setup sessions
