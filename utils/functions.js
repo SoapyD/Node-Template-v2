@@ -6,6 +6,10 @@ exports.removeFromArray = (array, value) => {
     return array
 }
 
+exports.removeFromObjectArray = (array, key, value) => {
+    return array.filter( el => el[key] !== value);    
+}
+
 exports.delay = async(ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }

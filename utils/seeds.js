@@ -6,7 +6,7 @@ exports.resetRooms = async() => {
     let list = [
         {model: "Room"}, 
     ]   
-    await queries.removeData(list);   
+    await database_handler.removeData(list);   
     console.log("Rooms Reset") 
 }
 

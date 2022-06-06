@@ -26,5 +26,5 @@ exports.getSocketRoom = async(req,res) => {
 	}
 
 
-	res.render("socket_template/socket_room", {title:"Socket Room Template",data: data});
+	res.render("socket_template/socket_view", {title:"Socket Room Template",data: data});
 }

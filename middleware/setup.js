@@ -56,6 +56,7 @@ exports.run = async(app) => {
     app.use(controllers.error.get404);
 
 
+    utils.seeds.resetRooms();
     // utils.seeds.seedDB();
 
 }

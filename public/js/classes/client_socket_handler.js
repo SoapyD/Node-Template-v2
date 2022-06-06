@@ -99,10 +99,10 @@ const client_socket_handler = class {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     defineCoreFunctions = () => {
-        this.functions.core.test = this.test;  
-        this.functions.core.printConnectionStatus = this.printConnectionStatus;
-        this.functions.core.joinWaitingRoom = this.joinWaitingRoom;  
-        this.functions.core.updateRoomData = this.updateRoomData;                      
+        //LOOP THROUGH METHODS AND MAKE THEM ACCESSIBLE FUNCTIONS
+        Object.getOwnPropertyNames(this).forEach((method) => {
+            this.functions.core[method] = this[method];
+        })
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -175,23 +175,62 @@ const client_socket_handler = class {
     joinWaitingRoom = (options) => {  
 
         clientRoomHandler.updateRoom(options.data)
+        let timer = 2000;
 
         window.setTimeout(() => {
             let myOffcanvas = document.getElementById('offcanvasRight')
             var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
             bsOffcanvas.hide();            
-        }, 4000)
+        }, timer)
 
         window.setTimeout(() => {
             let myOffcanvas = document.getElementById('waiting_offcanvasRight')
             var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
             bsOffcanvas.show();            
-        }, 4000)        
-        
+        }, timer)        
+
+    }
+
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################    
+    //  #####  #######    #    ######  #######       ######  ####### ####### #     # 
+    // #     #    #      # #   #     #    #          #     # #     # #     # ##   ## 
+    // #          #     #   #  #     #    #          #     # #     # #     # # # # # 
+    //  #####     #    #     # ######     #    ##### ######  #     # #     # #  #  # 
+    //       #    #    ####### #   #      #          #   #   #     # #     # #     # 
+    // #     #    #    #     # #    #     #          #    #  #     # #     # #     # 
+    //  #####     #    #     # #     #    #          #     # ####### ####### #     # 
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
+
+    startRoom = () => {
+        let timer = 2000;
+
+        window.setTimeout(() => {
+            let myOffcanvas = document.getElementById('offcanvasRight')
+            var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
+            bsOffcanvas.hide();            
+
+            myOffcanvas = document.getElementById('waiting_offcanvasRight')
+            bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
+            bsOffcanvas.hide();            
+
+            // let element = document.getElementById('login__blackout')
+            // element.classList.add("login__blackout_expanded");
+            $( "#socket__join_button").fadeOut(() => {
+                $( "#login__blackout").slideDown()
+                // $( "#socket__join_button").remove(() => {
+                //     $( "#login__blackout").slideDown()
+                // })
+            })
+
+        }, timer)    
     }
 
     updateRoomData = (options) => {
-        clientRoomHandler.updateUsers(options.data)
+        clientRoomHandler.updateInfo(options.data)
     }
 
 }

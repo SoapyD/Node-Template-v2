@@ -42,7 +42,7 @@ const server_socket_handler = class {
                         model: "Room"
                         ,search_type: "findOne"
                         ,params: {
-                            sockets: socket.id
+                            sockets: {$elemMatch: {socket: socket.id}}
                         }
                     })                    
         
@@ -51,9 +51,15 @@ const server_socket_handler = class {
                         let sockets = rooms[0].sockets; 	
                         const utils = require("../utils");
 
-                    	sockets = utils.functions.removeFromArray(sockets, socket.id)
-                    	room.sockets = sockets;
-                    	room.save();
+                    	sockets = utils.functions.removeFromObjectArray(room.sockets, "socket",socket.id)
+                    	// room.sockets = sockets;
+                        // room.save();
+                        await database_handler.updateData(room,
+                        {
+                            params: [{sockets: sockets}]
+                        })
+                        
+                        await this.sendRoomData(room.room_name)
                     	socket.leave(room.room_name)
                     	console.log("user disconnected: "+socket.id);
                     }
@@ -96,11 +102,10 @@ const server_socket_handler = class {
     }
 
     defineCoreFunctions = () => {
-        this.functions.core.test = this.test;
-        this.functions.core.checkRoom = this.checkRoom;        
-        this.functions.core.messageRoom = this.messageRoom;
-        this.functions.core.messageUser = this.messageUser;    
-        this.functions.core.sendRoomData  = this.sendRoomData;             
+            
+        Object.getOwnPropertyNames(this).forEach((method) => {
+            this.functions.core[method] = this[method];
+        })    
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -138,7 +143,6 @@ const server_socket_handler = class {
         }        
     }
 
-
 	// ##################################################################################
 	// ##################################################################################
 	// ##################################################################################
@@ -152,50 +156,6 @@ const server_socket_handler = class {
 	// ##################################################################################
 	// ##################################################################################
 	// ##################################################################################
-
-    sendToWaitingRoom = (socket, room_name) => {
-        let return_options = {
-            type: "source",
-            id: socket.id,
-            functionGroup: "core",
-            function: "joinWaitingRoom",
-            data: {
-                user_name: "SERVER",
-                message: "",
-                room_name: room_name
-            }  
-        }        
-
-        this.sendMessage(return_options)  
-        this.sendRoomData(room_name) 
-    }
-
-    sendRoomData = async(room_name) => {
-
-        let rooms = await database_handler.findData({
-            model: "Room"
-            ,search_type: "findOne"
-            ,params: {
-                room_name: room_name
-            }
-        })
-
-        if (rooms[0] !== null){
-            let room = rooms[0];
-
-            let return_options = {
-                type: "room",
-                id: room_name,
-                functionGroup: "core",
-                function: "updateRoomData",
-                data: {
-                    users: room.users
-                }  
-            }        
-    
-            this.sendMessage(return_options)        
-        }
-    }
 
     checkRoom = async(socket, options)  => {
 
@@ -272,15 +232,13 @@ const server_socket_handler = class {
                 else{
     
                     //CREATE THE ROOM
-                    let params =                         
-                    {
-                        room_name: options.data.room_name,
-                        password: options.data.password,
-                        sockets: [socket.id]
-                    }
-                    if(options.data.user){
-                        params.users = [options.data.user]
-                    }
+
+                    let params = options.data
+                    params.sockets = [];
+                    params.sockets.push({
+                        socket: socket.id
+                        ,user: options.data.users[0]
+                    });
     
                     room = await database_handler.createData({
                         model: "Room"
@@ -337,7 +295,8 @@ const server_socket_handler = class {
                         return_options.data.message = "Wrong password! Please try again";
                     }else{
                         //IF USER IS A MEMBER OF THE ROOM
-                        if(room.users.indexOf(options.data.user) > -1){
+                        // if(room.users.indexOf(options.data.user) > -1){
+                        if(JSON.stringify(room.users).includes(options.data.users[0])){
                             //IF THE USER IS STILL IN THE ROOM
                             if(room.sockets.indexOf(socket.id) > -1){
                                 return_options.data.message = "You're already in this room";
@@ -346,19 +305,28 @@ const server_socket_handler = class {
                                 return_options.data.success = true;
                                                 
                                 socket.join(options.data.room_name) 
-                                room.sockets.push(socket.id);
+                                room.sockets.push({
+                                    socket: socket.id
+                                    ,user: options.data.users[0]
+                                });
                                 saved_room = await room.save()
                                 room_joined = true;                                
                             }
                         }
                         else{
-                            room.users.push(options.data.user)
-                            room.sockets.push(socket.id)                            
+                            room.users.push(options.data.users[0])
+                            room.sockets.push({
+                                socket: socket.id
+                                ,user: options.data.users[0]
+                            });                        
 
                             let returned_rooms = await database_handler.updateData(room)
                             saved_room = returned_rooms[0];
                 
+
                             return_options.data.message = "Room Joined"
+                            return_options.data.success = true;
+                            socket.join(options.data.room_name)                             
                             room_joined = true;
                         }
                     }                                      
@@ -373,7 +341,11 @@ const server_socket_handler = class {
 
 
             if(room_joined === true){
-                this.sendToWaitingRoom(socket, options.data.room_name)                
+                if(room.use_waiting_room === true){
+                    this.sendToWaitingRoom(socket, options.data.room_name)                
+                }else{
+                    this.startRoom(socket, options.data.room_name)                    
+                }
             }
 
         }
@@ -387,7 +359,90 @@ const server_socket_handler = class {
         }				
     }
     
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################    
+    // #     #    #    ### ####### ### #     #  #####        ######  ####### ####### #     # 
+    // #  #  #   # #    #     #     #  ##    # #     #       #     # #     # #     # ##   ## 
+    // #  #  #  #   #   #     #     #  # #   # #             #     # #     # #     # # # # # 
+    // #  #  # #     #  #     #     #  #  #  # #  #### ##### ######  #     # #     # #  #  # 
+    // #  #  # #######  #     #     #  #   # # #     #       #   #   #     # #     # #     # 
+    // #  #  # #     #  #     #     #  #    ## #     #       #    #  #     # #     # #     # 
+    //  ## ##  #     # ###    #    ### #     #  #####        #     # ####### ####### #     # 
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
 
+    sendToWaitingRoom = (socket, room_name) => {
+        let return_options = {
+            type: "source",
+            id: socket.id,
+            functionGroup: "core",
+            function: "joinWaitingRoom",
+            data: {
+                user_name: "SERVER",
+                message: "",
+                room_name: room_name
+            }  
+        }        
+
+        this.sendMessage(return_options)  
+        this.sendRoomData(room_name) 
+    }
+
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################    
+    //  #####  #######    #    ######  #######       ######  ####### ####### #     # 
+    // #     #    #      # #   #     #    #          #     # #     # #     # ##   ## 
+    // #          #     #   #  #     #    #          #     # #     # #     # # # # # 
+    //  #####     #    #     # ######     #    ##### ######  #     # #     # #  #  # 
+    //       #    #    ####### #   #      #          #   #   #     # #     # #     # 
+    // #     #    #    #     # #    #     #          #    #  #     # #     # #     # 
+    //  #####     #    #     # #     #    #          #     # ####### ####### #     # 
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
+
+    startRoom = async(socket, room_name) => {
+        await this.sendRoomData(room_name)
+
+        let return_options = {
+            type: "source",
+            id: socket.id,
+            functionGroup: "core",
+            function: "startRoom"
+        }        
+
+        this.sendMessage(return_options) 
+
+    }
+
+
+    sendRoomData = async(room_name) => {
+
+        let rooms = await database_handler.findData({
+            model: "Room"
+            ,search_type: "findOne"
+            ,params: {
+                room_name: room_name
+            }
+        })
+
+        if (rooms[0] !== null){
+            let room = rooms[0];
+
+            let return_options = {
+                type: "room",
+                id: room_name,
+                functionGroup: "core",
+                function: "updateRoomData",
+                data: room  
+            }        
+    
+            this.sendMessage(return_options)        
+        }
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -406,7 +461,7 @@ const server_socket_handler = class {
         try{
             this.sendMessage({
                 type: "room",
-                id: options.room_name,                
+                id: options.id,                
                 functionGroup: options.data.functionGroup,
                 function: options.data.function,
                 parameters: options.data.parameters,

@@ -1,7 +1,5 @@
 
 
-<button class="btn btn-primary socket__join_button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Join / Create Room</button>
-
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasRightLabel">Join or Create Room</h5>    
@@ -9,7 +7,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
 
-    <div>
+    <div class="container">
         <div class="form-floating mb-3">
             <input type="email" class="form-control" id="floatingRoom" placeholder="Room Name">
             <label for="floatingInput">Room Name</label>
@@ -20,6 +18,18 @@
             <label for="floatingInput">Password</label>
         </div>
         
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" id="floatingMaxUsers" placeholder="Max Users", min="1">
+            <label for="floatingMaxUsers">Max Users</label>
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" value="" id="useWaitingRoom">
+            <label class="form-check-label" for="useWaitingRoom">
+                Use Waiting Room
+            </label>
+        </div>   
+
         <select class="form-select" onchange="getRoom(this)" id="connectionOptions">
             <option value="" selected>Submit</option>
             <option value="create">Create Room</option>
@@ -43,6 +53,13 @@
     </div>    
 </div>
 
+<button class="btn btn-primary socket__join_button" id="socket__join_button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Join / Create Room</button>
+<div id="login__blackout" class="container">
+
+<%- include("./socket_room") %>
+
+</div>
+
 
 <script>
     getRoom = (e) => {
@@ -53,18 +70,30 @@
             let room_name = document.getElementById('floatingRoom').value;
             let password = document.getElementById('floatingPassword').value;
             let user = document.getElementById('userID').value;
+            let max_users = document.getElementById('floatingMaxUsers').value;
+            let use_waiting_room = document.getElementById('useWaitingRoom').checked;
 
             let options = {
                 functionGroup: "core",  
                 function: "checkRoom",
                 message: action+" room",
                 data: {
-                    room_name: room_name
+                    action: action
+                    ,room_name: room_name
                     ,password: password
-                    ,user: user
-                    ,action: action
+                    ,users: [user]
+                    ,admins: [user]
+                    ,use_waiting_room: use_waiting_room
                 }     
             }       
+
+            if(max_users !== ""){
+                options.data.max_users = Number(max_users)
+            }
+            // if(use_waiting_room !== "false"){
+            //     options.data.use_waiting_room = true
+            // }            
+
             clientSocketHandler.messageServer(options)            
         }
     }

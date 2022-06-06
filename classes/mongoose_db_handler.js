@@ -29,7 +29,16 @@ const mongoose_db_handler = class {
     }
 
     getPopulateLists = (type) => {
+        let populate_list = [];
 
+        switch(type){
+            case 'Room':
+                populate_list.push({path: 'admins',model: "User"})  
+                populate_list.push({path: 'users',model: "User"})  
+                break;
+        }
+
+        return populate_list;
     }
 
     // ####### ### #     # ######        ######     #    #######    #    
