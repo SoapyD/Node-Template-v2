@@ -7,7 +7,7 @@ exports.getEurovision = async(req,res) => {
 		instance_type: process.env.INSTANCE_TYPE,
 	}
 
-	let countries = await database_handler.findData({
+	let countries = await databaseHandler.findData({
 		model: "Country"
 		,search_type: "find"
 		,sort: {order: "asc"}

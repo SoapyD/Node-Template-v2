@@ -1,59 +1,102 @@
 
 const client_room_handler = class {
-	constructor() {	
+	constructor(options) {	
         // this.users = [];
         this.room_name = '';
+        if(options.user){
+            this.user = options.user
+        }
         this.core;
         // this.room_name = options.room_name;
     }
 
     updateRoom = (options) => {
-        this.room_name = options.room_name;
-        this.core = undefined;
+        try{
+            this.room_name = options.room_name;
+            this.core = undefined;
+        }catch(e){
+
+            let options = {
+                "class": "clientRoomHandler",
+                "function": "updateRoom",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	        
     }
 
     checkUserConnected = (id) => {
-        let check = false;
-        if(this.core.sockets){
-            if(JSON.stringify(this.core.sockets).includes(id)){
-                check = true;
-            }                    
-        }        
-        return check;
+        try{
+            let check = false;
+            if(this.core.sockets){
+                if(JSON.stringify(this.core.sockets).includes(id)){
+                    check = true;
+                }                    
+            }        
+            return check;
+        }catch(e){
+
+            let options = {
+                "class": "clientRoomHandler",
+                "function": "checkUsersConnected",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	        
     }
 
     checkUserAdmin = (id) => {
-        let check = false;
-        if(this.core.sockets){
-            if(JSON.stringify(this.core.admins).includes(id)){
-                check = true;
-            }                    
-        }   
-        return check;             
+        try{
+            let check = false;
+            if(this.core.sockets){
+                if(JSON.stringify(this.core.admins).includes(id)){
+                    check = true;
+                }                    
+            }   
+            return check;
+        }catch(e){
+
+            let options = {
+                "class": "clientRoomHandler",
+                "function": "checkUserAdmin",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	                     
     }    
 
     updateInfo = (options) => {
-        this.core = options;
+        try{
+            this.core = options;
 
-        let element = $( "#user_list");
-        if(element){
-            element.empty();
-            this.core.users.forEach((user) => {
-                let name = user.username
+            let element = $( "#user_list");
+            if(element){
+                element.empty();
+                this.core.users.forEach((user) => {
+                    let name = user.username
 
-                let add = false;
-                if(this.checkUserConnected(user._id)){
-                        add = true;                  
-                }
-
-                if(add === true){
-                    if(this.checkUserAdmin(user._id)){
-                            name += " (Admin)"
+                    let add = false;
+                    if(this.checkUserConnected(user._id)){
+                            add = true;                  
                     }
-                    element.append('<li>'+name+'</li>')
-                }
-            })
-        }
+
+                    if(add === true){
+                        if(this.checkUserAdmin(user._id)){
+                                name += " (Admin)"
+                        }
+                        element.append('<li>'+name+'</li>')
+                    }
+                })
+            }
+        }catch(e){
+
+            let options = {
+                "class": "clientRoomHandler",
+                "function": "updateInfo",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	        
     }      
 
 }

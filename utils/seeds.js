@@ -6,7 +6,7 @@ exports.resetRooms = async() => {
     let list = [
         {model: "Room"}, 
     ]   
-    await database_handler.removeData(list);   
+    await databaseHandler.removeData(list);   
     console.log("Rooms Reset") 
 }
 
@@ -18,7 +18,7 @@ exports.seedDB = async() => {
     {model: "Country"}, 
     {model: "Score"},     
     ]
-    await database_handler.removeData(list);
+    await databaseHandler.removeData(list);
 
     await exports.createCountries();    
     console.log("Seeding Complete")
@@ -133,6 +133,6 @@ exports.createCountries = async() => {
         }                  
         ]
     }
-    return Promise.all([database_handler.createData(list)]);
+    return Promise.all([databaseHandler.createData(list)]);
 }
 

@@ -19,7 +19,7 @@ exports.checkItems = async(model, hours) => {
         var cutoff = new Date();
         cutoff.setHours(cutoff.getHours() - hours);
     
-        let data = await database_handler.findData({
+        let data = await databaseHandler.findData({
             model: model
             ,search_type: "find"
             ,params: 
@@ -41,7 +41,7 @@ exports.checkItems = async(model, hours) => {
                 })
         
                 if(ids.length > 0){
-                    let item = await database_handler.destroyData({
+                    let item = await databaseHandler.destroyData({
                         model: model
                         ,params: ids
                     })

@@ -39,7 +39,7 @@ const server_error_handler = class {
                 options.detail = "";
             }
 
-            database_handler.createData({
+            databaseHandler.createData({
                 model: "Error"
                 ,params: [
                     options

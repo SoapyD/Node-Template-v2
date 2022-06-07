@@ -38,7 +38,7 @@ const server_socket_handler = class {
 
                 try{
                     // let rooms = await queriesUtil.findRoomsWithSocket(socket.id)
-                    let rooms = await database_handler.findData({
+                    let rooms = await databaseHandler.findData({
                         model: "Room"
                         ,search_type: "findOne"
                         ,params: {
@@ -54,7 +54,7 @@ const server_socket_handler = class {
                     	sockets = utils.functions.removeFromObjectArray(room.sockets, "socket",socket.id)
                     	// room.sockets = sockets;
                         // room.save();
-                        await database_handler.updateData(room,
+                        await databaseHandler.updateData(room,
                         {
                             params: [{sockets: sockets}]
                         })
@@ -78,8 +78,9 @@ const server_socket_handler = class {
         })
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
     //  #####  ####### ######  #######       ####### #     # #     #  #####  ####### ### ####### #     #  #####  
     // #     # #     # #     # #             #       #     # ##    # #     #    #     #  #     # ##    # #     # 
     // #       #     # #     # #             #       #     # # #   # #          #     #  #     # # #   # #       
@@ -87,29 +88,52 @@ const server_socket_handler = class {
     // #       #     # #   #   #             #       #     # #   # # #          #     #  #     # #   # #       # 
     // #     # #     # #    #  #             #       #     # #    ## #     #    #     #  #     # #    ## #     # 
     //  #####  ####### #     # #######       #        #####  #     #  #####     #    ### ####### #     #  #####  
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
 
     sendMessage = (options) => {
-        switch(options.type){
-            case "source":
-                this.io.to(options.id).emit("message_client", options)
-                break;
-            case "room":
-                this.io.in(options.id).emit("message_client", options)
-                break;                
+
+        try{
+            switch(options.type){
+                case "source":
+                    this.io.to(options.id).emit("message_client", options)
+                    break;
+                case "room":
+                    this.io.in(options.id).emit("message_client", options)
+                    break;                
+            }
         }
+        catch(e){
+            let options = {
+                "class": "socket_handler",
+                "function": "sendMessage",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	
+
     }
 
     defineCoreFunctions = () => {
-            
-        Object.getOwnPropertyNames(this).forEach((method) => {
-            this.functions.core[method] = this[method];
-        })    
+        try{
+            Object.getOwnPropertyNames(this).forEach((method) => {
+                this.functions.core[method] = this[method];
+            })    
+        }
+        catch(e){
+            let options = {
+                "class": "socket_handler",
+                "function": "defineCoreFunctions",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	            
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
     //  ####### #######  #####  ####### 
     //     #    #       #     #    #    
     //     #    #       #          #    
@@ -117,8 +141,9 @@ const server_socket_handler = class {
     //     #    #             #    #    
     //     #    #       #     #    #    
     //     #    #######  #####     #    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
 
     test = async(socket, options)  => {
 
@@ -166,7 +191,7 @@ const server_socket_handler = class {
         let room_joined = false;
 
         try{
-            rooms = await database_handler.findData({
+            rooms = await databaseHandler.findData({
                 model: "Room"
                 ,search_type: "findOne"
                 ,params: {
@@ -240,7 +265,7 @@ const server_socket_handler = class {
                         ,user: options.data.users[0]
                     });
     
-                    room = await database_handler.createData({
+                    room = await databaseHandler.createData({
                         model: "Room"
                         ,params: [
                             params
@@ -320,7 +345,7 @@ const server_socket_handler = class {
                                 ,user: options.data.users[0]
                             });                        
 
-                            let returned_rooms = await database_handler.updateData(room)
+                            let returned_rooms = await databaseHandler.updateData(room)
                             saved_room = returned_rooms[0];
                 
 
@@ -374,20 +399,30 @@ const server_socket_handler = class {
 	// ##################################################################################
 
     sendToWaitingRoom = (socket, room_name) => {
-        let return_options = {
-            type: "source",
-            id: socket.id,
-            functionGroup: "core",
-            function: "joinWaitingRoom",
-            data: {
-                user_name: "SERVER",
-                message: "",
-                room_name: room_name
-            }  
-        }        
+        try{
+            let return_options = {
+                type: "source",
+                id: socket.id,
+                functionGroup: "core",
+                function: "joinWaitingRoom",
+                data: {
+                    user_name: "SERVER",
+                    message: "",
+                    room_name: room_name
+                }  
+            }        
 
-        this.sendMessage(return_options)  
-        this.sendRoomData(room_name) 
+            this.sendMessage(return_options)  
+            this.sendRoomData(room_name) 
+        }
+        catch(e){
+            let options = {
+                "class": "socket_handler",
+                "function": "sendToWaitingRoom",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	            
     }
 
 	// ##################################################################################
@@ -405,17 +440,27 @@ const server_socket_handler = class {
 	// ##################################################################################
 
     startRoom = async(socket, room_name) => {
-        await this.sendRoomData(room_name)
+        
+        try{
+            await this.sendRoomData(room_name)
 
-        let return_options = {
-            type: "source",
-            id: socket.id,
-            functionGroup: "core",
-            function: "startRoom"
-        }        
+            let return_options = {
+                type: "source",
+                id: socket.id,
+                functionGroup: "core",
+                function: "startRoom"
+            }        
 
-        this.sendMessage(return_options) 
-
+            this.sendMessage(return_options) 
+        }
+        catch(e){
+            let options = {
+                "class": "socket_handler",
+                "function": "startRoom",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	
     }
 
 	// ##################################################################################
@@ -433,32 +478,43 @@ const server_socket_handler = class {
 	// ##################################################################################
 
     sendRoomData = async(room_name) => {
+        try{
+            let rooms = await databaseHandler.findData({
+                model: "Room"
+                ,search_type: "findOne"
+                ,params: {
+                    room_name: room_name
+                }
+            })
 
-        let rooms = await database_handler.findData({
-            model: "Room"
-            ,search_type: "findOne"
-            ,params: {
-                room_name: room_name
+            if (rooms[0] !== null){
+                let room = rooms[0];
+
+                let return_options = {
+                    type: "room",
+                    id: room_name,
+                    functionGroup: "core",
+                    function: "updateRoomData",
+                    data: room  
+                }        
+        
+                this.sendMessage(return_options)        
             }
-        })
 
-        if (rooms[0] !== null){
-            let room = rooms[0];
-
-            let return_options = {
-                type: "room",
-                id: room_name,
-                functionGroup: "core",
-                function: "updateRoomData",
-                data: room  
-            }        
-    
-            this.sendMessage(return_options)        
         }
+        catch(e){
+            let options = {
+                "class": "socket_handler",
+                "function": "sendRoomData",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	        
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
     // #     # #######  #####   #####     #     #####  #######       ######  ####### ####### #     # 
     // ##   ## #       #     # #     #   # #   #     # #             #     # #     # #     # ##   ## 
     // # # # # #       #       #        #   #  #       #             #     # #     # #     # # # # # 
@@ -466,8 +522,9 @@ const server_socket_handler = class {
     // #     # #             #       # ####### #     # #             #   #   #     # #     # #     # 
     // #     # #       #     # #     # #     # #     # #             #    #  #     # #     # #     # 
     // #     # #######  #####   #####  #     #  #####  #######       #     # ####### ####### #     #  
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
 
     messageRoom = (socket, options) => {
 
@@ -491,8 +548,9 @@ const server_socket_handler = class {
         }				
     }
     
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
     // #     # #######  #####   #####     #     #####  #######       #     #  #####  ####### ######  
     // ##   ## #       #     # #     #   # #   #     # #             #     # #     # #       #     # 
     // # # # # #       #       #        #   #  #       #             #     # #       #       #     # 
@@ -500,8 +558,9 @@ const server_socket_handler = class {
     // #     # #             #       # ####### #     # #             #     #       # #       #   #   
     // #     # #       #     # #     # #     # #     # #             #     # #     # #       #    #  
     // #     # #######  #####   #####  #     #  #####  #######        #####   #####  ####### #     #
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
 
     messageUser = (socket, options) => {
     
