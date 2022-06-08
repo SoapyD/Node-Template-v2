@@ -63,6 +63,7 @@ const game_core = class {
         }       
     }
 
+    
     getSideColour = (side) => {
         let colour = {};
         colour.colour = 0xFFFFFF;
