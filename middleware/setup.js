@@ -58,5 +58,4 @@ exports.run = async(app) => {
 
     utils.seeder.resetRooms();
     utils.seeder.run();
-
 }
