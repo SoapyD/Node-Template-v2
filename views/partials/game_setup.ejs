@@ -3,11 +3,34 @@
 <script src="/js/classes/game_loading_screen.js"></script>
 <script src="/js/classes/game_assets.js"></script>
 <script src="/js/classes/game_maps.js"></script>
+<script src="/js/classes/game_squad_setup.js"></script>
 <script src="/js/classes/game_collisions.js"></script>
 <script src="/js/classes/game_pathfinder.js"></script>
+
+<script src="/js/classes/unit.js"></script>
 
 <script src="/js/game_scenes/game_scene.js"></script>
 
 <script>
     const gameCore = new game_core();
+</script>
+
+<script>
+    <% if(typeof data.room !== 'undefined') { %>
+    
+        let room_data = <%- JSON.stringify(data.room) %>
+        let army_data = <%- JSON.stringify(data.armies) %>  
+    
+    
+        gameCore.assets.forces = room_data.forces
+        // gameCore.data.users = room_data.users	
+        // gameCore.data.player_number = 0
+        // gameCore.data.max_players = room_data.config.max_players
+        // gameCore.data.max_sides = room_data.config.max_sides	
+    
+        gameCore.assets.forces.forEach((force, i) => {
+            force.army = army_data[i]
+        })
+    
+    <% } %>
 </script>

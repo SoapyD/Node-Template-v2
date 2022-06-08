@@ -1,0 +1,52 @@
+
+<%- include("../partials/header") %>
+
+
+<div class="container">
+	
+	<header class="jumbotron">
+		<div class="container">
+			
+			<h1>
+				Army Index
+			</h1>
+
+			<!-- <p>
+				List of reports
+			</p> -->
+
+			<p>
+				<a class="btn btn-primary btn-large" href="/army/new">
+					Add New Army
+				</a>
+			</p>
+
+		</div>
+	</header>
+
+
+	
+	<div class="row text-center" id="camp-grid">
+		
+		<% armies.forEach(function (army){ %>
+			<div class="col-lg-3 col-md-4 col-sm-6">
+				<div class="thumbnail d-flex flex-column">
+					<i class="far fa-file-alt fa-4x left icon-padding"></i>
+					<h5 class="word-wrap text-block-limit" name="report_name<%= army.id %>">
+						<%= army.name %>
+					</h5> 
+		
+					<a class="btn btn-primary top-margin-5 btn-100" href="/army/<%= army.id %>">Edit</a>
+		
+				</div>
+			</div>
+		<% }) %>
+		
+	</div>
+	
+	
+</div>
+
+
+
+<%- include("../partials/footer") %>

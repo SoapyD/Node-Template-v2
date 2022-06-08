@@ -10,13 +10,13 @@ canvas {
 }
 
 a { 
-	color: black;
+	color: white;
 	font-weight: 700; 
 	font-size: 1.0em;
 } 
 
 a:focus, a:hover {
-	color: black; 
+	color: white; 
 }
 
 

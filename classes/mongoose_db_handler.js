@@ -36,6 +36,76 @@ const mongoose_db_handler = class {
                 populate_list.push({path: 'admins',model: "User"})  
                 populate_list.push({path: 'users',model: "User"})  
                 break;
+
+            case 'Faction':
+                populate_list.push({
+                    path: "squads",
+                    model: "Squad",
+                    populate: [
+                        {path: 'upgrades',model: "Upgrade"},
+                        {path: 'unit'},
+                        {path: 'gun'},
+                        {path: 'melee'},
+                        {path: 'armour'},
+                    ]          
+                })
+                break;
+            case "Army":
+                populate_list.push({
+                    path: "squads",
+                    populate: [
+                    {
+                        path: "squad",
+                        populate: [
+                                {path: 'unit'},  
+                                {path: 'gun'},
+                                {path: 'melee'},
+                                {path: 'armour'},
+                                {
+                                    path: 'upgrades',
+                                    populate: [
+                                        {path: "upgrade"},
+                                        {path: 'unit'},  
+                                        {path: 'gun'},
+                                        {path: 'melee'},
+                                        {path: 'armour'},
+                                        ]                 
+                                }
+                            ]
+                    },
+                    {
+                        path: 'upgrades',
+                        populate: {
+                            path: "upgrade",
+                            populate: [
+                                {path: 'unit'},  
+                                {path: 'gun'},
+                                {path: 'melee'},
+                                {path: 'armour'},
+                            ]                    
+                        }          
+                    }
+                    ]
+                })
+                break;
+            case 'Squad':
+                populate_list.push({path: "unit"})
+                populate_list.push({path: "gun"})
+                populate_list.push({path: "melee"})
+                populate_list.push({path: "armour"}) 
+                populate_list.push({path: 'upgrades',model: "Upgrade"}) 
+                populate_list.push({path: 'special_rules',model: "SpecialRule"})                                   
+                break;
+    
+            case 'Gun':
+                populate_list.push({path: "barrier"})
+                break;   
+    
+            case 'Upgrade':
+                populate_list.push({path: "unit"})
+                populate_list.push({path: "gun"})                              
+                break;       
+
         }
 
         return populate_list;

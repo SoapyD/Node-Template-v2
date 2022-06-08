@@ -20,13 +20,6 @@ var GameScene = new Phaser.Class({
 		GameScene.game_assets = new game_assets({scene: GameScene.scene, parent: GameScene})
 		GameScene.game_maps = new game_maps({scene: GameScene.scene, parent: GameScene})
 		
-		// GameScene.game_squad_setup = new game_squad_setup({
-		// 	scene: GameScene.scene, 
-		// 	parent: GameScene,
-		// 	unit_list: gameCore.assets.units,
-		// 	forces: gameCore.assets.forces,
-		// 	tile_size: gameCore.data.tile_size			
-		// })
     },
 
 
@@ -35,6 +28,14 @@ var GameScene = new Phaser.Class({
 		GameScene.game_assets.loadSound();
 		// GameScene.game_setup.setupSquads();		
 		GameScene.game_maps.setupTable();
+
+		GameScene.game_squad_setup = new game_squad_setup({
+			scene: GameScene.scene, 
+			parent: GameScene,
+			unit_list: gameCore.assets.units,
+			forces: gameCore.assets.forces,
+			tile_size: gameCore.data.tile_size			
+		})		
     },
 
     update: function (time, delta)

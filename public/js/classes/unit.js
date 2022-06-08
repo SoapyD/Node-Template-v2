@@ -48,8 +48,8 @@ const unit = class {
 		this.depth_text_box = 10;
 		
 		
-		this.core.x += gameFunctions.tile_size * this.unit_class.sprite_offset;
-		this.core.y += gameFunctions.tile_size * this.unit_class.sprite_offset;				
+		this.core.x += gameCore.data.tile_size * this.unit_class.sprite_offset;
+		this.core.y += gameCore.data.tile_size * this.unit_class.sprite_offset;				
 
 		//SPRITES
 		this.spritesheet = this.unit_class.spritesheet;
@@ -58,7 +58,7 @@ const unit = class {
 		this.sprite.setDepth(this.depth_sprite);
 		this.sprite.angle = this.core.angle;
 		this.sprite.parent = this
-		GameScene.unit_collisions[this.core.side].add(this.sprite)
+		// GameScene.unit_collisions[this.core.side].add(this.sprite)
 		
 
 		this.sprite_ghost = options.scene.add.image(this.core.x,this.core.y,this.spritesheet).setInteractive().setScale(0.8);
@@ -67,7 +67,7 @@ const unit = class {
 		this.sprite_ghost.parent = this;
 		this.sprite_ghost.is_ghost = true;
 		this.sprite_ghost.setDepth(this.depth_sprite_ghost);
-		this.sprite_ghost.on('pointerup', this.selectHander)
+		// this.sprite_ghost.on('pointerup', this.selectHander)
 		
 
 		//action sprite
@@ -221,7 +221,7 @@ resetMove() {
 		
 		//CHECK TO SEE IF THE RESET AFFECTS ANY OTHER UNITS THAT'VE MOVED
 		//IF SO, RESET THOSE UNIT MOVES AS WELL
-		gameFunctions.units.forEach((unit) => {
+		gameCore.assets.units.forEach((unit) => {
 			if(unit.core.id !== this.core.id && unit.path.length > 0){
 				let check = this.checkSpriteOverlap(this.sprite_ghost, unit.sprite_ghost)
 				
@@ -268,7 +268,7 @@ resetGhost() {
 		this.sprite.alpha = 1;
 		this.drawFightRadius();
 		
-		if(gameFunctions.mode === "move" || gameFunctions.mode === "charge"){
+		if(gameCore.data.mode === "move" || gameCore.data.mode === "charge"){
 			if(this.unit_class.cohesion > 0){
 				this.cohesionCheck();	
 			}
@@ -353,11 +353,11 @@ kill(){
 // #     # #   #   ####### #  #  # 
 // #     # #    #  #     # #  #  # 
 // ######  #     # #     #  ## ##  	
-	
+
 drawTint(){
 
 	try{	
-		let colour = GameScene.game_setup.getSideColour(this.core.side);
+		let colour = gameCore.getSideColour(this.core.side);
 		this.colour = colour.colour
 		this.colour_gray = colour.colour_gray;
 		this.colour_info = colour.colour_info;
@@ -379,7 +379,7 @@ drawTint(){
 
 drawFlash(active=true, gray_out=false){
 	try{	
-		if(active === true && this.core.player === gameFunctions.params.player_number){
+		if(active === true && this.core.player === gameCore.data.player_number){
 			this.flash_tween = this.scene.tweens.addCounter({
 				targets: this, 
 				from: 0,
@@ -493,7 +493,7 @@ drawInfo(sprite)
 {
 	try{	
 		let string = ""
-		switch(gameFunctions.mode){
+		switch(gameCore.data.mode){
 			case "shoot":
 				string = this.targets.length + "/" + this.gun_class[this.selected_gun].max_targets
 				break;
@@ -551,12 +551,12 @@ drawHealth(sprite)
 	try{	
 		this.bar_graphic.clear();
 
-		let width = gameFunctions.tile_size * (this.unit_class.size * 3)
+		let width = gameCore.data.tile_size * (this.unit_class.size * 3)
 		if(width === 0){
-			width = gameFunctions.tile_size
+			width = gameCore.data.tile_size
 		}
 		if(this.unit_class.sprite_offset === 0){
-			width = gameFunctions.tile_size * (this.unit_class.size * 2)
+			width = gameCore.data.tile_size * (this.unit_class.size * 2)
 		}
 		width *= 0.8
 		
@@ -617,13 +617,13 @@ drawPath(colours) {
 			let angle = this.checkAngle(this.path[this.path.length - 2], this.path[this.path.length - 1])
 
 			if(this.sprite_ghost){
-				this.sprite_ghost.x = pos.x * gameFunctions.tile_size;
-				this.sprite_ghost.y = pos.y * gameFunctions.tile_size;
+				this.sprite_ghost.x = pos.x * gameCore.data.tile_size;
+				this.sprite_ghost.y = pos.y * gameCore.data.tile_size;
 				this.sprite_ghost.angle = angle;
 
 				this.updateElements(this.sprite_ghost)
 
-				// if(gameFunctions.mode === "charge"){
+				// if(gameCore.data.mode === "charge"){
 					this.drawFightRadius();
 				// }
 			}
@@ -631,8 +631,8 @@ drawPath(colours) {
 		
 		
 		let last_pos = {
-			x: this.sprite.x / gameFunctions.tile_size,
-			y: this.sprite.y / gameFunctions.tile_size
+			x: this.sprite.x / gameCore.data.tile_size,
+			y: this.sprite.y / gameCore.data.tile_size
 		}
 		
 		//RESET THE DRAW GRAPHICS
@@ -647,10 +647,10 @@ drawPath(colours) {
 			this.path.forEach((pos, i) => {
 
 				if (i !== 0){
-					this.path_graphic.lineTo(pos.x * gameFunctions.tile_size, pos.y * gameFunctions.tile_size);
+					this.path_graphic.lineTo(pos.x * gameCore.data.tile_size, pos.y * gameCore.data.tile_size);
 				}
 				else{
-					this.path_graphic.moveTo(pos.x * gameFunctions.tile_size, pos.y * gameFunctions.tile_size);
+					this.path_graphic.moveTo(pos.x * gameCore.data.tile_size, pos.y * gameCore.data.tile_size);
 				}
 				
 				last_pos = pos;
@@ -665,7 +665,7 @@ drawPath(colours) {
 		
 		this.cohesion_graphic.lineStyle(colours.line_width, colours.line_colour, colours.circle_alpha);
 		this.cohesion_graphic.fillStyle(colours.fill_colour, colours.fill_alpha);
-		let circle = new Phaser.Geom.Circle(last_pos.x * gameFunctions.tile_size, last_pos.y * gameFunctions.tile_size, this.unit_class.cohesion / 2);
+		let circle = new Phaser.Geom.Circle(last_pos.x * gameCore.data.tile_size, last_pos.y * gameCore.data.tile_size, this.unit_class.cohesion / 2);
 		this.cohesion_graphic.fillCircleShape(circle);
 
 		this.cohesion_graphic.strokePath();		
@@ -699,8 +699,8 @@ drawTarget(targets, blast_radius) {
 					pos.x = target.x;
 					pos.y = target.y;
 				}else{
-					pos.x = gameFunctions.units[target].sprite.x;
-					pos.y = gameFunctions.units[target].sprite.y;
+					pos.x = gameCore.assets.units[target].sprite.x;
+					pos.y = gameCore.assets.units[target].sprite.y;
 				}
 				this.path_graphic.moveTo(this.sprite.x, this.sprite.y);
 				
@@ -715,7 +715,7 @@ drawTarget(targets, blast_radius) {
 					let blast_graphic = this.blast_graphics[i];
 					blast_graphic.fillStyle(0x0000FF, 0.5);
 
-					let circle = new Phaser.Geom.Circle(pos.x, pos.y, (blast_radius / 2) * gameFunctions.tile_size);
+					let circle = new Phaser.Geom.Circle(pos.x, pos.y, (blast_radius / 2) * gameCore.data.tile_size);
 					blast_graphic.fillCircleShape(circle).setDepth(this.depth_explosion);
 
 					blast_graphic.strokePath();
