@@ -1,4 +1,4 @@
 
 exports.functions = require("./functions");
-exports.seeds = require("./seeds");
+exports.seeder = require("./seeder");
 exports.timer = require("./timer");

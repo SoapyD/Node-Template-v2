@@ -28,45 +28,45 @@ const game_assets = class {
 		this.parent.music_playing = false;		
         this.parent.music_track = 0;        
         
-																								
-        // this.preLoadTileMap();
-        // this.preLoadSprites();
-        // this.preLoadParticles();
-        // this.preLoadSFX();
-        // this.preLoadMusic();
+										
+        this.preLoadSprites();
+        this.preLoadParticles();
+        this.preLoadSFX();
+        this.preLoadMusic();
 
     }
 
     preLoadSprites = () => {
 		//UNIT SPRITES
-		this.scene.load.image('trooper_blaster', '../../img/units/trooper_blaster.png');
-		this.scene.load.image('trooper_rocket', '../../img/units/trooper_rocket.png');
-		this.scene.load.image('trooper_laser_cannon', '../../img/units/trooper_laser_cannon.png');
-		this.scene.load.image('trooper_assault_cannon', '../../img/units/trooper_assault_cannon.png');
-		this.scene.load.image('trooper_rad_cannon', '../../img/units/trooper_rad_cannon.png');
-		this.scene.load.image('trooper_leader', '../../img/units/trooper_leader.png');							
+		this.scene.load.image('trooper_blaster', '../../img/game/units/trooper_blaster.png');
+		this.scene.load.image('trooper_rocket', '../../img/game/units/trooper_rocket.png');
+		this.scene.load.image('trooper_laser_cannon', '../../img/game/units/trooper_laser_cannon.png');
+		this.scene.load.image('trooper_assault_cannon', '../../img/game/units/trooper_assault_cannon.png');
+		this.scene.load.image('trooper_rad_cannon', '../../img/game/units/trooper_rad_cannon.png');
+		this.scene.load.image('trooper_leader', '../../img/game/units/trooper_leader.png');							
 
-		this.scene.load.image('elite_blaster', '../../img/units/elite_blaster.png');
-		this.scene.load.image('elite_assault_cannon', '../../img/units/elite_assault_cannon.png');
-		this.scene.load.image('elite_leader', '../../img/units/elite_leader.png');	
-		this.scene.load.image('elite_claws', '../../img/units/elite_claws.png');						
-		this.scene.load.image('white', '../../img/white_texture.jpg');        
+		this.scene.load.image('elite_blaster', '../../img/game/units/elite_blaster.png');
+		this.scene.load.image('elite_assault_cannon', '../../img/game/units/elite_assault_cannon.png');
+		this.scene.load.image('elite_leader', '../../img/game/units/elite_leader.png');	
+		this.scene.load.image('elite_claws', '../../img/game/units/elite_claws.png');						
+		this.scene.load.image('white', '../../img/game/white_texture.jpg');        
     }
 
     preLoadParticles = () => {
 		//PARTICLE SPRITES
-		this.scene.load.image('bullet', '../../img/particles/bullet.png');	
-		this.scene.load.image('smoke', '../../img/particles/smoke.png');
-		this.scene.load.image('barrier', '../../img/particles/barrier.png');	
-		this.scene.load.image('marker', '../../img/particles/marker.png');			
-        this.scene.load.spritesheet('explosion', '../../img/particles/explosion7.png', { frameWidth: 256, frameHeight: 256 }); //WEAPON BLAST
-        this.scene.load.spritesheet('punch', '../../img/particles/explosion23.png', { frameWidth: 256, frameHeight: 256 });	//CLOSE COMBAT BLAST
-        this.scene.load.spritesheet('special_blast', '../../img/particles/explosion65.png', { frameWidth: 256, frameHeight: 256 });	//SPECIAL WEAPON BLAST
-        this.scene.load.spritesheet('heavy_blast', '../../img/particles/explosion102.png', { frameWidth: 256, frameHeight: 256 });	//HEAVY WEAPON BLAST				
-        this.scene.load.spritesheet('symbols', '../../img/symbols.png', { frameWidth: 190, frameHeight: 200 }); 	        
+		this.scene.load.image('bullet', '../../img/game/particles/bullet.png');	
+		this.scene.load.image('smoke', '../../img/game/particles/smoke.png');
+		this.scene.load.image('barrier', '../../img/game/particles/barrier.png');	
+		this.scene.load.image('marker', '../../img/game/particles/marker.png');			
+        this.scene.load.spritesheet('explosion', '../../img/game/particles/explosion7.png', { frameWidth: 256, frameHeight: 256 }); //WEAPON BLAST
+        this.scene.load.spritesheet('punch', '../../img/game/particles/explosion23.png', { frameWidth: 256, frameHeight: 256 });	//CLOSE COMBAT BLAST
+        this.scene.load.spritesheet('special_blast', '../../img/game/particles/explosion65.png', { frameWidth: 256, frameHeight: 256 });	//SPECIAL WEAPON BLAST
+        this.scene.load.spritesheet('heavy_blast', '../../img/game/particles/explosion102.png', { frameWidth: 256, frameHeight: 256 });	//HEAVY WEAPON BLAST				
+        this.scene.load.spritesheet('symbols', '../../img/game/symbols.png', { frameWidth: 190, frameHeight: 200 }); 	        
     }
 
     preLoadSFX = () => {
+		let old_path =this.scene.load.path
 		this.scene.load.setPath('../../sfx');		
 		this.scene.load.audio('select', [ 'select.mp3' ])
 		this.scene.load.audio('clear', [ 'clear.mp3' ])
@@ -87,13 +87,17 @@ const game_assets = class {
 		
 		this.scene.load.audio('death_man', [ 'death_man.mp3' ])
 		this.scene.load.audio('death_machine', [ 'death_machine.mp3' ])        
+
+		this.scene.load.setPath(old_path);
     }
 
     preLoadMusic = () => {
+		let old_path =this.scene.load.path
 		this.scene.load.setPath('../../music');
 		this.scene.load.audio('song1', [ 'song1.mp3' ])
 		this.scene.load.audio('song2', [ 'song2.mp3' ])
-		this.scene.load.audio('song3', [ 'song3.mp3' ])        
+		this.scene.load.audio('song3', [ 'song3.mp3' ])
+		this.scene.load.setPath(old_path);        
     }
 
     loadSound = () => {
