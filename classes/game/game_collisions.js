@@ -20,7 +20,7 @@ const u_rectangle = class {
 
 
 
-const game_collisions = class {
+module.exports = class game_collisions {
 	constructor(options) {	
 
         this.depth = 30;

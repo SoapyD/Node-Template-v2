@@ -3,6 +3,7 @@ const seeds = require("./seeds");
 exports.resetRooms = async() => {
     let list = [
         {model: "Room"}, 
+        {model: "GameData"},         
     ]   
     await databaseHandler.removeData(list);   
     console.log("Rooms Reset") 

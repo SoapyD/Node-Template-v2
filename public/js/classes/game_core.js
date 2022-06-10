@@ -52,7 +52,7 @@ const game_core = class {
     setScenes = () => {
         switch(instance_type){
             case "DEV":
-                this.config.scene = [ GameScene ]
+                this.config.scene = [ MainMenuScene, GameScene ]
                 break;
             // case "DEV-ONLINE":
             //     this.config.scene = [ MainMenuScene, ArmySelectMenuScene, ArmySelectUIScene, GameScene, GameUIScene, ArmySetupUIScene]
@@ -91,6 +91,27 @@ const game_core = class {
         colour.colour_info.b_itt = (colour.colour_info.dest.b - colour.colour_info.b) / 255
         
         return colour
+    }
+
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
+	// ████████ ██████   █████  ███    ██ ███████ ██ ████████ ██  ██████  ███    ██ ███████ 
+	//    ██    ██   ██ ██   ██ ████   ██ ██      ██    ██    ██ ██    ██ ████   ██ ██      
+	//    ██    ██████  ███████ ██ ██  ██ ███████ ██    ██    ██ ██    ██ ██ ██  ██ ███████ 
+	//    ██    ██   ██ ██   ██ ██  ██ ██      ██ ██    ██    ██ ██    ██ ██  ██ ██      ██ 
+	//    ██    ██   ██ ██   ██ ██   ████ ███████ ██    ██    ██  ██████  ██   ████ ███████ 
+	// ##################################################################################
+	// ##################################################################################
+	// ##################################################################################
+
+    sceneTransition = (options) => {
+        this.current_scene.scene.start(options.scene)	
+      }
+    
+    
+    uiSceneTransition = (options) => {
+        this.current_uiscene.scene.stop()	
     }
 
 }

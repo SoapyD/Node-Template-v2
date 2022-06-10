@@ -1,4 +1,5 @@
 
+exports.test = require("./test");
 exports.admin = require("./admin");
 exports.login = require("./login");
 exports.army = require("./army");

@@ -3,6 +3,7 @@ models.Room = require("./room");
 models.User = require("./user");
 models.Error = require("./error");
 
+models.GameData = require("./game/game_data");
 models.Unit = require("./game/unit");
 models.Armour = require("./game/armour");
 models.Melee = require("./game/melee");

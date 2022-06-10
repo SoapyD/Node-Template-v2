@@ -32,7 +32,7 @@ const pathProcess = class {
 }
 
 
-const game_pathfinder = class {
+module.exports = class game_pathfinder {
 	constructor(grid, acceptable_tiles) {	
 		this.grid = grid,
 		this.width = grid[0].length,

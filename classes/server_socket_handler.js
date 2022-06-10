@@ -59,7 +59,7 @@ const server_socket_handler = class {
                             params: [{sockets: sockets}]
                         })
                         
-                        await this.sendRoomData(room.room_name)
+                        // await this.sendRoomData(room.room_name)
                     	socket.leave(room.room_name)
                     	console.log("user disconnected: "+socket.id);
                     }
@@ -367,9 +367,9 @@ const server_socket_handler = class {
 
             if(room_joined === true){
                 if(room.use_waiting_room === true){
-                    this.sendToWaitingRoom(socket, options.data.room_name)                
+                    this.sendToWaitingRoom(socket, room)                
                 }else{
-                    this.startRoom(socket, options.data.room_name)                    
+                    this.startRoom(socket, room)                    
                 }
             }
 
@@ -398,7 +398,7 @@ const server_socket_handler = class {
 	// ##################################################################################
 	// ##################################################################################
 
-    sendToWaitingRoom = (socket, room_name) => {
+    sendToWaitingRoom = (socket, room) => {
         try{
             let return_options = {
                 type: "source",
@@ -408,12 +408,12 @@ const server_socket_handler = class {
                 data: {
                     user_name: "SERVER",
                     message: "",
-                    room_name: room_name
+                    room_name: room.room_name
                 }  
             }        
 
             this.sendMessage(return_options)  
-            this.sendRoomData(room_name) 
+            this.sendRoomData(room) 
         }
         catch(e){
             let options = {
@@ -439,10 +439,10 @@ const server_socket_handler = class {
 	// ##################################################################################
 	// ##################################################################################
 
-    startRoom = async(socket, room_name) => {
+    startRoom = async(socket, room) => {
         
         try{
-            await this.sendRoomData(room_name)
+            await this.sendRoomData(room)
 
             let return_options = {
                 type: "source",
@@ -477,29 +477,17 @@ const server_socket_handler = class {
 	// ##################################################################################
 	// ##################################################################################
 
-    sendRoomData = async(room_name) => {
+    sendRoomData = async(room) => {
         try{
-            let rooms = await databaseHandler.findData({
-                model: "Room"
-                ,search_type: "findOne"
-                ,params: {
-                    room_name: room_name
-                }
-            })
-
-            if (rooms[0] !== null){
-                let room = rooms[0];
-
-                let return_options = {
-                    type: "room",
-                    id: room_name,
-                    functionGroup: "core",
-                    function: "updateRoomData",
-                    data: room  
-                }        
-        
-                this.sendMessage(return_options)        
-            }
+            let return_options = {
+                type: "room",
+                id: room.room_name,
+                functionGroup: "core",
+                function: "updateRoomData",
+                data: room  
+            }        
+    
+            this.sendMessage(return_options)        
 
         }
         catch(e){
@@ -541,7 +529,7 @@ const server_socket_handler = class {
         catch(e){
             let options = {
                 "class": "socket_handler",
-                "function": "messageAll",
+                "function": "messageRoom",
                 "e": e
             }
             errorHandler.log(options)

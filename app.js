@@ -37,7 +37,7 @@ switch(process.env.INSTANCE_TYPE){
 
 const io = socketio(expressServer);
 
-const server_socket_handler = new classes.game_server_socket_handler({
+const server_socket_handler = new classes.server_game_socket_handler({
 	namespace: "/"
 	,io: io
 });

@@ -13,6 +13,11 @@ const game_maps = class {
 		this.parent.endX = 0
         this.parent.endY = 0
 
+        this.parent.old_tile_position = {
+            x: 0,
+            y: 0
+        }
+
         this.preLoadTileMap();
     }
 
@@ -60,6 +65,7 @@ const game_maps = class {
         var tiles = this.parent.map.addTilesetImage('tiles', 'tileset');
         this.parent.map.createStaticLayer(0, tiles, 0,0);		
     
+        /*
         // ### Pathfinding stuff ###
         // We create the 2D array representing all the tiles of our map
         var grid = [];
@@ -92,7 +98,8 @@ const game_maps = class {
         }
     
         this.parent.acceptable_tiles = acceptable_tiles;
-    
+        */
+
 		// this.parent.pathfinder = new game_pathfinder(grid, acceptable_tiles);	
 		// this.parent.u_collisions = new game_collisions({scene: this.scene});		
     }
@@ -111,9 +118,14 @@ const game_maps = class {
     setupMarker = () => {
         // Marker that will follow the mouse
         this.parent.markers = [];
-        this.parent.markers[0] = this.scene.add.graphics();
-        this.parent.markers[0].lineStyle(3, 0xffffff, 1);
-        this.parent.markers[0].strokeRect(0, 0, this.parent.map.tileWidth, this.parent.map.tileHeight);        
+
+        clientRoomHandler.core.users.forEach((user, i) => {
+
+            this.parent.markers[i] = this.scene.add.graphics();
+            this.parent.markers[i].lineStyle(3, 0xffffff, 1);
+            this.parent.markers[i].strokeRect(0, 0, this.parent.map.tileWidth, this.parent.map.tileHeight);        
+        })
+
     }
 
     updateMarker = () => {
@@ -126,9 +138,38 @@ const game_maps = class {
 		// Rounds down to nearest tile
 		var pointerTileX = this.parent.map.worldToTileX(worldPoint.x);
 		var pointerTileY = this.parent.map.worldToTileY(worldPoint.y);
-		this.parent.markers[0].x = this.parent.map.tileToWorldX(pointerTileX);
-		this.parent.markers[0].y = this.parent.map.tileToWorldY(pointerTileY);
-		this.parent.markers[0].setVisible(!this.checkCollision(pointerTileX,pointerTileY));          
+
+        this.parent.tile_position ={
+            x: this.parent.map.tileToWorldX(pointerTileX),
+            y: this.parent.map.tileToWorldY(pointerTileY)
+        }            
+
+        if(this.parent.tile_position.x != this.parent.old_tile_position.x 
+            || this.parent.tile_position.y != this.parent.old_tile_position.y)
+        {
+            let data = {
+                functionGroup: "core",  
+                function: "messageRoom",
+                id: clientRoomHandler.core.room_name,
+                data: {
+                    functionGroup: "core",
+                    function: "moveMarker",
+                    parameters: {
+                        i: 0,
+                        x: this.parent.map.tileToWorldX(pointerTileX),
+                        y: this.parent.map.tileToWorldY(pointerTileY)                    
+                    },
+                    message: "Move Marker"
+                }
+            }				
+            clientSocketHandler.messageServer(data)    
+    
+            this.parent.old_tile_position ={
+                x: this.parent.tile_position.x,
+                y: this.parent.tile_position.y
+            }            
+        }
+
     }
 
 	checkCollision = function(x,y){

@@ -2,6 +2,9 @@
 exports.login = require("./login");
 exports.login.path = '/'
 
+exports.test = require("./test");
+exports.test.path = '/test'
+
 exports.admin = require("./admin");
 exports.admin.path = '/admin'
 

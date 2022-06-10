@@ -15,6 +15,17 @@
 -Control the game state on the Server now its been seperated from the GameUI class
 
 
+-Tie the marker to an actual user ID instead of just the first one
+-Position a unit then generate possible positions for them to move in the server
+    -run a loop x number of times a second then cancel it when it's no longer needed
+    -return all possible movement position
+-When a possible position is clicked on
+    -recognise the click
+    -generate path to that position then send it to the client
+    -draw the client path
+    -set a timer on the server that calculates which marker the unit should be on over x seconds then send that position to the client to align the client
+    -make the unit interpolate along the given path
+
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
