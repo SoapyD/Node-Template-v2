@@ -240,7 +240,7 @@ const server_socket_handler = class {
      
                     //CHECK TO SEE IF THE USER IS ALREADY IN THE ROOM OR NOT IN THE ROOM BUT ABLE TO JOIN IT
                     let room = rooms[0];
-                    if(room.users.indexOf(options.data.user) > -1){
+                    if(room.users.indexOf(options.data.users[0]) > -1){
                         if(room.sockets.indexOf(socket.id) > -1){
                             return_options.data.message = "You're already in this room";							
                         }else{

@@ -1,0 +1,46 @@
+
+<script src="/js/classes/client_room_handler.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/classes/client_socket_handler.js"></script>
+
+<script>
+
+    socket_address = "<%= data.address %>";
+
+    const clientSocketHandler = new client_socket_handler({
+        socket_address: socket_address
+    });
+
+</script>
+
+<script>
+
+    const genRandomNumbers = function getRandomNumbers() {
+        const array = new Uint32Array(1);
+        crypto.getRandomValues(array);
+        return array[0]
+    }
+
+
+    let options = {};
+    options.user = {};
+
+    
+    <% if(data.user){ %>
+        
+        options.user.id = "<%= data.user._id %>"
+        options.user.username = "<%= data.user.username %>"
+    <% }%>
+
+    <% if(user){ %>
+        options.user.id = "<%= user._id %>"
+        options.user.username = "<%= user.username %>"
+    <% }else{ %>
+        // let id = genRandomNumbers()
+        // options.user.id = id
+        // options.user.name = "Guest_"+id        
+    <% } %>
+
+    const clientRoomHandler = new client_room_handler(options);
+
+</script>

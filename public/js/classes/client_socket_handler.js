@@ -196,20 +196,22 @@ const client_socket_handler = class {
     showAlert = (id, options) => {
         try{
             let el = document.getElementById(id)
-            el.style.display='block' //make visible
-
-            //TOGGLE IF IT'S GOING TO BE A SUCCESS OR DANGER MESSAGE
-            if(options.success){
-                el.classList.remove("alert-danger");
-                el.classList.add("alert-success");
-            }else{
-                el.classList.remove("alert-success");
-                el.classList.add("alert-danger");            
+            if(el){
+                el.style.display='block' //make visible
+    
+                //TOGGLE IF IT'S GOING TO BE A SUCCESS OR DANGER MESSAGE
+                if(options.success){
+                    el.classList.remove("alert-danger");
+                    el.classList.add("alert-success");
+                }else{
+                    el.classList.remove("alert-success");
+                    el.classList.add("alert-danger");            
+                }
+    
+                //SET INNER HTML TO RETURNED MESSAGE
+                el.innerHTML = options.message
+                window.setTimeout("document.getElementById('"+id+"').style.display='none';", 4000); //set timeout        
             }
-
-            //SET INNER HTML TO RETURNED MESSAGE
-            el.innerHTML = options.message
-            window.setTimeout("document.getElementById('"+id+"').style.display='none';", 4000); //set timeout        
         }catch(e){
 
             let options = {
@@ -228,7 +230,10 @@ const client_socket_handler = class {
             this.showAlert('connectionMessage', options.data)
 
             //unselect connection option
-            document.getElementById('connectionOptions').value = ""        
+            let el = document.getElementById('connectionOptions')
+            if(el){
+                el.value = ""        
+            }
         }catch(e){
 
             let options = {
@@ -300,21 +305,26 @@ const client_socket_handler = class {
 
             window.setTimeout(() => {
                 let myOffcanvas = document.getElementById('offcanvasRight')
-                var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
-                bsOffcanvas.hide();            
+                if(myOffcanvas){
+                    var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
+                    bsOffcanvas.hide();            
+                }
 
                 myOffcanvas = document.getElementById('waiting_offcanvasRight')
-                bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
-                bsOffcanvas.hide();            
-
-                // let element = document.getElementById('login__blackout')
-                // element.classList.add("login__blackout_expanded");
-                $( "#socket__join_button").fadeOut(() => {
-                    $( "#login__blackout").slideDown()
-                    // $( "#socket__join_button").remove(() => {
-                    //     $( "#login__blackout").slideDown()
-                    // })
-                })
+                if(myOffcanvas){
+                    bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas)
+                    bsOffcanvas.hide();            
+                }
+                let el = document.getElementById('login__blackout')
+                if(el){
+                    // element.classList.add("login__blackout_expanded");
+                    $( "#socket__join_button").fadeOut(() => {
+                        $( "#login__blackout").slideDown()
+                        // $( "#socket__join_button").remove(() => {
+                        //     $( "#login__blackout").slideDown()
+                        // })
+                    })
+                }
 
             }, timer)    
         }catch(e){

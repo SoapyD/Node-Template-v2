@@ -2,6 +2,7 @@
 exports.getGameRoom = async(req,res) => {
 
 	let data = {
+		address: process.env.SOCKET_ADDRESS,
 		instance_type: process.env.INSTANCE_TYPE,
 	}
 
@@ -9,17 +10,31 @@ exports.getGameRoom = async(req,res) => {
 	switch(process.env.INSTANCE_TYPE){
 		case "DEV":
 			let options = {
-				user: "6069bd7bc7b18a43c84292b4", //a user id we can user as an author
-				user_name: "test",
-				players: 2, //max players
-				room_name: "test room",
+				max_players: 1, //max players
+				name: "test room",
 				password: ""
 
 			}
+
+			let user = {
+				_id: "6202e2efcbdf8cac8448ad9b", //a user id we can user as an author
+				username: "test",
+			}
+
 			// let room = await databaseHandler.createRoom(options, "network.socket.id")
 			let room = {}
+			room.name = options.name
+			room.password = options.password
+			room.max_players = options.max_players
 			room.forces = []
 			room.forces.push({})
+
+
+			let deleted_army = await databaseHandler.destroyData({
+				model: "Room"
+				,search_type: "deleteMany"
+				,params: [{room_name: "test room"}]
+			})
 
 			// let army = await databaseHandler.getArmy({name: "Test"})
 			let army = await databaseHandler.findData({
@@ -43,6 +58,7 @@ exports.getGameRoom = async(req,res) => {
 
 			// room.save();
 
+			data.user = user;
 			data.room = room;
 			data.armies = armies;
 			break;

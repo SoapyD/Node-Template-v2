@@ -93,9 +93,8 @@ const game_maps = class {
     
         this.parent.acceptable_tiles = acceptable_tiles;
     
-        // acceptable_tiles.push(1);
-		this.parent.pathfinder = new game_pathfinder(grid, acceptable_tiles);	
-		this.parent.u_collisions = new game_collisions({scene: this.scene});		
+		// this.parent.pathfinder = new game_pathfinder(grid, acceptable_tiles);	
+		// this.parent.u_collisions = new game_collisions({scene: this.scene});		
     }
     
 	getTileID = function(x,y){

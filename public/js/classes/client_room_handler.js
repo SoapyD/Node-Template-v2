@@ -72,21 +72,23 @@ const client_room_handler = class {
             let element = $( "#user_list");
             if(element){
                 element.empty();
-                this.core.users.forEach((user) => {
-                    let name = user.username
-
-                    let add = false;
-                    if(this.checkUserConnected(user._id)){
-                            add = true;                  
-                    }
-
-                    if(add === true){
-                        if(this.checkUserAdmin(user._id)){
-                                name += " (Admin)"
+                if(this.core.users){
+                    this.core.users.forEach((user) => {
+                        let name = user.username
+    
+                        let add = false;
+                        if(this.checkUserConnected(user._id)){
+                                add = true;                  
                         }
-                        element.append('<li>'+name+'</li>')
-                    }
-                })
+    
+                        if(add === true){
+                            if(this.checkUserAdmin(user._id)){
+                                    name += " (Admin)"
+                            }
+                            element.append('<li>'+name+'</li>')
+                        }
+                    })
+                }
             }
         }catch(e){
 
