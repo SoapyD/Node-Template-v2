@@ -1,6 +1,10 @@
 
+clientSocketHandler.transitionScene = (options) => {
+    gameCore.sceneTransition({scene:options.scene})
+}
+
 clientSocketHandler.startRoom = () => {
-    gameCore.sceneTransition({scene:"GameScene"})
+    
     let options = {
         functionGroup: "core",  
         function: "setupGameData",
@@ -15,9 +19,9 @@ clientSocketHandler.startRoom = () => {
 
 clientSocketHandler.moveMarker = (options) => {
     
-    let id = options.parameters.i;
-    GameScene.markers[id].x = options.parameters.x;
-    GameScene.markers[id].y = options.parameters.y;
+    let id = options.data.i;
+    GameScene.markers[id].x = options.data.x;
+    GameScene.markers[id].y = options.data.y;
     // this.parent.markers[id].setVisible(!this.checkCollision(pointerTileX,pointerTileY)); 
 }
 

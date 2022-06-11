@@ -9,7 +9,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         this.defineCoreFunctions()
     }
 
-    setupGameData = async(options) => {
+    setupGameData = async(socket, options) => {
 
         //EXTRACT MAP DATA
         const classes = require('../classes');
@@ -25,5 +25,15 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }]
         })
         
+        let return_options = {
+            type: "room",
+            id: options.data.room_name,
+            functionGroup: "core",
+            function: "transitionScene",
+            scene: 'GameScene'  
+        }        
+
+        this.sendMessage(return_options) 
+
     }
 }

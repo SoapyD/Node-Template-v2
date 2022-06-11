@@ -147,22 +147,22 @@ const game_maps = class {
         if(this.parent.tile_position.x != this.parent.old_tile_position.x 
             || this.parent.tile_position.y != this.parent.old_tile_position.y)
         {
-            let data = {
+            let options = {
                 functionGroup: "core",  
                 function: "messageRoom",
                 id: clientRoomHandler.core.room_name,
                 data: {
                     functionGroup: "core",
                     function: "moveMarker",
-                    parameters: {
+                    message: "Move Marker",
+                    data: {
                         i: 0,
                         x: this.parent.map.tileToWorldX(pointerTileX),
-                        y: this.parent.map.tileToWorldY(pointerTileY)                    
-                    },
-                    message: "Move Marker"
+                        y: this.parent.map.tileToWorldY(pointerTileY),                    
+                    }
                 }
             }				
-            clientSocketHandler.messageServer(data)    
+            clientSocketHandler.messageServer(options)    
     
             this.parent.old_tile_position ={
                 x: this.parent.tile_position.x,

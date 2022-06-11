@@ -46,15 +46,15 @@ const client_error_handler = class {
             }
               
 
-            if(GameScene.online === true){
-                let data = {
-                    functionGroup: "socketFunctions",  
-                    function: "logClientError",
-                    message: "log error",
-                    options: options 
-                }				
-                connFunctions.messageServer(data)
-            }
+            // if(GameScene.online === true){
+            //     let data = {
+            //         functionGroup: "socketFunctions",  
+            //         function: "logClientError",
+            //         message: "log error",
+            //         options: options 
+            //     }				
+            //     connFunctions.messageServer(data)
+            // }
 
         }catch(e){
             console.log("error handler has errored")
