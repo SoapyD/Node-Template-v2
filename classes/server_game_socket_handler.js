@@ -16,6 +16,19 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         const gameMap = new classes.game_maps()
         await gameMap.setup();
 
+
+        //LOAD UP THE FORCE THE USER WILL USE
+        // let army = await databaseHandler.findData({
+        // 	model: "Army"
+        // 	,search_type: "find"
+        // 	,params: {name: "Test"}
+        // })
+
+        // room.forces[0].side = 0;
+        // room.forces[0].start = 0;
+        // room.forces[0].army = army[0]._id;
+
+
         //CREATE A NEW INSTANCE OF GAME_DATA
         let game_data = await databaseHandler.createData({
             model: "GameData"
@@ -25,6 +38,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }]
         })
         
+
+
         let return_options = {
             type: "room",
             id: options.data.room_name,

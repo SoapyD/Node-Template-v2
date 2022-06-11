@@ -1,5 +1,6 @@
 
-<%- include("../partials/socket_setup") %>
+<%- include("../socket_template/socket_setup") %>
+
 <script src="/js/classes/client_game_socket_handler.js"></script>
 
 <script src="/js/classes/game_core.js"></script>
@@ -23,12 +24,11 @@
     <% if(typeof data.room !== 'undefined') { %>
     
         let user_data = <%- JSON.stringify(data.user) %>
-
         let room_data = <%- JSON.stringify(data.room) %>
-        let army_data = <%- JSON.stringify(data.armies) %>  
+  
     
     
-        gameCore.assets.forces = room_data.forces
+        // gameCore.assets.forces = room_data.forces
         // gameCore.data.users = room_data.users	
         // gameCore.data.player_number = 0
         // gameCore.data.max_players = room_data.config.max_players

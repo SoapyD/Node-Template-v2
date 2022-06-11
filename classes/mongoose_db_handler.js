@@ -33,8 +33,13 @@ const mongoose_db_handler = class {
 
         switch(type){
             case 'Room':
-                populate_list.push({path: 'admins',model: "User"})  
-                populate_list.push({path: 'users',model: "User"})  
+                // populate_list.push({path: 'admins',model: "User"})  
+                populate_list.push({
+                    path: "users",
+                    populate: [
+                        {path: 'user'}
+                    ]
+                })  
                 break;
 
             case 'Faction':
@@ -159,12 +164,14 @@ const mongoose_db_handler = class {
     // #     # #    #  #       #     #    #    #             #    #  #       #     # #     # #    #  #     # 
     //  #####  #     # ####### #     #    #    #######       #     # #######  #####  ####### #     # ######  
 
-    createData = async(list, search_type="create") => {
+    createData = async(options, search_type="create") => {
 
         let promises = [];
+        let populate_list = [];
+        populate_list = this.getPopulateLists(options.model)        
 
-        list.params.forEach((item) => {
-            promises.push(this.models[list.model][search_type](item))
+        options.params.forEach((item) => {
+            promises.push(this.models[options.model][search_type](item))
         })
 
         return Promise.all(promises)

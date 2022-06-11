@@ -271,10 +271,20 @@ const server_socket_handler = class {
                             params
                         ]
                     })
-    
                     room = room[0]
                     
+                    //FIND ROOM CREATED SO WE CAN POPULATE USER DATA USING FKs
+                    // rooms = await databaseHandler.findData({
+                    //     model: "Room"
+                    //     ,search_type: "findOne"
+                    //     ,params: {
+                    //         _id: room._id
+                    //     }
+                    // })      
                     
+                    // room = rooms[0]
+
+
                     //SEND THE CORE GAME DATA OT THE PLAYER
                     let return_options = {
                         type: "source"
@@ -479,6 +489,18 @@ const server_socket_handler = class {
 
     sendRoomData = async(room) => {
         try{
+
+            let rooms = await databaseHandler.findData({
+                model: "Room"
+                ,search_type: "findOne"
+                ,params: {
+                    _id: room._id
+                }
+            })      
+            
+            room = rooms[0]
+
+
             let return_options = {
                 type: "room",
                 id: room.room_name,
@@ -522,7 +544,7 @@ const server_socket_handler = class {
                 id: options.id,                
                 functionGroup: options.data.functionGroup,
                 function: options.data.function,
-                parameters: options.data.parameters,
+                data: options.data.data,
                 message: options.message,
             })            
         }
@@ -558,7 +580,7 @@ const server_socket_handler = class {
                 id: socket.id,                
                 functionGroup: options.data.functionGroup,
                 function: options.data.function,
-                parameters: options.data.parameters,
+                data: options.data.data,
                 message: options.message,
             })  
 

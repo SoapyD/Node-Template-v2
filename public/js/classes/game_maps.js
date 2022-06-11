@@ -233,7 +233,7 @@ const game_maps = class {
         
         let width = gameCore.config.width / 4;
         let height = gameCore.config.height / 4;	
-        this.parent.minimap = this.scene.cameras.add(gameCore.config.width - width, gameCore.config.height - height, width, height).setZoom(0.3).setName('mini');
+        this.parent.minimap = this.scene.cameras.add(gameCore.config.width - width, gameCore.config.height - height, width, height).setZoom(0.2).setName('mini');
         this.parent.minimap.setBackgroundColor(0x002244);	
         
     
