@@ -20,6 +20,13 @@ const gameSchema = new mongoose.Schema({
 			ref: "User"
 		}	
 	}]
+
+	,players: [{
+		x: {type: Number, default: -1},
+		y: {type: Number, default: -1},
+		pointerX: {type: Number, default: -1},
+		pointerY: {type: Number, default: -1}						
+	}]
 	
 	,units: [{
 		

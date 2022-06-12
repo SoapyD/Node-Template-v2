@@ -102,24 +102,39 @@ const game_maps = class {
             || this.parent.tile_position.y != this.parent.old_tile_position.y)
         {
             if(gameCore.data.player_number !== -1){
+                // let options = {
+                //     functionGroup: "core",  
+                //     function: "messageRoom",
+                //     id: clientRoomHandler.core.room_name,
+                //     data: {
+                //         functionGroup: "core",
+                //         function: "moveMarker",
+                //         message: "Move Marker",
+                //         data: {
+                //             i: gameCore.data.player_number,
+                //             x: this.parent.map.tileToWorldX(pointerTileX),
+                //             y: this.parent.map.tileToWorldY(pointerTileY),
+                //             pointerX: pointerTileX,
+                //             pointerY: pointerTileY,                    
+                //         }
+                //     }
+                // }				
+                // clientSocketHandler.messageServer(options)    
+
                 let options = {
                     functionGroup: "core",  
-                    function: "messageRoom",
+                    function: "moveMarker",
                     id: clientRoomHandler.core.room_name,
                     data: {
-                        functionGroup: "core",
-                        function: "moveMarker",
-                        message: "Move Marker",
-                        data: {
-                            i: gameCore.data.player_number,
-                            x: this.parent.map.tileToWorldX(pointerTileX),
-                            y: this.parent.map.tileToWorldY(pointerTileY),
-                            pointerX: pointerTileX,
-                            pointerY: pointerTileY,                    
-                        }
+                        i: gameCore.data.player_number,
+                        x: this.parent.map.tileToWorldX(pointerTileX),
+                        y: this.parent.map.tileToWorldY(pointerTileY),
+                        pointerX: pointerTileX,
+                        pointerY: pointerTileY,                    
                     }
                 }				
-                clientSocketHandler.messageServer(options)    
+                clientSocketHandler.messageServer(options) 
+
             }
     
             this.parent.old_tile_position ={

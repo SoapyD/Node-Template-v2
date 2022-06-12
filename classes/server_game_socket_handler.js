@@ -34,6 +34,11 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }
             forces.push(force)
 
+            let players = []
+            options.data.selected_forces.forEach((player) => {
+                players.push({})
+            })
+
 
             //CREATE A NEW INSTANCE OF GAME_DATA
             let game_data = await databaseHandler.createData({
@@ -41,7 +46,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 ,params: [{
                     acceptable_tiles: gameMap.acceptable_tiles
                     ,matrix: gameMap.matrix
-                    ,forces: forces            
+                    ,forces: forces
+                    ,players: players            
                 }]  
             })
             
@@ -86,6 +92,37 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }
             errorHandler.log(options)
         }	
-
     }
+
+
+    moveMarker = async(socket, options) => {
+        try{
+
+            // let game_data = await databaseHandler.findData({
+            //     model: "GameData"
+            //     ,search_type: "find"
+            //     ,params: {name: selected_force.army}
+            // })            
+
+            //RETURN POSITIONAL DATA TO PLAYERS
+            let return_options = {
+                type: "room",
+                id: options.id,
+                functionGroup: "core",
+                function: "moveMarker",
+                data: options.data
+            }        
+            this.sendMessage(return_options) 
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "moveMarker",
+                "e": e
+            }
+            errorHandler.log(options)
+        }        
+    }
+
+
 }
