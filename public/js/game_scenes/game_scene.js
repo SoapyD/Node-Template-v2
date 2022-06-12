@@ -19,6 +19,7 @@ var GameScene = new Phaser.Class({
 
 		GameScene.game_assets = new game_assets({scene: GameScene.scene, parent: GameScene})
 		GameScene.game_maps = new game_maps({scene: GameScene.scene, parent: GameScene})
+		GameScene.game_controls = new game_controls({scene: GameScene.scene, parent: GameScene})
 		
     },
 
@@ -28,6 +29,7 @@ var GameScene = new Phaser.Class({
 		GameScene.game_assets.loadSound();
 		// GameScene.game_setup.setupSquads();		
 		GameScene.game_maps.setupTable();
+		GameScene.game_controls.setupControls();
 
 		GameScene.game_squad_setup = new game_squad_setup({
 			scene: GameScene.scene, 
@@ -77,6 +79,9 @@ var GameScene = new Phaser.Class({
 // ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██ 
 // ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████ 
 
+// GameScene.runTempFunction = () => {
+// 	gameCore.assets.units[0].
+// }
 
 
 GameScene.resetTempSprites = () => {

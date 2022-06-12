@@ -5,17 +5,19 @@
 -modernize the login and register input fields
 
 
--use the game template setup and connect to the socket using a guest login
--Move the pathfinder script to the server and load the MAP JSON file
--Create a means of generating a path on the server then passing back a series of positions and angles for the sprite to follow
--Strip down the unit class to completely seperate out any functions that can be carried out on the server with those those must be on the client side
+-DONE -use the game template setup and connect to the socket using a guest login
+-DONE -Move the pathfinder script to the server and load the MAP JSON file
+-DONE -Strip down the unit class to completely seperate out any functions that can be carried out on the server with those those must be on the client side
     -Sprite generation and movement, CLIENT
     -setting actions, SERVER
     -path checking to show available spaces, SERVER
+-DONE -Tie the marker to an actual user ID instead of just the first one
+
+
+
+-Create a means of generating a path on the server then passing back a series of positions and angles for the sprite to follow
 -Control the game state on the Server now its been seperated from the GameUI class
 
-
--Tie the marker to an actual user ID instead of just the first one
 -Position a unit then generate possible positions for them to move in the server
     -run a loop x number of times a second then cancel it when it's no longer needed
     -return all possible movement position

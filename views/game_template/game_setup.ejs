@@ -3,11 +3,12 @@
 
 <script src="/js/classes/client_game_socket_handler.js"></script>
 
-<script src="/js/classes/game_core.js"></script>
-<script src="/js/classes/game_loading_screen.js"></script>
-<script src="/js/classes/game_assets.js"></script>
-<script src="/js/classes/game_maps.js"></script>
-<script src="/js/classes/game_squad_setup.js"></script>
+<script src="/js/classes/game_setup/game_core.js"></script>
+<script src="/js/classes/game_setup/game_loading_screen.js"></script>
+<script src="/js/classes/game_setup/game_assets.js"></script>
+<script src="/js/classes/game_setup/game_maps.js"></script>
+<script src="/js/classes/game_setup/game_controls.js"></script>
+<script src="/js/classes/game_setup/game_squad_setup.js"></script>
 <!-- <script src="/js/classes/game_collisions.js"></script>
 <script src="/js/classes/game_pathfinder.js"></script> -->
 
@@ -25,14 +26,6 @@
     
         let user_data = <%- JSON.stringify(data.user) %>
         let room_data = <%- JSON.stringify(data.room) %>
-  
-    
-    
-        // gameCore.assets.forces = room_data.forces
-        // gameCore.data.users = room_data.users	
-        // gameCore.data.player_number = 0
-        // gameCore.data.max_players = room_data.config.max_players
-        // gameCore.data.max_sides = room_data.config.max_sides	
     
         gameCore.assets.forces.forEach((force, i) => {
             force.army = army_data[i]

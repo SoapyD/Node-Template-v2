@@ -42,6 +42,57 @@ const mongoose_db_handler = class {
                 })  
                 break;
 
+            case 'GameData': 
+                           
+                populate_list.push(
+                    {
+                    path: "forces",                 
+                    populate: 
+                    [
+                        {path: 'user'},
+                        {
+                            path: 'army',
+                            populate: {
+                                path: "squads",
+                                populate: [
+                                {
+                                    path: "squad",
+                                    populate: [
+                                            {path: 'unit'},  
+                                            {path: 'gun'},
+                                            {path: 'melee'},
+                                            {path: 'armour'},
+                                            {
+                                                path: 'upgrades',
+                                                populate: [
+                                                    {path: "upgrade"},
+                                                    {path: 'unit'},  
+                                                    {path: 'gun'},
+                                                    {path: 'melee'},
+                                                    {path: 'armour'},
+                                                    ]                 
+                                            }
+                                        ]
+                                },
+                                {
+                                    path: 'upgrades',
+                                    populate: {
+                                        path: "upgrade",
+                                        populate: [
+                                            {path: 'unit'},  
+                                            {path: 'gun'},
+                                            {path: 'melee'},
+                                            {path: 'armour'},
+                                        ]                    
+                                    }          
+                                }]                                
+                            }
+                        },
+                    ],  
+                })  
+                
+                break;
+
             case 'Faction':
                 populate_list.push({
                     path: "squads",

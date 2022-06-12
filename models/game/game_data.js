@@ -3,37 +3,22 @@ const mongoose = require("mongoose");
 
 const gameSchema = new mongoose.Schema({
 	room_name: String
-
     ,acceptable_tiles: [Number]
     ,matrix: [[Number]]    
 
 	,forces: [{
-		player_number: Number
-		,user:
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "User"
-		}		
-		,side: {type: Number, default: -1}
+		side: {type: Number, default: -1}
 		,start: {type: Number, default: -1}
 		,army:
 		{
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Army"
-		}		
-		,army_list: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Army"
-			}			
-		]
-		,army_selected:
+		}	
+		,user:
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Army"
-		}			
-		,ready: {type: Boolean, default: false}
-		,actions: {type: Number, default: 0}
+			ref: "User"
+		}	
 	}]
 	
 	,units: [{
@@ -65,7 +50,6 @@ const gameSchema = new mongoose.Schema({
 		,shot: Boolean
 		,fought: Boolean								
 	}]
-
 
    ,created_date: {type: Date, default: Date.now}
    ,updateddate: {type: Date, default: Date.now}	

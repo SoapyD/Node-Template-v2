@@ -26,7 +26,7 @@ const game_squad_setup = class {
 
 		//LOOP THROUGH ALL FORCES
 		this.forces.forEach((force, force_id) => {
-			force.army[0].squads.forEach((squad_data, squad_id) => {
+			force.army.squads.forEach((squad_data, squad_id) => {
 				let squad = squad_data.squad;
 
 				//CHECK TO SEE IF ANY OF THE UPPGRADES NEED TO GET APPLIED TO ALL UNITS IN THE SQUAD
@@ -49,8 +49,10 @@ const game_squad_setup = class {
 						squad: squad_id, //this can be used for squad checks like unit cohesion
 						
 						angle: 0,
-						x: 1 * this.tile_size,
-						y: -2 * this.tile_size,
+						// x: 1 * this.tile_size,
+						// y: -2 * this.tile_size,
+						x: 5 * this.tile_size,
+						y: 5 * this.tile_size,						
 						
 						alive: false,
 		
