@@ -11,6 +11,7 @@ const game_core = class {
         }
 
         this.data = {
+            game_data_id: "",
             mode: '',
             mode_state: 0,
             turn_number: 0,          

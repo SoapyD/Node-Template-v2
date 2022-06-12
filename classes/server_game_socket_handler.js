@@ -68,6 +68,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 function: "setupGameData",
                 scene: 'GameScene',
                 data: {
+                    game_data_id: game_datas[0]._id,
                     forces: game_datas[0].forces
                 }
             }        
@@ -98,11 +99,15 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     moveMarker = async(socket, options) => {
         try{
 
-            // let game_data = await databaseHandler.findData({
-            //     model: "GameData"
-            //     ,search_type: "find"
-            //     ,params: {name: selected_force.army}
-            // })            
+            let game_data = await databaseHandler.updateOne({
+                model: "GameData"
+                ,params: [
+                    {
+                        filter: {_id: options.data.id}, 
+                        value: {$set: options.data.update}
+                    }
+                ]
+            })            
 
             //RETURN POSITIONAL DATA TO PLAYERS
             let return_options = {

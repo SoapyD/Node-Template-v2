@@ -37,7 +37,9 @@ var GameScene = new Phaser.Class({
 			unit_list: gameCore.assets.units,
 			forces: gameCore.assets.forces,
 			tile_size: gameCore.data.tile_size			
-		})		
+		})
+		
+		//SAVE UNIT DATA AND POSITIONS TO THE SERVER
     },
 
     update: function (time, delta)

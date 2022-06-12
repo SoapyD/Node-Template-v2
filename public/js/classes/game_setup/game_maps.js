@@ -126,13 +126,21 @@ const game_maps = class {
                     function: "moveMarker",
                     id: clientRoomHandler.core.room_name,
                     data: {
+                        id: gameCore.data.game_data_id,
                         i: gameCore.data.player_number,
                         x: this.parent.map.tileToWorldX(pointerTileX),
                         y: this.parent.map.tileToWorldY(pointerTileY),
                         pointerX: pointerTileX,
-                        pointerY: pointerTileY,                    
+                        pointerY: pointerTileY,
+                        update: {}                    
                     }
-                }				
+                }
+                
+                options.data.update["players."+gameCore.data.player_number+".x"] = this.parent.map.tileToWorldX(pointerTileX);
+                options.data.update["players."+gameCore.data.player_number+".y"] = this.parent.map.tileToWorldX(pointerTileY);                
+                options.data.update["players."+gameCore.data.player_number+".pointerX"] = pointerTileX;
+                options.data.update["players."+gameCore.data.player_number+".pointerY"] = pointerTileY;
+
                 clientSocketHandler.messageServer(options) 
 
             }

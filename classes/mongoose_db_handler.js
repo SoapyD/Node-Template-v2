@@ -262,7 +262,22 @@ const mongoose_db_handler = class {
         .catch((err) => {
             console.log(err)
         })      
-    }    
+    }
+    
+    updateOne = async(options) => {
+        let promises = [];
+
+        if(options.params){
+            options.params.forEach((item) => {
+                promises.push(this.models[options.model].updateOne(item.filter, item.value))
+            })            
+        }
+
+        return Promise.all(promises)
+        .catch((err) => {
+            console.log(err)
+        })         
+    }
 
 
     // ######  #######  #####  ####### ######  ####### #     #       ######     #    #######    #    
