@@ -5,7 +5,7 @@ clientSocketHandler.transitionScene = (options) => {
     }catch(e){
 
         let options = {
-            "class": "gameSocketHandler",
+            "class": "clientGameSocketHandler",
             "function": "transitionScene",
             "e": e
         }
@@ -34,7 +34,7 @@ clientSocketHandler.startRoom = () => {
     }catch(e){
 
         let options = {
-            "class": "gameSocketHandler",
+            "class": "clientGameSocketHandler",
             "function": "startRoom",
             "e": e
         }
@@ -45,19 +45,19 @@ clientSocketHandler.startRoom = () => {
 clientSocketHandler.setupGameData = (options) => {
     try{
         if(options.data.forces){
-            gameCore.data.game_data_id = options.data.game_data_id
+            gameCore.data.id = options.data.id
             gameCore.assets.forces = options.data.forces
             gameCore.assets.forces.forEach((force, i) => {
                 if(force.user._id === clientRoomHandler.user.id){
-                    gameCore.data.player_number = i
-                    gameCore.data.player_side = force.side
+                    gameCore.data.player = i
+                    gameCore.data.side = force.side
                 }
             })
         }
     }catch(e){
 
         let options = {
-            "class": "gameSocketHandler",
+            "class": "clientGameSocketHandler",
             "function": "setupGameData",
             "e": e
         }
@@ -65,45 +65,50 @@ clientSocketHandler.setupGameData = (options) => {
     }      
 }
 
-/*
+
 clientSocketHandler.saveGame = () => {
 
     try{
 
         let options = {
             functionGroup: "core",  
-            function: "saveGame",
+            function: "saveUnitData",            
             data: {}     
         }                
 
-        let data = {}
-
+        let data = {
+            // id: gameCore.data.id,
+        }
         data.units = [];
         gameCore.assets.units.forEach((unit) => {
+            if(unit.core.player === gameCore.data.player){
 
-            unit.core.x = unit.sprite.x
-            unit.core.y = unit.sprite.y		
-            unit.core.x -= gameCore.data.tile_size * unit.unit_class.sprite_offset;
-            unit.core.y -= gameCore.data.tile_size * unit.unit_class.sprite_offset;				
-            
-            data.units.push(unit.core)
+                unit.core.x = unit.sprite.x
+                unit.core.y = unit.sprite.y		
+                unit.core.x -= gameCore.data.tile_size * unit.unit_class.sprite_offset;
+                unit.core.y -= gameCore.data.tile_size * unit.unit_class.sprite_offset;				
+                
+                data.units.push(unit.core)
+            }
+
         })
 
-        options.data.units = data;
+        options.data.update = data;
+        options.data.id = gameCore.data.id
 
         clientSocketHandler.messageServer(options)
 
     }catch(e){
 
         let options = {
-            "class": "gameSocketHandler",
+            "class": "clientGameSocketHandler",
             "function": "saveGame",
             "e": e
         }
         errorHandler.log(options)
     }    
 }
-*/
+
 
 clientSocketHandler.moveMarker = (options) => {
     try{
@@ -114,13 +119,28 @@ clientSocketHandler.moveMarker = (options) => {
     }catch(e){
 
         let options = {
-            "class": "gameSocketHandler",
+            "class": "clientGameSocketHandler",
             "function": "moveMarker",
             "e": e
         }
         errorHandler.log(options)
     }        
 }
+
+
+// clientSocketHandler.clickHander = (options) => {
+//     try{
+
+//     }catch(e){
+
+//         let options = {
+//             "class": "clientGameSocketHandler",
+//             "function": "moveMarker",
+//             "e": e
+//         }
+//         errorHandler.log(options)
+//     }        
+// }
 
 
 

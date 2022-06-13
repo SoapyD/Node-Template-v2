@@ -11,16 +11,17 @@ const game_core = class {
         }
 
         this.data = {
-            game_data_id: "",
+            id: "",
             mode: '',
+            game_state: 0,
             mode_state: 0,
             turn_number: 0,          
             
             tile_size: 32,
             
             current_side: -1,
-            player_number: -1,
-            player_side: -1,
+            player: -1,
+            side: -1,
             max_players: 2,
             max_sides: 2,
         }

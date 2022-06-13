@@ -74,7 +74,7 @@ const game_maps = class {
 
         clientRoomHandler.core.users.forEach((user, i) => {
 
-            let colour = gameCore.getSideColour(gameCore.data.player_side);
+            let colour = gameCore.getSideColour(gameCore.data.side);
             this.parent.markers[i] = this.scene.add.graphics();
             this.parent.markers[i].lineStyle(3, colour.colour, 1);
             this.parent.markers[i].strokeRect(0, 0, this.parent.map.tileWidth, this.parent.map.tileHeight);        
@@ -101,7 +101,7 @@ const game_maps = class {
         if(this.parent.tile_position.x != this.parent.old_tile_position.x 
             || this.parent.tile_position.y != this.parent.old_tile_position.y)
         {
-            if(gameCore.data.player_number !== -1){
+            if(gameCore.data.player !== -1){
                 // let options = {
                 //     functionGroup: "core",  
                 //     function: "messageRoom",
@@ -111,7 +111,7 @@ const game_maps = class {
                 //         function: "moveMarker",
                 //         message: "Move Marker",
                 //         data: {
-                //             i: gameCore.data.player_number,
+                //             i: gameCore.data.player,
                 //             x: this.parent.map.tileToWorldX(pointerTileX),
                 //             y: this.parent.map.tileToWorldY(pointerTileY),
                 //             pointerX: pointerTileX,
@@ -126,8 +126,8 @@ const game_maps = class {
                     function: "moveMarker",
                     id: clientRoomHandler.core.room_name,
                     data: {
-                        id: gameCore.data.game_data_id,
-                        i: gameCore.data.player_number,
+                        id: gameCore.data.id,
+                        i: gameCore.data.player,
                         x: this.parent.map.tileToWorldX(pointerTileX),
                         y: this.parent.map.tileToWorldY(pointerTileY),
                         pointerX: pointerTileX,
@@ -136,10 +136,10 @@ const game_maps = class {
                     }
                 }
                 
-                options.data.update["players."+gameCore.data.player_number+".x"] = this.parent.map.tileToWorldX(pointerTileX);
-                options.data.update["players."+gameCore.data.player_number+".y"] = this.parent.map.tileToWorldX(pointerTileY);                
-                options.data.update["players."+gameCore.data.player_number+".pointerX"] = pointerTileX;
-                options.data.update["players."+gameCore.data.player_number+".pointerY"] = pointerTileY;
+                options.data.update["players."+gameCore.data.player+".x"] = this.parent.map.tileToWorldX(pointerTileX);
+                options.data.update["players."+gameCore.data.player+".y"] = this.parent.map.tileToWorldX(pointerTileY);                
+                options.data.update["players."+gameCore.data.player+".pointerX"] = pointerTileX;
+                options.data.update["players."+gameCore.data.player+".pointerY"] = pointerTileY;
 
                 clientSocketHandler.messageServer(options) 
 

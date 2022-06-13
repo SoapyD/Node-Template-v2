@@ -39,7 +39,6 @@ var GameScene = new Phaser.Class({
 			tile_size: gameCore.data.tile_size			
 		})
 		
-		//SAVE UNIT DATA AND POSITIONS TO THE SERVER
     },
 
     update: function (time, delta)
@@ -48,28 +47,32 @@ var GameScene = new Phaser.Class({
 		GameScene.controls.update(delta);
 		GameScene.game_assets.musicHandler(); 
 
-        /*
+        
 
-		let worldPoint = GameScene.scene.input.activePointer.positionToCamera(GameScene.scene.cameras.main);
+		// let worldPoint = GameScene.scene.input.activePointer.positionToCamera(GameScene.scene.cameras.main);
 
-		switch(GameScene.game_state){
+		switch(gameCore.data.game_state){
 
 			case 0:
-				//PLACE UNITS LOOP			
+				//PLACE UNITS LOOP		
+				
+				//RUN TEMP PROCESS TO SAVE THE POSITIONS OF UNITS WHERE THEY ARE
+				clientSocketHandler.saveGame();
+				GameScene.game_state++;
 				break;			
 			case 1:
-				gameFunctions.current_uiscene.scene.start("GameUIScene")
-				GameScene.game_state++;
+				// gameFunctions.current_uiscene.scene.start("GameUIScene")
+				// GameScene.game_state++;
 				break;			
 
 			case 2:
-				GameScene.game_setup.checkUnitClicks();
-				GameScene.game_setup.updateElements(worldPoint);
-				GameScene.pathfinder.update();
+				// GameScene.game_setup.checkUnitClicks();
+				// GameScene.game_setup.updateElements(worldPoint);
+				// GameScene.pathfinder.update();
 				break;
 		}
 
-        */
+        /**/
 	}
 });
 

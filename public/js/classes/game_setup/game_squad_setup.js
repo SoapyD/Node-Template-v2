@@ -25,7 +25,7 @@ const game_squad_setup = class {
 	placeSquads = () => {
 
 		//LOOP THROUGH ALL FORCES
-		this.forces.forEach((force, force_id) => {
+		this.forces.forEach((force, player) => {
 			force.army.squads.forEach((squad_data, squad_id) => {
 				let squad = squad_data.squad;
 
@@ -45,7 +45,7 @@ const game_squad_setup = class {
 					let core = {
 						id: gameCore.assets.units.length,
 						side: force.side, //this can be used if each side has multiple players
-						player: force.player_number, //this is the specific owner of the unit
+						player: player, //this is the specific owner of the unit
 						squad: squad_id, //this can be used for squad checks like unit cohesion
 						
 						angle: 0,

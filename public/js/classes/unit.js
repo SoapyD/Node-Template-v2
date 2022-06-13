@@ -379,7 +379,7 @@ drawTint(){
 
 drawFlash(active=true, gray_out=false){
 	try{	
-		if(active === true && this.core.player === gameCore.data.player_number){
+		if(active === true && this.core.player === gameCore.data.player){
 			this.flash_tween = this.scene.tweens.addCounter({
 				targets: this, 
 				from: 0,

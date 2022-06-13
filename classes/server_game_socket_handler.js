@@ -68,7 +68,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 function: "setupGameData",
                 scene: 'GameScene',
                 data: {
-                    game_data_id: game_datas[0]._id,
+                    id: game_datas[0]._id,
                     forces: game_datas[0].forces
                 }
             }        
@@ -95,11 +95,33 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         }	
     }
 
+    saveUnitData = (socket, options) => {
+        try{
+            let game_data = databaseHandler.updateOne({
+                model: "GameData"
+                ,params: [
+                    {
+                        filter: {_id: options.data.id}, 
+                        value: {$set: options.data.update}
+                    }
+                ]
+            })        
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "saveUnitData",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	        
+    }
+
 
     moveMarker = async(socket, options) => {
         try{
 
-            let game_data = await databaseHandler.updateOne({
+            let game_data = databaseHandler.updateOne({
                 model: "GameData"
                 ,params: [
                     {
@@ -127,6 +149,39 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }
             errorHandler.log(options)
         }        
+    }
+
+
+    clickHandler = (socket, options) => {
+        try{
+
+            //ONLY ALLOW THE BELOW TO BE ACCESSED ONCE PER TILE (RESET WHEN NO LONGER ON TILE)?
+
+            //GET GAMEDATA
+                //GET UNIT DATA
+                //GET MARKER DATA
+            //SEE IF MARKER IS ON THE SAME TILE AS ANY UNIT
+                //IF SO, SET THAT AS THE SELECTED UNIT            
+
+
+            // let game_data = databaseHandler.updateOne({
+            //     model: "GameData"
+            //     ,params: [
+            //         {
+            //             filter: {_id: options.data.id}, 
+            //             value: {$set: options.data.update}
+            //         }
+            //     ]
+            // })        
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "clickHander",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	        
     }
 
 
