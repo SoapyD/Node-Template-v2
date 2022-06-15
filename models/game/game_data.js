@@ -25,7 +25,8 @@ const gameSchema = new mongoose.Schema({
 		x: {type: Number, default: -1},
 		y: {type: Number, default: -1},
 		pointerX: {type: Number, default: -1},
-		pointerY: {type: Number, default: -1}						
+		pointerY: {type: Number, default: -1},
+		selected_unit: {type: Number, default: -1}						
 	}]
 	
 	,units: [{
@@ -38,6 +39,8 @@ const gameSchema = new mongoose.Schema({
 
 		,x: {type: Number, default: 0}
 		,y: {type: Number, default: 0}
+		,tileX: {type: Number, default: 0}
+		,tileY: {type: Number, default: 0}		
 		,angle: {type: Number, default: 0}
 		
 		,alive: Boolean
@@ -55,7 +58,32 @@ const gameSchema = new mongoose.Schema({
 		,moved: Boolean
 		,charged: Boolean
 		,shot: Boolean
-		,fought: Boolean								
+		,fought: Boolean		
+		
+		,selected_gun: Number
+		,selected_melee: Number
+
+		
+		,unit_class:
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Unit"
+		}		
+		,armour_class:
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Armour"
+		}
+		,gun_class:
+		[{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Armour"
+		}]
+		,melee_class:
+		[{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Melee"
+		}]		
 	}]
 
    ,created_date: {type: Date, default: Date.now}

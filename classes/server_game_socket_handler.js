@@ -1,5 +1,6 @@
 
 var server_socket_handler = require("./server_socket_handler")
+var game_pathfinder = require("./game/game_pathfinder")
 
 module.exports = class server_game_socket_handler extends server_socket_handler {
 	constructor(options) {	
@@ -152,8 +153,79 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     }
 
 
-    clickHandler = (socket, options) => {
+    clickHandler = async(socket, options) => {
         try{
+
+            //GET THE POPULATE GAMES DATA
+            let game_data = await databaseHandler.findData({
+                model: "GameData"
+                ,search_type: "findOne"
+                ,params: {_id: options.data.id}
+            }, false)
+            
+            //FIND IF A UNIT IS SELECTED
+            let selected_unit = -1
+            let matrix = [];
+            let acceptable_tiles = [];
+            let saved_unit = {};
+
+            if(game_data[0]){
+                //GET PLAYER POSITION DATA
+                game_data = game_data[0]
+                let player = game_data.players[options.data.player];
+
+                matrix = game_data.matrix;
+                acceptable_tiles = game_data.acceptable_tiles;                
+
+                game_data.units.forEach((unit) => {
+                    //NEED TO RUN A CLASH CHECK HERE INSTEAD TO SEE IF THE CLICK POSITION IS WITHIN THE UNIT BOUNDS
+                    if(player.pointerX === unit.tileX && player.pointerY === unit.tileY){
+                        if(unit.player === options.data.player){
+
+                            selected_unit = unit.id;
+                            saved_unit = unit; 
+                            let update = {}
+                            update["players."+options.data.player+".selected_unit"] = unit.id;
+
+                            databaseHandler.updateOne({
+                                model: "GameData"
+                                ,params: [
+                                    {
+                                        filter: {_id: options.data.id}, 
+                                        value: {$set: update}
+                                    }
+                                ]
+                            })   
+
+                        }
+                    }
+                })
+
+            }
+
+            if(selected_unit !== -1){
+                //GET SELECTED UNIT DATA
+
+                const gamePathfinder = new game_pathfinder({
+                    id: options.id,
+                    grid: matrix, 
+                    acceptable_tiles: acceptable_tiles
+                })
+
+                gamePathfinder.setup({
+                    callback: this.returnPath
+                    ,id: selected_unit
+                    ,sprite_offset: 0
+                    ,movement: 10
+                    ,obj_size: 1
+                    ,x_start: (saved_unit.tileX + 1)
+                    ,y_start: (saved_unit.tileY + 1)
+                    ,x_end: (saved_unit.tileX + 1) - 2
+                    ,y_end: (saved_unit.tileY + 1) + 3                                                            
+                })
+
+                gamePathfinder.update()
+            }                 
 
             //ONLY ALLOW THE BELOW TO BE ACCESSED ONCE PER TILE (RESET WHEN NO LONGER ON TILE)?
 
@@ -182,6 +254,21 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }
             errorHandler.log(options)
         }	        
+    }
+
+    returnPath = (pathfinder, process) => {
+        let return_options =  {
+            type: "room",
+            id: pathfinder.id,                
+            functionGroup: "core",
+            function: "test",
+            data: {
+                message: "Left Click",
+                path: process.path,
+                id: process.id
+            }
+        }
+        this.sendMessage(return_options)        
     }
 
 

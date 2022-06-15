@@ -86,7 +86,10 @@ clientSocketHandler.saveGame = () => {
                 unit.core.x = unit.sprite.x
                 unit.core.y = unit.sprite.y		
                 unit.core.x -= gameCore.data.tile_size * unit.unit_class.sprite_offset;
-                unit.core.y -= gameCore.data.tile_size * unit.unit_class.sprite_offset;				
+                unit.core.y -= gameCore.data.tile_size * unit.unit_class.sprite_offset;	
+                
+                unit.core.tileX = unit.core.x / gameCore.data.tile_size,
+                unit.core.tileY = unit.core.y / gameCore.data.tile_size,               
                 
                 data.units.push(unit.core)
             }

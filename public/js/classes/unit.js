@@ -10,15 +10,14 @@ const unit = class {
 		//UNIT CLASS	
 		this.unit_class = options.unit_class	
 
+				
 		//GUN CLASS
 		this.gun_class = []
 		this.gun_class.push(options.gun_class);
-		this.selected_gun = 0;
 
 		//FIGHT CLASS
 		this.melee_class = []
 		this.melee_class.push(options.melee_class);
-		this.selected_melee = 0;				
 
 		//ARMOUR CLASS
 		this.armour_class = options.armour_class
@@ -495,10 +494,10 @@ drawInfo(sprite)
 		let string = ""
 		switch(gameCore.data.mode){
 			case "shoot":
-				string = this.targets.length + "/" + this.gun_class[this.selected_gun].max_targets
+				string = this.targets.length + "/" + this.gun_class[this.core.selected_gun].max_targets
 				break;
 			case "fight":
-				string = this.fight_targets.length + "/" + this.melee_class[this.selected_melee].max_targets
+				string = this.fight_targets.length + "/" + this.melee_class[this.core.selected_melee].max_targets
 				break;				
 		}
 
@@ -744,7 +743,7 @@ drawFightRadius(){
 		let radius_graphic = this.fight_graphic;
 		radius_graphic.lineStyle(2, this.colour, 0.5);
 		radius_graphic.fillStyle(this.colour, 0.05);
-		let circle = new Phaser.Geom.Circle(this.sprite_ghost.x, this.sprite_ghost.y, (this.melee_class[this.selected_melee].range));
+		let circle = new Phaser.Geom.Circle(this.sprite_ghost.x, this.sprite_ghost.y, (this.melee_class[this.core.selected_melee].range));
 		radius_graphic.fillCircleShape(circle).setDepth(this.depth_fight_radius);
 
 		radius_graphic.strokePath();		

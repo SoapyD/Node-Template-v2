@@ -162,6 +162,8 @@ const mongoose_db_handler = class {
                 populate_list.push({path: "gun"})                              
                 break;       
 
+
+
         }
 
         return populate_list;
@@ -175,13 +177,15 @@ const mongoose_db_handler = class {
     // #        #  #    ## #     #       #     # #     #    #    #     # 
     // #       ### #     # ######        ######  #     #    #    #     # 
 
-    findData = async(options) => {
+    findData = async(options, populate=true) => {
 
         let promises = [];
 
 
         let populate_list = [];
-        populate_list = this.getPopulateLists(options.model)
+        if(populate === true){
+            populate_list = this.getPopulateLists(options.model)
+        }
 
         if (options.multiple_search)
         {
@@ -190,7 +194,9 @@ const mongoose_db_handler = class {
                 let model = options.model
                 if(item.model){
                     model = item.model
-                    populate_list = exports.getPopulateLists(model)
+                    if(populate === true){
+                        populate_list = this.getPopulateLists(model)
+                    }
                 }
 
                 promises.push(this.models[model][options.search_type](item.params).sort().populate(populate_list))

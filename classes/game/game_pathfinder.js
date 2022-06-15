@@ -2,56 +2,69 @@
 const pathProcess = class {
     constructor(options) {
 
-		this.running = true;
-		this.parent = options.parent;
-		this.pointer = options.pointer;
+		if(options.callback){
+			this.callback = options.callback;
+		}
+		if(options.fail_callback){
+			this.fail_callback = options.fail_callback;		
+		}
+
+		this.id = options.id
+		this.sprite_offset = options.sprite_offset
+		this.movement = options.movement
 		this.obj_size = options.obj_size;        
+		
 		this.start = {
 			x: options.x_start,
 			y: options.y_start
 		},
+		this.end = {
+			x: options.x_end,
+			y: options.y_end
+		}		
+
+		this.running = true;
+		
+
 		this.current = {
 			x: 0,
 			y: 0
 		},			
-		this.end = {
-			x: options.x_end,
-			y: options.y_end
-		}
+
 		
 		this.open = [];
 		this.closed = [];
         this.path_found = false;
 		this.path = [];
-		this.callback = options.callback;
-		this.fail_callback = options.fail_callback;
+
 		
 		this.current_checks = 0;
-		this.max_checks = 100;
+		this.max_checks = 1000;
     }
 }
 
 
 module.exports = class game_pathfinder {
-	constructor(grid, acceptable_tiles) {	
-		this.grid = grid,
-		this.width = grid[0].length,
-        this.height = grid.length,
-		this.acceptable_tiles = acceptable_tiles;	
+	constructor(options) {
+		this.id = options.id,	
+		this.grid = options.grid,
+		this.width = this.grid[0].length,
+        this.height = this.grid.length,
+		this.acceptable_tiles = options.acceptable_tiles;	
 		
 		
 		this.current_checks = 0;
 		this.max_checks = 1000;       
 		
 		this.process_list = [];
-		this.bound_unit = -1;
+		// this.bound_unit = -1;
 		// this.new_processes = [];
 	}
 	
 	
 	setup(options) {
 		
-		this.bound_unit = options.parent.core.id;
+		//this.bound_unit = this.id;
         let process = new pathProcess(options)
 
 		//add start pos to open list, first needs converting into a node
@@ -65,6 +78,11 @@ module.exports = class game_pathfinder {
 		this.process_list.push(process)
     }
 
+	twoPointDistance = (pos_start, pos_end) => {
+		return Math.sqrt(Math.pow(pos_start.x - pos_end.x, 2) + Math.pow(pos_start.y - pos_end.y, 2))
+	}
+	
+
 
 	update() {
 
@@ -72,8 +90,10 @@ module.exports = class game_pathfinder {
 
 		while(i--){
 			let process = this.process_list[i]
-			if(process.running === true && process.parent.core.id === this.bound_unit
-				&& (gameFunctions.mode === 'move' || gameFunctions.mode === "charge")){
+			if(process.running === true 
+				//&& process.id === this.bound_unit
+				//&& (gameFunctions.mode === 'move' || gameFunctions.mode === "charge")
+				){
 				// console.log("running")
 				//only run the pathfinding process if the check number hasn't been reached yet
 				if(this.current_checks <= this.max_checks){
@@ -138,7 +158,7 @@ module.exports = class game_pathfinder {
 						//if neighbour non traversable or neighbour is in closed list
 						if(skip === true || process.closed.some(e => JSON.stringify(e.pos) === JSON.stringify(node.pos))){                    
 						// if(node.cell !== 1 || this.closed.some(e => JSON.stringify(e.pos) === JSON.stringify(node.pos))){
-							//skip
+							let test = ""
 						}
 						else{
 							
@@ -192,18 +212,17 @@ module.exports = class game_pathfinder {
 
 			}
 			
-			process.path = process.path.slice(0,process.parent.unit_class.movement + 1)
+			process.path = process.path.slice(0,process.movement + 1)
 
 			// //OFFSET PATH SO THEY'RE IN THE MIDDLE OF EACH TILE
 			process.path.forEach((pos) => {
-				pos.x += process.parent.unit_class.sprite_offset;
-				pos.y += process.parent.unit_class.sprite_offset;
+				pos.x += process.sprite_offset;
+				pos.y += process.sprite_offset;
 			})
 
 			process.running = false;
             if(process.callback){
-				// console.log("pass callback")
-                process.parent[process.callback](process)
+                process.callback(this,process)
 			}
 			
 			
@@ -211,9 +230,8 @@ module.exports = class game_pathfinder {
         else{         
 			if(process.current_checks >= process.max_checks){
 				process.running = false;
-				if(process.fail_callback){
-					// console.log("fail callback")					
-					process.parent[process.fail_callback](process)
+				if(process.fail_callback){					
+					process.fail_callback(process)
 				}
 
 				
@@ -262,8 +280,8 @@ module.exports = class game_pathfinder {
 					}
 
 					if(run_check === true){
-						let g_cost = gameFunctions.twoPointDistance(pos, process.current.pos)
-						let h_cost = gameFunctions.twoPointDistance(pos, process.end)
+						let g_cost = this.twoPointDistance(pos, process.current.pos)
+						let h_cost = this.twoPointDistance(pos, process.end)
 						let f_cost = g_cost + h_cost;
 
 						// if(return_info.distance === -1 || total_distance < return_info.distance){
@@ -275,7 +293,7 @@ module.exports = class game_pathfinder {
 							origin_pos: process.current.pos,
 							pos: pos,
 							cell: cell,
-							g_cost: cell,
+							g_cost: g_cost,
 							h_cost: h_cost,
 							f_cost: f_cost
 						}
@@ -299,7 +317,7 @@ module.exports = class game_pathfinder {
 			
 			//CHECK CELL CHECK SLIGHTLY DIFFERENTLY DEPENDING ON THE SPRITE OFFSET VALUE
 
-			if(process.parent.unit_class.sprite_offset === 0){
+			if(process.sprite_offset === 0){
 				for(let x=-process.obj_size;x<=0;x++){
 					for(let y=-process.obj_size;y<=0;y++){
 						let pos = {
@@ -324,7 +342,7 @@ module.exports = class game_pathfinder {
 				}				
 			}			
 			
-			if(process.parent.unit_class.sprite_offset === 0.5){
+			if(process.sprite_offset === 0.5){
 				for(let x=-process.obj_size;x<=process.obj_size;x++){
 					for(let y=-process.obj_size;y<=process.obj_size;y++){
 						let pos = {

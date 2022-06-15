@@ -23,8 +23,8 @@ const u_rectangle = class {
 module.exports = class game_collisions {
 	constructor(options) {	
 
-        this.depth = 30;
-		this.graphics = [];
+        // this.depth = 30;
+		// this.graphics = [];
 		// for(let i=0; i<10; i++){
 		// 	this.graphics.push(options.scene.add.graphics().setDepth(this.depth));
 		// }        

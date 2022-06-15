@@ -49,10 +49,10 @@ const game_squad_setup = class {
 						squad: squad_id, //this can be used for squad checks like unit cohesion
 						
 						angle: 0,
-						// x: 1 * this.tile_size,
-						// y: -2 * this.tile_size,
 						x: 5 * this.tile_size,
-						y: 5 * this.tile_size,						
+						y: 5 * this.tile_size,
+						tileX: 5,
+						tileY: 5,												
 						
 						alive: false,
 		
@@ -68,6 +68,9 @@ const game_squad_setup = class {
 						charged: false,		
 						shot: false,
 						fought: false,
+
+						selected_gun: 0,
+						selected_melee: 0,						
 					}
 
 
@@ -193,6 +196,16 @@ const game_squad_setup = class {
 		if(!options.loaded){
 			options.core.health = unit_class.health
 			options.core.cost = cost
+
+			options.core.unit_class = unit_class._id
+			options.core.armour_class = armour_class._id
+
+			options.core.gun_class = []
+			options.core.gun_class.push(gun_class._id)
+
+			options.core.melee_class = []
+			options.core.melee_class.push(melee_class._id)			
+								
 		}
 
 

@@ -74,18 +74,37 @@ module.exports = class game_maps {
     setAcceptableTiles = () => {
         
         this.acceptable_tiles = [];
-        this.data.tilesets[this.layer].tiles.forEach((tile, i) => {
+
+        for(let i=0;i<this.data.tilesets[this.layer].tilecount;i++)
+        {
             let add_acceptable = true;
-            if (tile.properties){
-                tile.properties.forEach((property) => {
-                    if(property.name === "collide"){
-                        add_acceptable = false;
+            this.data.tilesets[this.layer].tiles.forEach((tile) => {
+                if(tile.id === i){
+                    if (tile.properties){
+                        tile.properties.forEach((property) => {
+                            if(property.name === "collide"){
+                                add_acceptable = false;
+                            }
+                        })
                     }
-                })
-            }
+                }             
+            })
             if(add_acceptable === true){
-                this.acceptable_tiles.push(i)
-            }
-        })     
+                this.acceptable_tiles.push(i+1)
+            }               
+        }
+        // this.data.tilesets[this.layer].tiles.forEach((tile, i) => {
+        //     let add_acceptable = true;
+        //     if (tile.properties){
+        //         tile.properties.forEach((property) => {
+        //             if(property.name === "collide"){
+        //                 add_acceptable = false;
+        //             }
+        //         })
+        //     }
+        //     if(add_acceptable === true){
+        //         this.acceptable_tiles.push(tile.id)
+        //     }
+        // })     
     }
 }
