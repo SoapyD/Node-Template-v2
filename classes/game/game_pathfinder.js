@@ -40,7 +40,7 @@ const pathProcess = class {
 
 		
 		this.current_checks = 0;
-		this.max_checks = 1000;
+		this.max_checks = 100;
     }
 }
 
@@ -55,7 +55,7 @@ module.exports = class game_pathfinder {
 		
 		
 		this.current_checks = 0;
-		this.max_checks = 1000;       
+		this.max_checks = 100;       
 		
 		this.process_list = [];
 		// this.bound_unit = -1;

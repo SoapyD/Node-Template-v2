@@ -270,10 +270,10 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         ,sprite_offset: 0
                         ,movement: 20
                         ,obj_size: 1
-                        ,x_start: (selected_unit.tileX + 1)
-                        ,y_start: (selected_unit.tileY + 1)
-                        ,x_end: (player.pointerX + 1)
-                        ,y_end: (player.pointerY + 1)                                                           
+                        ,x_start: (selected_unit.tileX + 0)
+                        ,y_start: (selected_unit.tileY + 0)
+                        ,x_end: (player.pointerX + 0)
+                        ,y_end: (player.pointerY + 0)                                                           
                     })
     
                     gamePathfinder.update()                
