@@ -12,7 +12,8 @@ const pathProcess = class {
 		this.id = options.id
 		this.sprite_offset = options.sprite_offset
 		this.movement = options.movement
-		this.obj_size = options.obj_size;        
+		this.obj_size = options.obj_size;
+		// this.tile_size = options.tile_size        
 		
 		this.start = {
 			x: options.x_start,
@@ -216,8 +217,8 @@ module.exports = class game_pathfinder {
 
 			// //OFFSET PATH SO THEY'RE IN THE MIDDLE OF EACH TILE
 			process.path.forEach((pos) => {
-				pos.x += process.sprite_offset;
-				pos.y += process.sprite_offset;
+				pos.x += process.sprite_offset - 0.5;
+				pos.y += process.sprite_offset - 0.5;
 			})
 
 			process.running = false;

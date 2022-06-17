@@ -1,6 +1,7 @@
 module.exports = class game_maps {
 	constructor(options) {	
 
+        this.tile_size = 0;
         this.acceptable_tiles = [];
         this.matrix = [];   
 
@@ -53,6 +54,7 @@ module.exports = class game_maps {
 
     setMatrix = () => {
 
+        this.tile_size = this.data.tileheight
         let layer_data = this.data.layers[this.layer]
         let list = layer_data.data;
         let elementsPerSubArray = layer_data.width;

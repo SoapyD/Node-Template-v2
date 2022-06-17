@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 const gameSchema = new mongoose.Schema({
 	room_name: String
+	,tile_size: Number
     ,acceptable_tiles: [Number]
     ,matrix: [[Number]]    
 

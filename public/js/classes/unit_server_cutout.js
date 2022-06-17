@@ -684,33 +684,7 @@ checkSpriteandPos(pointer){
 	}		
 }
 
-checkAngle(start_pos, end_pos) {
-	try{
-		let angle = 0
-		if(start_pos.x < end_pos.x){
-			angle = 0;
-		}
-		if(start_pos.x > end_pos.x){
-			angle = 180;
-		}				
-		if(start_pos.y < end_pos.y){
-			angle = 90;
-		}
-		if(start_pos.y > end_pos.y){
-			angle = -90;
-		}		
-		
-		return angle;
-	}catch(e){
 
-		let options = {
-			"class": "unit",
-			"function": "checkAngle",
-			"e": e
-		}
-		errorHandler.log(options)
-	}		
-}	
 
 
 	

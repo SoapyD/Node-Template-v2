@@ -10,6 +10,18 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         this.defineCoreFunctions()
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  #####  ####### ####### #     # ######         #####     #    #     # ####### ######     #    #######    #    
+    // #     # #          #    #     # #     #       #     #   # #   ##   ## #       #     #   # #      #      # #   
+    // #       #          #    #     # #     #       #        #   #  # # # # #       #     #  #   #     #     #   #  
+    //  #####  #####      #    #     # ######  ##### #  #### #     # #  #  # #####   #     # #     #    #    #     # 
+    //       # #          #    #     # #             #     # ####### #     # #       #     # #######    #    ####### 
+    // #     # #          #    #     # #             #     # #     # #     # #       #     # #     #    #    #     # 
+    //  #####  #######    #     #####  #              #####  #     # #     # ####### ######  #     #    #    #     # 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     setupGameData = async(socket, options) => {
 
         try{
@@ -45,7 +57,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             let game_data = await databaseHandler.createData({
                 model: "GameData"
                 ,params: [{
-                    acceptable_tiles: gameMap.acceptable_tiles
+                    tile_size: gameMap.tile_size
+                    ,acceptable_tiles: gameMap.acceptable_tiles
                     ,matrix: gameMap.matrix
                     ,forces: forces
                     ,players: players            
@@ -96,6 +109,17 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         }	
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  #####     #    #     # #######       #     # #     # ### #######       ######     #    #######    #    
+    // #     #   # #   #     # #             #     # ##    #  #     #          #     #   # #      #      # #   
+    // #        #   #  #     # #             #     # # #   #  #     #          #     #  #   #     #     #   #  
+    //  #####  #     # #     # #####   ##### #     # #  #  #  #     #    ##### #     # #     #    #    #     # 
+    //       # #######  #   #  #             #     # #   # #  #     #          #     # #######    #    ####### 
+    // #     # #     #   # #   #             #     # #    ##  #     #          #     # #     #    #    #     # 
+    //  #####  #     #    #    #######        #####  #     # ###    #          ######  #     #    #    #     # 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     saveUnitData = (socket, options) => {
         try{
             let game_data = databaseHandler.updateOne({
@@ -118,6 +142,17 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         }	        
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    // #     # ####### #     # #######       #     #    #    ######  #    # ####### ######  
+    // ##   ## #     # #     # #             ##   ##   # #   #     # #   #  #       #     # 
+    // # # # # #     # #     # #             # # # #  #   #  #     # #  #   #       #     # 
+    // #  #  # #     # #     # #####   ##### #  #  # #     # ######  ###    #####   ######  
+    // #     # #     #  #   #  #             #     # ####### #   #   #  #   #       #   #   
+    // #     # #     #   # #   #             #     # #     # #    #  #   #  #       #    #  
+    // #     # #######    #    #######       #     # #     # #     # #    # ####### #     # 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     moveMarker = async(socket, options) => {
         try{
@@ -152,6 +187,17 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         }        
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    //  #####  #       ###  #####  #    #       #     #    #    #     # ######  #       ####### ######  
+    // #     # #        #  #     # #   #        #     #   # #   ##    # #     # #       #       #     # 
+    // #       #        #  #       #  #         #     #  #   #  # #   # #     # #       #       #     # 
+    // #       #        #  #       ###    ##### ####### #     # #  #  # #     # #       #####   ######  
+    // #       #        #  #       #  #         #     # ####### #   # # #     # #       #       #   #   
+    // #     # #        #  #     # #   #        #     # #     # #    ## #     # #       #       #    #  
+    //  #####  ####### ###  #####  #    #       #     # #     # #     # ######  ####### ####### #     # 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 
     clickHandler = async(socket, options) => {
         try{
@@ -164,15 +210,16 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }, false)
             
             //FIND IF A UNIT IS SELECTED
-            let selected_unit = -1
+            let unit_selected = false
             let matrix = [];
             let acceptable_tiles = [];
-            let saved_unit = {};
+            // let saved_unit = {};
+            let player;
 
             if(game_data[0]){
                 //GET PLAYER POSITION DATA
                 game_data = game_data[0]
-                let player = game_data.players[options.data.player];
+                player = game_data.players[options.data.player];
 
                 matrix = game_data.matrix;
                 acceptable_tiles = game_data.acceptable_tiles;                
@@ -182,8 +229,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     if(player.pointerX === unit.tileX && player.pointerY === unit.tileY){
                         if(unit.player === options.data.player){
 
-                            selected_unit = unit.id;
-                            saved_unit = unit; 
+                            unit_selected = true;
+                            // saved_unit = unit; 
                             let update = {}
                             update["players."+options.data.player+".selected_unit"] = unit.id;
 
@@ -203,48 +250,38 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
             }
 
-            if(selected_unit !== -1){
+            //A NEW UNIT HAS BEEN SELECTED
+            if(unit_selected === false){
                 //GET SELECTED UNIT DATA
 
-                const gamePathfinder = new game_pathfinder({
-                    id: options.id,
-                    grid: matrix, 
-                    acceptable_tiles: acceptable_tiles
-                })
+                if(player && player.selected_unit !== -1){
+                    let selected_unit = game_data.units[player.selected_unit]
 
-                gamePathfinder.setup({
-                    callback: this.returnPath
-                    ,id: selected_unit
-                    ,sprite_offset: 0
-                    ,movement: 10
-                    ,obj_size: 1
-                    ,x_start: (saved_unit.tileX + 1)
-                    ,y_start: (saved_unit.tileY + 1)
-                    ,x_end: (saved_unit.tileX + 1) - 2
-                    ,y_end: (saved_unit.tileY + 1) + 3                                                            
-                })
+                    const gamePathfinder = new game_pathfinder({
+                        id: options.id,
+                        // tile_size: game_data.tile_size,
+                        grid: matrix, 
+                        acceptable_tiles: acceptable_tiles
+                    })
+    
+                    gamePathfinder.setup({
+                        callback: this.returnPath
+                        ,id: player.selected_unit
+                        ,sprite_offset: 0
+                        ,movement: 20
+                        ,obj_size: 1
+                        ,x_start: (selected_unit.tileX + 1)
+                        ,y_start: (selected_unit.tileY + 1)
+                        ,x_end: (player.pointerX + 1)
+                        ,y_end: (player.pointerY + 1)                                                           
+                    })
+    
+                    gamePathfinder.update()                
+                }
 
-                gamePathfinder.update()
             }                 
 
-            //ONLY ALLOW THE BELOW TO BE ACCESSED ONCE PER TILE (RESET WHEN NO LONGER ON TILE)?
-
-            //GET GAMEDATA
-                //GET UNIT DATA
-                //GET MARKER DATA
-            //SEE IF MARKER IS ON THE SAME TILE AS ANY UNIT
-                //IF SO, SET THAT AS THE SELECTED UNIT            
-
-
-            // let game_data = databaseHandler.updateOne({
-            //     model: "GameData"
-            //     ,params: [
-            //         {
-            //             filter: {_id: options.data.id}, 
-            //             value: {$set: options.data.update}
-            //         }
-            //     ]
-            // })        
+   
         }
         catch(e){
             let options = {
@@ -256,12 +293,24 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         }	        
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    // ######  ####### ####### #     # ######  #     #       ######     #    ####### #     # 
+    // #     # #          #    #     # #     # ##    #       #     #   # #      #    #     # 
+    // #     # #          #    #     # #     # # #   #       #     #  #   #     #    #     # 
+    // ######  #####      #    #     # ######  #  #  # ##### ######  #     #    #    ####### 
+    // #   #   #          #    #     # #   #   #   # #       #       #######    #    #     # 
+    // #    #  #          #    #     # #    #  #    ##       #       #     #    #    #     # 
+    // #     # #######    #     #####  #     # #     #       #       #     #    #    #     #
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+
     returnPath = (pathfinder, process) => {
         let return_options =  {
             type: "room",
             id: pathfinder.id,                
             functionGroup: "core",
-            function: "test",
+            function: "setPath",
             data: {
                 message: "Left Click",
                 path: process.path,
