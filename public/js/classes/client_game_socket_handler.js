@@ -203,7 +203,7 @@ clientSocketHandler.moveMarker = (options) => {
 
 clientSocketHandler.setPath = (options) => {
 
-    console.log(options.data)
+    // console.log(options.data)
 
     try{
         let unit = gameCore.assets.units[options.data.id]

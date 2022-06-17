@@ -217,8 +217,8 @@ module.exports = class game_pathfinder {
 
 			// //OFFSET PATH SO THEY'RE IN THE MIDDLE OF EACH TILE
 			process.path.forEach((pos) => {
-				pos.x += process.sprite_offset - 0.5;
-				pos.y += process.sprite_offset - 0.5;
+				pos.x += process.sprite_offset;
+				pos.y += process.sprite_offset;
 			})
 
 			process.running = false;

@@ -267,13 +267,13 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     gamePathfinder.setup({
                         callback: this.returnPath
                         ,id: player.selected_unit
-                        ,sprite_offset: 0
-                        ,movement: 20
-                        ,obj_size: 1
-                        ,x_start: (selected_unit.tileX + 0)
-                        ,y_start: (selected_unit.tileY + 0)
-                        ,x_end: (player.pointerX + 0)
-                        ,y_end: (player.pointerY + 0)                                                           
+                        ,sprite_offset: 0.5
+                        ,movement: 10
+                        ,obj_size: 0
+                        ,x_start: (selected_unit.tileX)
+                        ,y_start: (selected_unit.tileY)
+                        ,x_end: (player.pointerX)
+                        ,y_end: (player.pointerY)                                                           
                     })
     
                     gamePathfinder.update()                
