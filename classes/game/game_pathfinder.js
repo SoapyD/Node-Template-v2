@@ -108,6 +108,8 @@ module.exports = class game_pathfinder {
 		}
 
 		this.current_checks = 0;
+
+		return this.process_list;
 	}
 
     run(process) {

@@ -1,6 +1,8 @@
 
 var server_socket_handler = require("./server_socket_handler")
 var game_pathfinder = require("./game/game_pathfinder")
+const { Worker, workerData } = require('worker_threads')
+const path = require('path');
 
 module.exports = class server_game_socket_handler extends server_socket_handler {
 	constructor(options) {	
@@ -189,6 +191,39 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    // ######  #     # #     #       #     # ####### ######  #    # ####### ######   #####  
+    // #     # #     # ##    #       #  #  # #     # #     # #   #  #       #     # #     # 
+    // #     # #     # # #   #       #  #  # #     # #     # #  #   #       #     # #       
+    // ######  #     # #  #  # ##### #  #  # #     # ######  ###    #####   ######   #####  
+    // #   #   #     # #   # #       #  #  # #     # #   #   #  #   #       #   #         # 
+    // #    #  #     # #    ##       #  #  # #     # #    #  #   #  #       #    #  #     # 
+    // #     #  #####  #     #        ## ##  ####### #     # #    # ####### #     #  #####   
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+
+    runWorker = (workerData) => {
+        return new Promise((resolve, reject) => {
+        
+            // import workerExample.js script..
+        
+            const worker = new Worker(path.resolve(__dirname, workerData.worker_path), {workerData});
+            worker.on('message', resolve);
+            worker.on('error', reject);
+            worker.on('exit', (code) => {
+                if (code !== 0)
+                    reject(new Error(`stopped with  ${code} exit code`));
+            })
+        })
+    }
+
+    setupPathFinderWorker = async(options) => {
+        const result = await this.runWorker(options)
+        this.returnPath(result)
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     //  #####  #       ###  #####  #    #       #     #    #    #     # ######  #       ####### ######  
     // #     # #        #  #     # #   #        #     #   # #   ##    # #     # #       #       #     # 
     // #       #        #  #       #  #         #     #  #   #  # #   # #     # #       #       #     # 
@@ -197,7 +232,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     // #     # #        #  #     # #   #        #     # #     # #    ## #     # #       #       #    #  
     //  #####  ####### ###  #####  #    #       #     # #     # #     # ######  ####### ####### #     # 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
 
     clickHandler = async(socket, options) => {
         try{
@@ -252,34 +287,38 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
             //A NEW UNIT HAS BEEN SELECTED
             if(unit_selected === false){
-                //GET SELECTED UNIT DATA
 
+                
+                //GET SELECTED UNIT DATA
+                
                 if(player && player.selected_unit !== -1){
                     let selected_unit = game_data.units[player.selected_unit]
 
-                    const gamePathfinder = new game_pathfinder({
+                    this.setupPathFinderWorker({
+                        worker_path: 'workers/pathfinder.js',
+                        message: 'Pathfinding Test',
                         id: options.id,
-                        // tile_size: game_data.tile_size,
-                        grid: matrix, 
-                        acceptable_tiles: acceptable_tiles
+                        grid: matrix,
+                        acceptable_tiles: acceptable_tiles,
+                        setup_data: {
+                            id: player.selected_unit
+                            ,sprite_offset: 0.5
+                            ,movement: 100
+                            ,obj_size: 0
+                            ,x_start: (selected_unit.tileX)
+                            ,y_start: (selected_unit.tileY)
+                            ,x_end: (player.pointerX)
+                            ,y_end: (player.pointerY)                              
+                        }
                     })
-    
-                    gamePathfinder.setup({
-                        callback: this.returnPath
-                        ,id: player.selected_unit
-                        ,sprite_offset: 0.5
-                        ,movement: 10
-                        ,obj_size: 0
-                        ,x_start: (selected_unit.tileX)
-                        ,y_start: (selected_unit.tileY)
-                        ,x_end: (player.pointerX)
-                        ,y_end: (player.pointerY)                                                           
-                    })
-    
-                    gamePathfinder.update()                
+                                  
                 }
 
-            }                 
+            }
+            
+            if(unit_selected === true){
+
+            }
 
    
         }
@@ -305,20 +344,19 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
-    returnPath = (pathfinder, process) => {
+    returnPath = (options) => {
         let return_options =  {
             type: "room",
-            id: pathfinder.id,                
+            id: options.id,                
             functionGroup: "core",
             function: "setPath",
             data: {
                 message: "Left Click",
-                path: process.path,
-                id: process.id
+                id: options.process.id,
+                path: options.process.path,
             }
         }
         this.sendMessage(return_options)        
     }
-
 
 }
