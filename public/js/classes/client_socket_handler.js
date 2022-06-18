@@ -21,6 +21,8 @@ const client_socket_handler = class {
             this.socket.emit('message_server', options)
         }catch(e){
 
+            console.log("ISSUE CAUSING ERRORS:", options)
+
             let options = {
                 "class": "socketHandler",
                 "function": "messageServer",

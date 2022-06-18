@@ -221,6 +221,11 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         this.returnPath(result)
     }
 
+    findPotentialPathsWorker = async(options) => {
+        const result = await this.runWorker(options)
+        console.log(result)
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -248,7 +253,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             let unit_selected = false
             let matrix = [];
             let acceptable_tiles = [];
-            // let saved_unit = {};
+            let saved_unit = {};
             let player;
 
             if(game_data[0]){
@@ -265,7 +270,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         if(unit.player === options.data.player){
 
                             unit_selected = true;
-                            // saved_unit = unit; 
+                            saved_unit = unit; 
                             let update = {}
                             update["players."+options.data.player+".selected_unit"] = unit.id;
 
@@ -283,6 +288,26 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     }
                 })
 
+            }
+
+            if(unit_selected === true){
+                let selected_unit = saved_unit
+
+                this.findPotentialPathsWorker({
+                    worker_path: 'workers/potential_paths.js',
+                    message: 'Potential Path Test',
+                    id: options.id,
+                    grid: matrix,
+                    acceptable_tiles: acceptable_tiles,
+                    unit: {
+                        id: player.selected_unit
+                        ,sprite_offset: 0.5
+                        ,movement: 10
+                        ,obj_size: 0
+                        ,x_start: (selected_unit.tileX)
+                        ,y_start: (selected_unit.tileY)                             
+                    }
+                })                
             }
 
             //A NEW UNIT HAS BEEN SELECTED
