@@ -223,7 +223,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
     findPotentialPathsWorker = async(options) => {
         const result = await this.runWorker(options)
-        console.log(result)
+        this.returnPotentialPaths(result)
     }
 
 
@@ -299,7 +299,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     id: options.id,
                     grid: matrix,
                     acceptable_tiles: acceptable_tiles,
-                    unit: {
+                    setup_data: {
                         id: player.selected_unit
                         ,sprite_offset: 0.5
                         ,movement: 10
@@ -328,7 +328,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         setup_data: {
                             id: player.selected_unit
                             ,sprite_offset: 0.5
-                            ,movement: 100
+                            ,movement: 10
                             ,obj_size: 0
                             ,x_start: (selected_unit.tileX)
                             ,y_start: (selected_unit.tileY)
@@ -383,5 +383,21 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         }
         this.sendMessage(return_options)        
     }
+
+    returnPotentialPaths = (options) => {
+        let return_options =  {
+            type: "room",
+            id: options.id,                
+            functionGroup: "core",
+            function: "setPotentialPaths",
+            data: {
+                message: "Potential Paths",
+                id: options.process.id,
+                live_tiles: options.process.paths,
+            }
+        }
+        this.sendMessage(return_options)        
+    }
+
 
 }

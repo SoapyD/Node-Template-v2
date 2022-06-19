@@ -233,4 +233,26 @@ clientSocketHandler.setPath = (options) => {
 
 
 
+clientSocketHandler.setPotentialPaths = (options) => {
+
+    console.log(options.data)
+
+    try{
+        // let unit = gameCore.assets.units[options.data.id]
+        GameScene.game_assets.live_tiles = options.data.live_tiles
+        GameScene.game_assets.drawLiveTiles()
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "moveMarker",
+            "e": e
+        }
+        errorHandler.log(options)
+    }        
+}
+
+
+
 clientSocketHandler.defineCoreFunctions();

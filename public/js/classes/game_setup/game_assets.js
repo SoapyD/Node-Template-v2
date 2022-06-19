@@ -194,4 +194,37 @@ const game_assets = class {
 		}
 	}
 
+
+// ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████ 
+// ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██      
+// █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████ 
+// ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██ 
+// ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████ 
+
+    resetTempSprites = () => {
+        // console.log(live_tiles)
+        if (!this.temp_sprites){
+            this.temp_sprites = [];
+        }
+        else{
+            this.temp_sprites.forEach((sprite) => {
+                sprite.destroy();
+            })
+        }		
+    }
+
+    drawLiveTiles = () => {
+        this.resetTempSprites();
+        
+		if(this.live_tiles){
+			this.live_tiles.forEach((tile)=> {
+				this.temp_sprites.push(
+					this.scene.physics.add.image(
+						tile.x * gameCore.data.tile_size,
+						tile.y * gameCore.data.tile_size,"marker").setDepth(0)
+				)
+			})		
+		}
+    }
+
 }

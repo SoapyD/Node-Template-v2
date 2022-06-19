@@ -81,56 +81,65 @@ const getSpiralMatrix = (tile_size, n, x_start, y_start) => {
 const gamePathfinder = new game_pathfinder(workerData)
 
 
-let startX = workerData.unit.x_start - workerData.unit.movement
-let startY = workerData.unit.y_start - workerData.unit.movement
-let endX = workerData.unit.x_start + workerData.unit.movement
-let endY = workerData.unit.y_start + workerData.unit.movement
+let startX = workerData.setup_data.x_start - workerData.setup_data.movement
+let startY = workerData.setup_data.y_start - workerData.setup_data.movement
+let endX = workerData.setup_data.x_start + workerData.setup_data.movement
+let endY = workerData.setup_data.y_start + workerData.setup_data.movement
 
 let live_tiles = [];
 let check_tiles = getSpiralMatrix(1, (endX - startX) + 1, startX, startY);
 
 check_tiles.forEach((check_tile) => {
-    
-    let check_x = (check_tile.pointer.x / GameScene.map.tileWidth) + this.unit_class.sprite_offset
-    let check_y = (check_tile.pointer.y / GameScene.map.tileHeight) + this.unit_class.sprite_offset
+
+    if(check_tile.pointer.x >= 0 && check_tile.pointer.y >= 0
+        && check_tile.pointer.x < workerData.grid[0].length
+        && check_tile.pointer.y < workerData.grid.length        
+        ){
+            let check_x = check_tile.pointer.x
+            let check_y = check_tile.pointer.y
+                
+            let found = live_tiles.some(i => i.x === check_x && i.y === check_y);
         
-    let found = live_tiles.some(i => i.x === check_x && i.y === check_y);
+            //NO NEED TO CHECK POSITIONS THAT AREN'T CLOSE ENOUGH TO REACH
+            let distance = gamePathfinder.twoPointDistance({x: workerData.setup_data.x_start, y: workerData.setup_data.y_start}, {x: check_x,y: check_y});
+        
+            let cell = workerData.grid[check_y][check_x];
+            let acceptable_tile = false
+            if(workerData.acceptable_tiles.includes(cell)){
+                acceptable_tile = true;
+            }			
+        
+            // this.runDrawLiveTiles();
+            if(found === false && distance <= workerData.setup_data.movement && acceptable_tile === true){
+        
+                workerData.setup_data.x_end = (check_x)
+                workerData.setup_data.y_end = (check_y)  
 
-    //NO NEED TO CHECK POSITIONS THAT AREN'T CLOSE ENOUGH TO REACH
-    let distance = gameFunctions.twoPointDistance({x: this.sprite.x / gameFunctions.tile_size, y: this.sprite.y / gameFunctions.tile_size}, {x: check_x,y: check_y});
-
-    let cell = GameScene.grid[check_y - this.unit_class.sprite_offset][check_x - this.unit_class.sprite_offset];
-    let acceptable_tile = false
-    if(GameScene.acceptable_tiles.includes(cell)){
-        acceptable_tile = true;
-    }			
-
-    // this.runDrawLiveTiles();
-    if(found === false && distance <= this.unit_class.movement && acceptable_tile === true){
-
-        gamePathfinder.setup(workerData.setup_data)
-        let process_list = gamePathfinder.update()
-        let process = process_list[0];
-
-        if(process){
-            if(process.path_found === true){
-    
-                //ADD THE PATH ELEMENTS TO THE LIVE TILES LIST
-                if(process.path){
-                    if(process.path.length){
-                        let found = false;
-                        process.path.forEach((pos) => {
-                            found = live_tiles.some(i => i.x === pos.x && i.y === pos.y);
-                            if(found === false){
-                                live_tiles.push(pos);
+                gamePathfinder.setup(workerData.setup_data)
+                let process_list = gamePathfinder.update()
+                let process = process_list[0];
+        
+                if(process){
+                    if(process.path_found === true){
+            
+                        //ADD THE PATH ELEMENTS TO THE LIVE TILES LIST
+                        if(process.path){
+                            if(process.path.length){
+                                let found = false;
+                                process.path.forEach((pos) => {
+                                    found = live_tiles.some(i => i.x === pos.x && i.y === pos.y);
+                                    if(found === false){
+                                        live_tiles.push(pos);
+                                    }
+                                })
+            
                             }
-                        })
-    
+                        }
                     }
-                }
+                }    
             }
-        }    
-    }
+        }
+    
 
 
 
@@ -139,11 +148,11 @@ check_tiles.forEach((check_tile) => {
 
 
 parentPort.postMessage({ 
-    welcome: workerData.message 
-    ,check_tiles: check_tiles
-    // ,process: {
-    //     id: process_list[0].id
-    //     ,path: process_list[0].path
-    // }
+    welcome: workerData.message
+    ,id: workerData.id     
+    ,process: {
+        id: workerData.setup_data.id
+        ,paths: live_tiles
+    }
 
 })
