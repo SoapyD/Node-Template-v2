@@ -58,7 +58,7 @@ var GameScene = new Phaser.Class({
 				
 				//RUN TEMP PROCESS TO SAVE THE POSITIONS OF UNITS WHERE THEY ARE
 				clientSocketHandler.saveGame();
-				GameScene.game_state++;
+				gameCore.data.game_state++;
 				break;			
 			case 1:
 				// gameFunctions.current_uiscene.scene.start("GameUIScene")

@@ -64,6 +64,12 @@ const gameSchema = new mongoose.Schema({
 		,selected_gun: Number
 		,selected_melee: Number
 
+		,path: [{
+			x: Number
+			,y: Number
+		}]
+		// ,path: {type: Number, default: -1}
+
 		
 		,unit_class:
 		{

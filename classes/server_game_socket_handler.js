@@ -216,15 +216,40 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         })
     }
 
-    setupPathFinderWorker = async(options) => {
-        const result = await this.runWorker(options)
-        this.returnPath(result)
-    }
-
     findPotentialPathsWorker = async(options) => {
         const result = await this.runWorker(options)
         this.returnPotentialPaths(result)
     }
+
+    setupPathFinderWorker = async(game_data, options) => {
+        const result = await this.runWorker(options)
+        //SAVE THE PATH TO THE UNIT
+
+        let update = {}
+        update["units."+options.setup_data.id+".path"] = result.process.path; 
+        // update["units."+options.setup_data.id+".x"] = -90; 
+        // update["tile_size"] = -90; 
+        // update["players.0.selected_unit"] = -90;
+
+        let update_options = 
+        {
+            model: "GameData"
+            ,params: [
+                {
+                    filter: {_id: game_data.id}, 
+                    value: {$set: update}
+                }
+            ]
+        }   
+
+        databaseHandler.updateOne(update_options)   
+        console.log(update_options.params[0].filter,update_options.params[0].value)
+
+
+        this.returnPath(result)
+    }
+
+
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -274,7 +299,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             let update = {}
                             update["players."+options.data.player+".selected_unit"] = unit.id;
 
-                            databaseHandler.updateOne({
+                            let update_options = 
+                            {
                                 model: "GameData"
                                 ,params: [
                                     {
@@ -282,7 +308,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                         value: {$set: update}
                                     }
                                 ]
-                            })   
+                            }                            
+                            databaseHandler.updateOne(update_options)   
+                            console.log(update_options.params[0].filter,update_options.params[0].value)
 
                         }
                     }
@@ -319,7 +347,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 if(player && player.selected_unit !== -1){
                     let selected_unit = game_data.units[player.selected_unit]
 
-                    this.setupPathFinderWorker({
+                    this.setupPathFinderWorker(
+                        game_data,
+                        {
                         worker_path: 'workers/pathfinder.js',
                         message: 'Pathfinding Test',
                         id: options.id,
@@ -412,6 +442,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
     followPath = (options) => {
+        /*
         let array = [1,2,3,4,5,6]
         let pos = 0
         let options = {
@@ -429,7 +460,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
           options.pos = func(options.pos)
           console.log(options.pos)
         },10000, options)
-        /**/
+        */
         
     }
 

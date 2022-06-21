@@ -21,7 +21,7 @@ const client_socket_handler = class {
             this.socket.emit('message_server', options)
         }catch(e){
 
-            console.log("ISSUE CAUSING ERRORS:", options)
+            // console.log("ISSUE CAUSING ERRORS:", options)
 
             let options = {
                 "class": "socketHandler",
@@ -93,21 +93,21 @@ const client_socket_handler = class {
     }
 
     disconnectedHandler = () => {
-        try{
+        // try{
             this.showAlert('liveMessage', 
                 {
                     message: "Disconnected from Server"
                 }
             )   
-        }catch(e){
+        // }catch(e){
 
-            let options = {
-                "class": "socketHandler",
-                "function": "disconnectedHandler",
-                "e": e
-            }
-            errorHandler.log(options)
-        }	             
+        //     let options = {
+        //         "class": "socketHandler",
+        //         "function": "disconnectedHandler",
+        //         "e": e
+        //     }
+        //     errorHandler.log(options)
+        // }	             
     }
 
     reconnectedHandler = () => {
