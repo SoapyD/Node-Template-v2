@@ -15,12 +15,12 @@ var GameScene = new Phaser.Class({
     {		
 		GameScene.scene = this.scene.get('GameScene')
 		gameCore.current_scene = this.scene.get('GameScene');
-		GameScene.loading_screen = new game_loading_screen({scene: GameScene.scene, }) //launch_uiscene: "ArmySetupUIScene" 
+		GameScene.loading_screen = new game_loading_screen({scene: GameScene.scene, launch_uiscene: "GameUIScene" }) //launch_uiscene: "ArmySetupUIScene" 
 
 		GameScene.game_assets = new game_assets({scene: GameScene.scene, parent: GameScene})
 		GameScene.game_maps = new game_maps({scene: GameScene.scene, parent: GameScene})
 		GameScene.game_controls = new game_controls({scene: GameScene.scene, parent: GameScene})
-		
+
     },
 
 

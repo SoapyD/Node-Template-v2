@@ -49,9 +49,9 @@ const game_squad_setup = class {
 						squad: squad_id, //this can be used for squad checks like unit cohesion
 						
 						angle: 0,
-						x: 5 * this.tile_size,
+						x: (5+(i*2)) * this.tile_size,
 						y: 5 * this.tile_size,
-						tileX: 5,
+						tileX: (5+(i*2)),
 						tileY: 5,												
 						
 						alive: false,

@@ -235,7 +235,7 @@ clientSocketHandler.setPath = (options) => {
 
 clientSocketHandler.setPotentialPaths = (options) => {
 
-    console.log(options.data)
+    // console.log(options.data)
 
     try{
         // let unit = gameCore.assets.units[options.data.id]
@@ -252,6 +252,122 @@ clientSocketHandler.setPotentialPaths = (options) => {
         errorHandler.log(options)
     }        
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  #####  ####### #######       ######     #    ####### #     # 
+// #     # #          #          #     #   # #      #    #     # 
+// #       #          #          #     #  #   #     #    #     # 
+//  #####  #####      #    ##### ######  #     #    #    ####### 
+//       # #          #          #       #######    #    #     # 
+// #     # #          #          #       #     #    #    #     # 
+//  #####  #######    #          #       #     #    #    #     # 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+clientSocketHandler.readyUp = (options) => {
+
+
+    try{
+        let options = {
+            functionGroup: "core",  
+            function: "followPath",
+            id: clientRoomHandler.core.room_name,
+            data: {
+                id: gameCore.data.id,
+                player: gameCore.data.player
+            }     
+        }                
+
+        clientSocketHandler.messageServer(options)
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "moveMarker",
+            "e": e
+        }
+        errorHandler.log(options)
+    }        
+}
+
+clientSocketHandler.moveUnit = (options) => {
+    try{
+        if(options.data.start){
+            // resetMove
+            GameScene.game_assets.resetTempSprites()
+        }
+
+
+        const addTween = (unit, position) => {
+            let tween = getTweenData(unit, position)
+            console.log("id:",tween.unit.id, "angle:",tween.angle)
+            GameScene.scene.tweens.add(tween)
+        }
+
+        const getTweenData = (unit, position) => {
+            let game_pos = {
+                x: position.x * gameCore.data.tile_size,
+                y: position.y * gameCore.data.tile_size,                    
+            }
+            
+            let tween_data = {
+                targets: unit.sprite_ghost,
+                x: {value: game_pos.x, duration: 200},
+                y: {value: game_pos.y, duration: 200},
+                delay: 0,
+                angle: {value: unit.checkAngle(unit.sprite_ghost, game_pos), duration: 0},
+                onComplete: function ()
+                {
+                    let unit = this.targets[0].parent
+                    if(unit.saved_path.length > 0){
+                        let position = unit.saved_path.shift()
+                        addTween(unit,position)
+                    }
+                    // unit.is_moving = false;
+                }
+            }
+
+            return tween_data
+        }
+
+
+        let tweens = [];
+        options.data.positions.forEach((position, i) => {
+
+            //ONLY APPLY AN POSITION MOVE IF THERE'S ONE PASSED FROM THE SERVER
+            if(position){
+                let unit = gameCore.assets.units[i]
+                if(!unit.saved_path){
+                    unit.saved_path = [];
+                }
+                if(options.data.start){
+                    console.log("test")
+                    tweens.push(getTweenData(unit, position));
+                }else{
+                    unit.saved_path.push(position)
+                }
+            }
+        })
+
+        GameScene.scene.tweens.timeline({
+            tweens: tweens
+        });
+
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "moveMarker",
+            "e": e
+        }
+        errorHandler.log(options)
+    }  
+}
+
+
 
 
 

@@ -267,11 +267,11 @@ resetGhost() {
 		this.sprite.alpha = 1;
 		this.drawFightRadius();
 		
-		if(gameCore.data.mode === "move" || gameCore.data.mode === "charge"){
-			if(this.unit_class.cohesion > 0){
-				this.cohesionCheck();	
-			}
-		}
+		// if(gameCore.data.mode === "move" || gameCore.data.mode === "charge"){
+		// 	if(this.unit_class.cohesion > 0){
+		// 		this.cohesionCheck();	
+		// 	}
+		// }
 	}catch(e){
 
 		let options = {

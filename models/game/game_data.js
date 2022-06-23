@@ -68,8 +68,6 @@ const gameSchema = new mongoose.Schema({
 			x: Number
 			,y: Number
 		}]
-		// ,path: {type: Number, default: -1}
-
 		
 		,unit_class:
 		{

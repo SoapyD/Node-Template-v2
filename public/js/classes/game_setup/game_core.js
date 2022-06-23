@@ -54,7 +54,7 @@ const game_core = class {
     setScenes = () => {
         switch(instance_type){
             case "DEV":
-                this.config.scene = [ MainMenuScene, GameScene ]
+                this.config.scene = [ MainMenuScene, GameScene, GameUIScene ]
                 break;
             // case "DEV-ONLINE":
             //     this.config.scene = [ MainMenuScene, ArmySelectMenuScene, ArmySelectUIScene, GameScene, GameUIScene, ArmySetupUIScene]
@@ -115,6 +115,21 @@ const game_core = class {
     
     uiSceneTransition = (options) => {
         this.current_uiscene.scene.stop()	
+    }
+
+
+    hideButtons = () => {
+        this.assets.btn_sprite.forEach((btn) => {
+            btn.hideButton();
+            btn.text.visible = false;
+        })
+    }
+    
+    showButtons = () => {
+        this.assets.btn_sprite.forEach((btn) => {
+            btn.showButton();
+            btn.text.visible = true;	
+        })
     }
 
 }

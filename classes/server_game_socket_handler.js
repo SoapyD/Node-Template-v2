@@ -3,6 +3,7 @@ var server_socket_handler = require("./server_socket_handler")
 var game_pathfinder = require("./game/game_pathfinder")
 const { Worker, workerData } = require('worker_threads')
 const path = require('path');
+const _ = require('lodash');
 
 module.exports = class server_game_socket_handler extends server_socket_handler {
 	constructor(options) {	
@@ -227,9 +228,6 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
         let update = {}
         update["units."+options.setup_data.id+".path"] = result.process.path; 
-        // update["units."+options.setup_data.id+".x"] = -90; 
-        // update["tile_size"] = -90; 
-        // update["players.0.selected_unit"] = -90;
 
         let update_options = 
         {
@@ -242,9 +240,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             ]
         }   
 
-        databaseHandler.updateOne(update_options)   
-        console.log(update_options.params[0].filter,update_options.params[0].value)
-
+        await databaseHandler.updateOne(update_options)   
 
         this.returnPath(result)
     }
@@ -310,8 +306,6 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                 ]
                             }                            
                             databaseHandler.updateOne(update_options)   
-                            console.log(update_options.params[0].filter,update_options.params[0].value)
-
                         }
                     }
                 })
@@ -352,7 +346,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         {
                         worker_path: 'workers/pathfinder.js',
                         message: 'Pathfinding Test',
-                        id: options.id,
+                        id: socket.id,
                         grid: matrix,
                         acceptable_tiles: acceptable_tiles,
                         setup_data: {
@@ -399,6 +393,21 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
+    returnPotentialPaths = (options) => {
+        let return_options =  {
+            type: "source",
+            id: options.id,                
+            functionGroup: "core",
+            function: "setPotentialPaths",
+            data: {
+                message: "Potential Paths",
+                id: options.process.id,
+                live_tiles: options.process.paths,
+            }
+        }
+        this.sendMessage(return_options)        
+    }
+
     returnPath = (options) => {
         let return_options =  {
             type: "room",
@@ -409,21 +418,6 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 message: "Left Click",
                 id: options.process.id,
                 path: options.process.path,
-            }
-        }
-        this.sendMessage(return_options)        
-    }
-
-    returnPotentialPaths = (options) => {
-        let return_options =  {
-            type: "room",
-            id: options.id,                
-            functionGroup: "core",
-            function: "setPotentialPaths",
-            data: {
-                message: "Potential Paths",
-                id: options.process.id,
-                live_tiles: options.process.paths,
             }
         }
         this.sendMessage(return_options)        
@@ -441,11 +435,93 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
-    followPath = (options) => {
+    followPath = async(socket, options) => {
+
+        //GET THE POPULATE GAMES DATA
+        let game_data = await databaseHandler.findData({
+            model: "GameData"
+            ,search_type: "findOne"
+            ,params: {_id: options.data.id}
+        }, false)
+
+        //COUNT THROUGH PATH POSITIONS UP TO MAXIMUM
+
+        if(game_data[0]){
+            game_data = game_data[0];
+
+            //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF P
+            let lengths = _(game_data.units)
+            .map(row => row.path.length)
+            .value()
+            let max_pos = lengths[lengths.indexOf(Math.max(...lengths))]
+            let pos = 0 
+
+            options = {
+                id: options.id
+                ,pos: pos
+                ,max_pos: max_pos
+                ,game_data: game_data
+            }
+            
+            const advancePos = (pos) => {
+              pos++;
+              return pos
+            }
+            
+            
+            var myInterval =setInterval(() => {
+
+                let positions = _(options.game_data.units)
+                .map(row => row.path[options.pos])
+                .value()
+              
+                // console.log(positions)
+
+                let return_options =  {
+                    type: "room",
+                    id: options.id,                
+                    functionGroup: "core",
+                    function: "moveUnit",
+                    data: {
+                        positions: positions
+                    }
+                }
+                if(options.pos === 0){
+                    return_options.data.start = true;
+                }
+
+                this.sendMessage(return_options) 
+
+
+                options.pos = advancePos(options.pos)                
+                if(options.pos === options.max_pos){
+                    clearInterval(myInterval);
+                }
+
+            },250, options)
+        }
+
+
+/*
+
+let lengths = _(data)
+.map(row => row.array.length)
+.value()
+
+lengths[lengths.indexOf(Math.max(...lengths))]
+
+
+_(data)
+.map(row => row.array[3])
+.value()
+
+*/
+
+
         /*
         let array = [1,2,3,4,5,6]
         let pos = 0
-        let options = {
+        options = {
             array: array,
           pos: pos
         }
