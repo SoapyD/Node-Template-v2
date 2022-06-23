@@ -302,7 +302,6 @@ clientSocketHandler.moveUnit = (options) => {
 
         const addTween = (unit, position) => {
             let tween = getTweenData(unit, position)
-            console.log("id:",tween.unit.id, "angle:",tween.angle)
             GameScene.scene.tweens.add(tween)
         }
 
@@ -318,15 +317,6 @@ clientSocketHandler.moveUnit = (options) => {
                 y: {value: game_pos.y, duration: 200},
                 delay: 0,
                 angle: {value: unit.checkAngle(unit.sprite_ghost, game_pos), duration: 0},
-                onComplete: function ()
-                {
-                    let unit = this.targets[0].parent
-                    if(unit.saved_path.length > 0){
-                        let position = unit.saved_path.shift()
-                        addTween(unit,position)
-                    }
-                    // unit.is_moving = false;
-                }
             }
 
             return tween_data
@@ -339,15 +329,8 @@ clientSocketHandler.moveUnit = (options) => {
             //ONLY APPLY AN POSITION MOVE IF THERE'S ONE PASSED FROM THE SERVER
             if(position){
                 let unit = gameCore.assets.units[i]
-                if(!unit.saved_path){
-                    unit.saved_path = [];
-                }
-                if(options.data.start){
-                    console.log("test")
-                    tweens.push(getTweenData(unit, position));
-                }else{
-                    unit.saved_path.push(position)
-                }
+                let tween = getTweenData(unit, position)
+                GameScene.scene.tweens.add(tween)                
             }
         })
 

@@ -449,13 +449,14 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         if(game_data[0]){
             game_data = game_data[0];
 
-            //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF P
+            //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
             let lengths = _(game_data.units)
             .map(row => row.path.length)
             .value()
             let max_pos = lengths[lengths.indexOf(Math.max(...lengths))]
             let pos = 0 
 
+            //SETUP TROOP MOVING
             options = {
                 id: options.id
                 ,pos: pos
@@ -468,9 +469,10 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
               return pos
             }
             
-            
+            //SET AN INTERVAL THAT'LL COUNT THROUGH TROOP POSITIONS AND COMMUNCATE THEM BACK THE EACH PLAYER
             var myInterval =setInterval(() => {
 
+                //USE LOBASE TO GET PATH POSITIONS
                 let positions = _(options.game_data.units)
                 .map(row => row.path[options.pos])
                 .value()
@@ -501,43 +503,6 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             },250, options)
         }
 
-
-/*
-
-let lengths = _(data)
-.map(row => row.array.length)
-.value()
-
-lengths[lengths.indexOf(Math.max(...lengths))]
-
-
-_(data)
-.map(row => row.array[3])
-.value()
-
-*/
-
-
-        /*
-        let array = [1,2,3,4,5,6]
-        let pos = 0
-        options = {
-            array: array,
-          pos: pos
-        }
-        
-        const func = (pos) => {
-          pos++;
-          return pos
-        }
-        
-        
-        setInterval(() => {
-          options.pos = func(options.pos)
-          console.log(options.pos)
-        },10000, options)
-        */
-        
     }
 
 
