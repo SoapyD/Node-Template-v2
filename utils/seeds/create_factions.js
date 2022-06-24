@@ -22,8 +22,8 @@ exports.run = async() => {
                     {params:{name:"elite squad"}},
                     // {params:{name:"general"}},
                     // {params:{name:"scouts"}},
-                    // {params:{name:"tank"}},   
-                    // {params:{name:"dread"}},                                        
+                    {params:{name:"light tank"}},   
+                    {params:{name:"juggernaut"}},                                        
                 ],
             }
         ),

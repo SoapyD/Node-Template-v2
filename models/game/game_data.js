@@ -69,6 +69,10 @@ const gameSchema = new mongoose.Schema({
 			,y: Number
 		}]
 		
+		,movement: Number
+		,size: Number
+		,sprite_offset: Number
+
 		,unit_class:
 		{
 			type: mongoose.Schema.Types.ObjectId,

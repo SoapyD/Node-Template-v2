@@ -260,6 +260,43 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
 
+    getUnitTileRange = (unit) => {
+
+
+        let min = {
+            x: -1,
+            y: -1,
+        }
+        let max = {
+            x: -1,
+            y: -1,
+        }        
+
+        if(unit.sprite_offset === 0){
+
+            min.x = unit.tileX - unit.size;
+            min.y = unit.tileY - unit.size;            
+
+            max.x = unit.tileX
+            max.y = unit.tileY             
+        }
+
+        if(unit.sprite_offset === 0.5){
+
+            min.x = unit.tileX - unit.size;
+            min.y = unit.tileY - unit.size;            
+
+            max.x = unit.tileX + unit.size;
+            max.y = unit.tileY + unit.size;             
+        }
+
+        return {
+            min: min,
+            max: max
+        }
+
+    }
+
     clickHandler = async(socket, options) => {
         try{
 
@@ -283,8 +320,42 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 player = game_data.players[options.data.player];
 
                 matrix = game_data.matrix;
-                acceptable_tiles = game_data.acceptable_tiles;                
+                acceptable_tiles = game_data.acceptable_tiles;  
+                
+                
+                //USE LODASH TO SEARCH FOR UNIT
+                let unit_search = _.filter(game_data.units, (unit) => {
+                    let range = this.getUnitTileRange(unit)
+                    
+                    return (
+                        range.min.x <= player.pointerX && range.min.y <= player.pointerY
+                        && range.max.x >= player.pointerX && range.max.y >= player.pointerY
+                    )
+                })
+                if(unit_search.length > 0){
+                    // console.log("found unit:",test[0].id)
+                    let unit = unit_search[0]
 
+                    unit_selected = true;
+                    saved_unit = unit; 
+                    let update = {}
+                    update["players."+options.data.player+".selected_unit"] = unit.id;
+
+                    let update_options = 
+                    {
+                        model: "GameData"
+                        ,params: [
+                            {
+                                filter: {_id: options.data.id}, 
+                                value: {$set: update}
+                            }
+                        ]
+                    }                            
+                    databaseHandler.updateOne(update_options)
+
+                }
+
+                /*
                 game_data.units.forEach((unit) => {
                     //NEED TO RUN A CLASH CHECK HERE INSTEAD TO SEE IF THE CLICK POSITION IS WITHIN THE UNIT BOUNDS
                     if(player.pointerX === unit.tileX && player.pointerY === unit.tileY){
@@ -309,6 +380,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         }
                     }
                 })
+                */
 
             }
 
@@ -323,9 +395,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     acceptable_tiles: acceptable_tiles,
                     setup_data: {
                         id: player.selected_unit
-                        ,sprite_offset: 0.5
-                        ,movement: 10
-                        ,obj_size: 0
+                        ,sprite_offset: selected_unit.sprite_offset
+                        ,movement: selected_unit.movement
+                        ,obj_size: selected_unit.size
                         ,x_start: (selected_unit.tileX)
                         ,y_start: (selected_unit.tileY)                             
                     }
@@ -351,9 +423,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         acceptable_tiles: acceptable_tiles,
                         setup_data: {
                             id: player.selected_unit
-                            ,sprite_offset: 0.5
-                            ,movement: 10
-                            ,obj_size: 0
+                            ,sprite_offset: selected_unit.sprite_offset
+                            ,movement: selected_unit.movement
+                            ,obj_size: selected_unit.size
                             ,x_start: (selected_unit.tileX)
                             ,y_start: (selected_unit.tileY)
                             ,x_end: (player.pointerX)

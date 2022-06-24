@@ -63,6 +63,34 @@
                 }
             ),
             
+
+            exports.createSquad(
+                {
+                    type: "light tank",
+                    unit: "light tank",
+                    gun: "rocket launcher",
+                    armour: "heavy",
+                    melee: "none",
+                    upgrades: [],
+                    special_rules: [],                
+                    min_size: 1,
+                    max_size: 1,
+                }
+            ), 
+            exports.createSquad(
+                {
+                    type: "juggernaut",
+                    unit: "juggernaut",
+                    gun: "assault cannon",
+                    armour: "heavy",
+                    melee: "power fist",
+                    upgrades: [],
+                    special_rules: [],
+                    min_size: 1,
+                    max_size: 1,
+                }
+            ),
+
             /*
             exports.createSquad(
                 {
@@ -98,32 +126,7 @@
 
             
 
-            exports.createSquad(
-                {
-                    type: "tank",
-                    unit: "tank",
-                    gun: "rocket launcher",
-                    armour: "heavy",
-                    melee: "none",
-                    upgrades: [],
-                    special_rules: [],                
-                    min_size: 1,
-                    max_size: 1,
-                }
-            ), 
-            exports.createSquad(
-                {
-                    type: "dread",
-                    unit: "dread",
-                    gun: "heavy stubber",
-                    armour: "heavy",
-                    melee: "power fist",
-                    upgrades: [],
-                    special_rules: [],
-                    min_size: 1,
-                    max_size: 1,
-                }
-            ),
+
             exports.createSquad(
                 {
                     type: "scouts",

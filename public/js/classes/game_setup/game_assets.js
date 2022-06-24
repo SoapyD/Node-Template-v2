@@ -37,6 +37,9 @@ const game_assets = class {
     }
 
     preLoadSprites = () => {
+
+		this.scene.load.image('white', '../../img/game/white_texture.jpg');        
+		
 		//UNIT SPRITES
 		this.scene.load.image('trooper_blaster', '../../img/game/units/trooper_blaster.png');
 		this.scene.load.image('trooper_rocket', '../../img/game/units/trooper_rocket.png');
@@ -49,7 +52,11 @@ const game_assets = class {
 		this.scene.load.image('elite_assault_cannon', '../../img/game/units/elite_assault_cannon.png');
 		this.scene.load.image('elite_leader', '../../img/game/units/elite_leader.png');	
 		this.scene.load.image('elite_claws', '../../img/game/units/elite_claws.png');						
-		this.scene.load.image('white', '../../img/game/white_texture.jpg');        
+
+
+		this.scene.load.image('tank_assault', '../../img/game/units/tank_assault.png');
+		this.scene.load.image('dread_assault_fist', '../../img/game/units/dread_assault_fist.png');
+
     }
 
     preLoadParticles = () => {

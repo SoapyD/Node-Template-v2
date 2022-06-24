@@ -49,7 +49,7 @@ const game_squad_setup = class {
 						squad: squad_id, //this can be used for squad checks like unit cohesion
 						
 						angle: 0,
-						x: (5+(i*2)) * this.tile_size,
+						x: (7+(i*2)) * this.tile_size,
 						y: 5 * this.tile_size,
 						tileX: (5+(i*2)),
 						tileY: 5,												
@@ -205,6 +205,10 @@ const game_squad_setup = class {
 
 			options.core.melee_class = []
 			options.core.melee_class.push(melee_class._id)			
+
+			options.core.movement = unit_class.movement
+			options.core.size = unit_class.size
+			options.core.sprite_offset = unit_class.sprite_offset			
 								
 		}
 
