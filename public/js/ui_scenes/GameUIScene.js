@@ -28,8 +28,7 @@ var GameUIScene = new Phaser.Class({
 
 		GameUIScene.mode_check_state = 0;
 		GameUIScene.mode_check_timer = 0;
-
-		console.log("TEST")		
+	
     },
 
     create: function()

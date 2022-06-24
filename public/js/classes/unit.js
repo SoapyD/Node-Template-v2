@@ -37,7 +37,8 @@ const unit = class {
 		this.depth_sprite_flash = 6;		
 		this.depth_sprite = 4;
 		this.depth_sprite_ghost = 5;
-		this.depth_sprite_symbol = 10;
+		// this.depth_sprite_symbol = 10;
+		this.depth_sprite_action = 10;
 		this.depth_path = 9;
 		this.depth_explosion = 1;
 		this.depth_health = 2;
@@ -71,7 +72,7 @@ const unit = class {
 
 		//action sprite
 		this.sprite_action = options.scene.add.image(this.core.x,this.core.y,"symbols").setScale(0.08 * (this.unit_class.size + 1))		
-		this.sprite_action.setFrame(0).setDepth(this.depth_sprite_symbol);
+		this.sprite_action.setFrame(0).setDepth(this.depth_sprite_action);
 		this.sprite_action.alpha = 0.4
 		this.sprite_action.visible = false
 		
@@ -163,19 +164,19 @@ resetColours(){
 }
 
 
-resetCohesionGraphic() {
-	try{	
-		this.cohesion_graphic.clear()
-	}catch(e){
+// resetCohesionGraphic() {
+// 	try{	
+// 		this.cohesion_graphic.clear()
+// 	}catch(e){
 
-		let options = {
-			"class": "unit",
-			"function": "resetCohesionGraphic",
-			"e": e
-		}
-		errorHandler.log(options)
-	}		
-}
+// 		let options = {
+// 			"class": "unit",
+// 			"function": "resetCohesionGraphic",
+// 			"e": e
+// 		}
+// 		errorHandler.log(options)
+// 	}		
+// }
 
 resetActions() {
 	try{	
@@ -195,7 +196,9 @@ resetActions() {
 				
 		this.path_graphic.clear();
 		this.cohesion_graphic.clear();
-		this.resetDrawInfo();
+
+		this.text.setText("");
+		this.text_graphic.clear();		
 		
 		this.blast_graphics.forEach((graphic) => {
 			graphic.clear();
@@ -283,20 +286,20 @@ resetGhost() {
 	}		
 }
 
-resetDrawInfo(){
-	try{	
-		this.text.setText("");
-		this.text_graphic.clear();
-	}catch(e){
+// resetDrawInfo(){
+// 	try{	
+// 		this.text.setText("");
+// 		this.text_graphic.clear();
+// 	}catch(e){
 
-		let options = {
-			"class": "unit",
-			"function": "resetDrawInfo",
-			"e": e
-		}
-		errorHandler.log(options)
-	}		
-}	
+// 		let options = {
+// 			"class": "unit",
+// 			"function": "resetDrawInfo",
+// 			"e": e
+// 		}
+// 		errorHandler.log(options)
+// 	}		
+// }	
 
 // ####### #     # #     #  #####  ####### ### ####### #     #  #####  
 // #       #     # ##    # #     #    #     #  #     # ##    # #     # 
@@ -305,6 +308,20 @@ resetDrawInfo(){
 // #       #     # #   # # #          #     #  #     # #   # #       # 
 // #       #     # #    ## #     #    #     #  #     # #    ## #     # 
 // #        #####  #     #  #####     #    ### ####### #     #  #####  	
+
+async delay(ms) {
+	try{	
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}catch(e){
+
+		let options = {
+			"class": "unit",
+			"function": "delay",
+			"e": e
+		}
+		errorHandler.log(options)
+	}		
+}		
 
 
 checkAngle(start_pos, end_pos) {
@@ -491,7 +508,11 @@ drawTextParticle(text){
 
 updateElements(sprite){
 	try{	
-		this.updateUnitElements(sprite);
+		// this.updateUnitElements(sprite);
+		this.drawHealth(sprite);
+		this.sprite_action.x = sprite.x
+		this.sprite_action.y = sprite.y
+
 		this.drawInfo(sprite);
 		this.drawHealth(sprite);
 		this.drawFightRadius();
@@ -506,21 +527,21 @@ updateElements(sprite){
 	}		
 }
 
-updateUnitElements(sprite){
-	try{	
-		this.drawHealth(sprite);
-		this.sprite_action.x = sprite.x
-		this.sprite_action.y = sprite.y
-	}catch(e){
+// updateUnitElements(sprite){
+// 	try{	
+// 		this.drawHealth(sprite);
+// 		this.sprite_action.x = sprite.x
+// 		this.sprite_action.y = sprite.y
+// 	}catch(e){
 
-		let options = {
-			"class": "unit",
-			"function": "updateUnitElements",
-			"e": e
-		}
-		errorHandler.log(options)
-	}
-}	
+// 		let options = {
+// 			"class": "unit",
+// 			"function": "updateUnitElements",
+// 			"e": e
+// 		}
+// 		errorHandler.log(options)
+// 	}
+// }	
 
 
 drawInfo(sprite)
@@ -658,6 +679,9 @@ drawPath(colours) {
 	try{	
 		//UPDATE THE POSITIONAL DATA AND ANGLE OF THE SPRITE GHOST
 		if(this.path.length > 1){
+			this.sprite.alpha = 0.75
+			this.sprite.setTint(0x808080) //turn unit grey if it has a ghost path			
+
 			let pos = this.path[this.path.length - 1];
 
 			let angle = this.checkAngle(this.path[this.path.length - 2], this.path[this.path.length - 1])
@@ -676,6 +700,8 @@ drawPath(colours) {
 		}
 		
 		
+		
+		//DRAW THE  PATH OF THE UNIT
 		let last_pos = {
 			x: this.sprite.x / gameCore.data.tile_size,
 			y: this.sprite.y / gameCore.data.tile_size
@@ -702,19 +728,15 @@ drawPath(colours) {
 				last_pos = pos;
 			})				
 			
-			this.path_graphic.strokePath();				
-
-			this.sprite.setTint(0x808080) //turn unit grey if it has a ghost path
-			this.sprite.alpha = 0 //.25;
-			
+			this.path_graphic.strokePath();						
 		}
 		
-		this.cohesion_graphic.lineStyle(colours.line_width, colours.line_colour, colours.circle_alpha);
-		this.cohesion_graphic.fillStyle(colours.fill_colour, colours.fill_alpha);
-		let circle = new Phaser.Geom.Circle(last_pos.x * gameCore.data.tile_size, last_pos.y * gameCore.data.tile_size, this.unit_class.cohesion / 2);
-		this.cohesion_graphic.fillCircleShape(circle);
-
-		this.cohesion_graphic.strokePath();		
+		
+		// this.cohesion_graphic.lineStyle(colours.line_width, colours.line_colour, colours.circle_alpha);
+		// this.cohesion_graphic.fillStyle(colours.fill_colour, colours.fill_alpha);
+		// let circle = new Phaser.Geom.Circle(last_pos.x * gameCore.data.tile_size, last_pos.y * gameCore.data.tile_size, this.unit_class.cohesion / 2);
+		// this.cohesion_graphic.fillCircleShape(circle);
+		// this.cohesion_graphic.strokePath();		
 	}catch(e){
 
 		let options = {
@@ -833,29 +855,6 @@ drawSymbol(){
 }
 
 
-
-// ####### #     # #     #  #####  ####### ### ####### #     #  #####  
-// #       #     # ##    # #     #    #     #  #     # ##    # #     # 
-// #       #     # # #   # #          #     #  #     # # #   # #       
-// #####   #     # #  #  # #          #     #  #     # #  #  #  #####  
-// #       #     # #   # # #          #     #  #     # #   # #       # 
-// #       #     # #    ## #     #    #     #  #     # #    ## #     # 
-// #        #####  #     #  #####     #    ### ####### #     #  #####  	
-
-
-async delay(ms) {
-	try{	
-		return new Promise(resolve => setTimeout(resolve, ms));
-	}catch(e){
-
-		let options = {
-			"class": "unit",
-			"function": "delay",
-			"e": e
-		}
-		errorHandler.log(options)
-	}		
-}		
 
 
 

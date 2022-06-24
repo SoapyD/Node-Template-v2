@@ -300,10 +300,10 @@ clientSocketHandler.moveUnit = (options) => {
         }
 
 
-        const addTween = (unit, position) => {
-            let tween = getTweenData(unit, position)
-            GameScene.scene.tweens.add(tween)
-        }
+        // const addTween = (unit, position) => {
+        //     let tween = getTweenData(unit, position)
+        //     GameScene.scene.tweens.add(tween)
+        // }
 
         const getTweenData = (unit, position) => {
             let game_pos = {
@@ -323,20 +323,23 @@ clientSocketHandler.moveUnit = (options) => {
         }
 
 
-        let tweens = [];
         options.data.positions.forEach((position, i) => {
 
             //ONLY APPLY AN POSITION MOVE IF THERE'S ONE PASSED FROM THE SERVER
             if(position){
                 let unit = gameCore.assets.units[i]
-                let tween = getTweenData(unit, position)
-                GameScene.scene.tweens.add(tween)                
+                let tween = GameScene.scene.tweens.add(getTweenData(unit, position))
+                
+                //UPDATE PLAYER ELEMENTS AS IT MOVES
+                tween.on('update',(target) => {
+                    let unit = target.targets[0].parent
+
+                    unit.updateElements(unit.sprite_ghost)
+                    // unit.updateUnitElements(unit.sprite_ghost);
+                })
+
             }
         })
-
-        GameScene.scene.tweens.timeline({
-            tweens: tweens
-        });
 
 
     }catch(e){
