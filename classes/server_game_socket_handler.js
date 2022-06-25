@@ -297,6 +297,70 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
     }
 
+    getBulletPath = () => {
+
+        //GET START AND END DIFFERENCE
+        let start = {x:6.5,y:1.5}
+        let end = {x:9.5,y:6.5}
+        let width = end.x - start.x
+        let height = end.y - start.y
+
+        //CONVERT BOTH VALUES INTO POSITIVE NUMBERS
+        let c_width = width
+        let x_dir = 1;
+        if(width < 0){
+        c_width *= -1;
+        x_dir = -1
+        }
+
+        let c_height = height
+        let y_dir = 1;
+        if(height < 0){
+        c_height *= -1;
+        y_dir = -1;
+        }
+
+        //console.log(c_width,c_height)
+
+        //FIND WHICH DIMENSION IS LARGEST
+        let itts = c_width
+        let x_itt = 0.5
+        let y_itt = c_height / ((c_width) * 2)
+
+        if(c_height > c_width){
+            itts = c_height
+        x_itt = c_width / ((c_height) * 2)
+        y_itt = 0.5
+        }
+
+        let total_itts = (itts*2)+1
+
+        console.log("width:", c_width,"x_itt:",x_itt,"height:",c_height,"y_itt:",y_itt,"total itts:",total_itts)
+
+
+        _.times(total_itts, (i) => {
+        return {
+        //i:i,
+        x:start.x+((i*x_itt)*x_dir)
+        ,y:start.y+((i*y_itt)*y_dir)
+        }})
+        /**/
+
+        /*
+        let path = _.times(total_itts, (i) => {
+        return {
+        i:i,
+        x:Math.floor(start.x+((i*x_itt)*x_dir))
+        ,y:Math.floor(start.y+((i*y_itt)*y_dir))
+        }})
+
+        _.uniqBy(path, function (e) {
+        return e.x + '_' + e.y;
+        });
+        */      
+    }
+
+
     clickHandler = async(socket, options) => {
         try{
 
