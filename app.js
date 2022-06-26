@@ -37,10 +37,10 @@ switch(process.env.INSTANCE_TYPE){
 
 const io = socketio(expressServer);
 
-const server_socket_handler = new classes.server_game_socket_handler({
+global.socketHandler = new classes.server_game_socket_handler({
 	namespace: "/"
 	,io: io
 });
 
 
-server_socket_handler.checkMessages();
+socketHandler.checkMessages();

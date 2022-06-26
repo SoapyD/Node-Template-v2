@@ -1,6 +1,6 @@
 
 const { workerData, parentPort } = require('worker_threads')
-var game_pathfinder = require("../game/game_pathfinder")
+var game_pathfinder = require("../game_pathfinder")
 
 // let selected_unit = game_data.units[player.selected_unit]
 

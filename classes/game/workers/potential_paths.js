@@ -1,6 +1,6 @@
 
 const { workerData, parentPort } = require('worker_threads')
-var game_pathfinder = require("../game/game_pathfinder")
+var game_pathfinder = require("../game_pathfinder")
 
 
 const getSpiralMatrix = (tile_size, n, x_start, y_start) => {

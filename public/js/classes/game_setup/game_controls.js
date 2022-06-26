@@ -103,7 +103,8 @@ const game_controls = class {
                 id: clientRoomHandler.core.room_name,
                 data: {
                     id: gameCore.data.id,
-                    player: gameCore.data.player
+                    player: gameCore.data.player,
+                    button: "left-mouse"
                 }
             }				
             clientSocketHandler.messageServer(options)  
@@ -113,19 +114,17 @@ const game_controls = class {
 		if (pointer.rightButtonReleased())
 		{	
 
-            // let options = {
-            //     functionGroup: "core",  
-            //     function: "messageUser",
-            //     id: clientRoomHandler.core.room_name,
-            //     data: {
-            //         functionGroup: "core",
-            //         function: "test",
-            //         data: {
-            //             message: "Right Click",
-            //         }
-            //     }
-            // }				
-            // clientSocketHandler.messageServer(options)  
+            let options = {
+                functionGroup: "core",  
+                function: "clickHandler",
+                id: clientRoomHandler.core.room_name,
+                data: {
+                    id: gameCore.data.id,
+                    player: gameCore.data.player,
+                    button: "right-mouse"
+                }
+            }				
+            clientSocketHandler.messageServer(options)  
 
 			// this.parent.right_click = true;
 		}			

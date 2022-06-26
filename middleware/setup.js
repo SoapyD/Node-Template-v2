@@ -13,6 +13,9 @@ const strategies = require('./strategies')
 const classes = require('../classes');
 global.databaseHandler = new classes.mongoose_db_handler();
 global.errorHandler = new classes.server_error_handler();
+global.collisionHandler = new classes.game_collisions();
+global.actionHandler = new classes.game_actions();
+
 
 exports.run = async(app) => {
     //setup sessions
