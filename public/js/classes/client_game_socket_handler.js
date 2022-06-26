@@ -398,11 +398,11 @@ clientSocketHandler.setShootingTargets = (options) => {
         let unit = gameCore.assets.units[options.data.unit];
 
         unit.targets = [];
-        unit.targets.push(options.data.path[options.data.path.length - 1])
+        unit.targets.push(options.data.target)
         unit.drawTarget();
         
-        gameCore.live_tiles = options.data.path
-        gameCore.drawLiveTiles(1, 0xff3333)
+        // gameCore.live_tiles = options.data.path
+        // gameCore.drawLiveTiles(1, 0xff3333)
 
     }catch(e){
 

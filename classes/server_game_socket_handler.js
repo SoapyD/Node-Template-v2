@@ -404,8 +404,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             function: "setShootingTargets",
             data: {
                 message: "Potential Paths",
+                unit: options.unit,
                 path: options.path,
-                unit: options.unit
+                target: options.target,
             }
         }
         this.sendMessage(return_options)        

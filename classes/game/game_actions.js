@@ -76,6 +76,8 @@ module.exports = class game_actions {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
 
+
+
     checkUnitSelection = (options) => {
 
         try{
@@ -100,16 +102,15 @@ module.exports = class game_actions {
                 select_options.matrix = options.game_data.matrix;
                 select_options.acceptable_tiles = options.game_data.acceptable_tiles;  
                 
-                
-                //USE LODASH TO SEARCH FOR UNIT
-                let unit_search = _.filter(options.game_data.units, (unit) => {
-                    let range = collisionHandler.getUnitTileRange(unit)
-                    
-                    return (
-                        range.min.x <= select_options.player.pointerX && range.min.y <= select_options.player.pointerY
-                        && range.max.x >= select_options.player.pointerX && range.max.y >= select_options.player.pointerY
-                    )
-                })
+                let unit_search = collisionHandler.checkUnitClash(
+                    {
+                        game_data: options.game_data
+                        ,check_pos: {
+                            x: select_options.player.pointerX
+                            ,y: select_options.player.pointerY
+                        }
+                    })
+
 
                 //IF A UNIT WAS FOUND, SAVE IT TO GAME DATA FOR THAT PLAYER
                 if(unit_search.length > 0){
@@ -266,27 +267,41 @@ module.exports = class game_actions {
         //CHECK THROUGH TILES AND SEE IF THEY CLASH WITH ANY TERRAIN
         let saved_path = []
         let skip = false
-        path.forEach((e) => {
+        path.forEach((e, i) => {
 
-            // console.log(e)
+            let cell = options.matrix[e.y][e.x]            
+
+            if(skip === false){
+                saved_path.push(e)
+            }
 
             //break the loop if this isn't an acceptable tile
-            let cell = options.matrix[e.y][e.x]
             if(!options.acceptable_tiles.includes(cell)){
                 skip = true;
             }
 
-            if(skip === false){
-                e.x += 0.5
-                e.y += 0.5
-                saved_path.push(e)
+            //break the loop if the position hits another unit
+            let unit_search = collisionHandler.checkUnitClash(
+                {
+                    game_data: options.parent.game_data
+                    ,check_pos: e
+                })
+            if(unit_search.length > 0 && i > 0){
+                let unit = unit_search[0]
+                skip = true;
             }
+        })
+
+        saved_path.forEach((e, i) => {
+            e.x += 0.5
+            e.y += 0.5
         })
 
         socketHandler.returnShootingTarget({
             id: options.parent.id,
             unit: options.saved_unit.id,
-            path: saved_path
+            path: saved_path,
+            target: saved_path[saved_path.length - 1]
         })
 
     }

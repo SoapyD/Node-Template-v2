@@ -105,6 +105,18 @@ module.exports = class game_collisions {
     }
   }
 
+  checkUnitClash = (options) => {
+    //USE LODASH TO SEARCH FOR UNIT
+    return _.filter(options.game_data.units, (unit) => {
+      let range = this.getUnitTileRange(unit)
+      
+      return (
+          range.min.x <= options.check_pos.x && range.min.y <= options.check_pos.y
+          && range.max.x >= options.check_pos.x && range.max.y >= options.check_pos.y
+      )
+    })    
+  }
+
 
   gridRayTracing = (start, end) => {
 
