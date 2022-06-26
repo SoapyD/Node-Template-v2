@@ -147,8 +147,7 @@ module.exports = class game_collisions {
           // x:start.x+((i*x_itt) * x_dir)
           // ,y:start.y+((i*y_itt) * y_dir)
           x: Math.floor(start.x+((i*x_itt) * x_dir))
-          ,y: Math.floor(start.y+((i*y_itt) * y_dir))
-
+          ,y: Math.floor(start.y+((i*y_itt) * y_dir)) 
         }})
       }      
 
@@ -166,7 +165,7 @@ module.exports = class game_collisions {
           // x:start.x+((i*x_itt) * x_dir)
           // ,y:start.y+((i*y_itt) * y_dir)
           x: Math.floor(start.x+((i*x_itt) * x_dir))
-          ,y: Math.floor(start.y+((i*y_itt) * y_dir))          
+          ,y: Math.floor(start.y+((i*y_itt) * y_dir))         
         }})
       }
 

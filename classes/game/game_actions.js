@@ -263,16 +263,30 @@ module.exports = class game_actions {
 
         let path = collisionHandler.gridRayTracing(start, end)
 
-        // console.log(path)
+        //CHECK THROUGH TILES AND SEE IF THEY CLASH WITH ANY TERRAIN
+        let saved_path = []
+        let skip = false
         path.forEach((e) => {
-            e.x += 0.5
-            e.y += 0.5
+
+            // console.log(e)
+
+            //break the loop if this isn't an acceptable tile
+            let cell = options.matrix[e.y][e.x]
+            if(!options.acceptable_tiles.includes(cell)){
+                skip = true;
+            }
+
+            if(skip === false){
+                e.x += 0.5
+                e.y += 0.5
+                saved_path.push(e)
+            }
         })
 
         socketHandler.returnShootingTarget({
             id: options.parent.id,
             unit: options.saved_unit.id,
-            path: path
+            path: saved_path
         })
 
     }
