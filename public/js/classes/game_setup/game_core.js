@@ -30,6 +30,9 @@ const game_core = class {
         this.setConfig();
         this.setScenes();
 
+        this.live_tiles = [];
+        this.temp_sprites = [];
+
         this.game = new Phaser.Game(this.config);
     }
 
@@ -131,5 +134,41 @@ const game_core = class {
             btn.text.visible = true;	
         })
     }
+
+
+    // ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████ 
+    // ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██      
+    // █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████ 
+    // ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██ 
+    // ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████ 
+
+    resetTempSprites = () => {
+        this.temp_sprites.forEach((sprite) => {
+            sprite.destroy();
+        })
+        
+        this.temp_sprites = []
+    }
+
+    drawLiveTiles = (reset=1, colour) => {
+        if(reset === 1){
+            this.resetTempSprites();
+        }
+        
+        if(this.live_tiles){
+            this.live_tiles.forEach((tile, i)=> {
+                this.temp_sprites.push(
+                    this.current_scene.physics.add.image(
+                        tile.x * gameCore.data.tile_size,
+                        tile.y * gameCore.data.tile_size,"marker").setDepth(0)
+                )
+
+                if(colour){
+                    this.temp_sprites[i].setTint(colour)
+                }
+            })		
+        }
+    }
+
 
 }

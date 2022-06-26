@@ -263,11 +263,16 @@ module.exports = class game_actions {
 
         let path = collisionHandler.gridRayTracing(start, end)
 
-        socketHandler.returnPotentialPaths({
+        // console.log(path)
+        path.forEach((e) => {
+            e.x += 0.5
+            e.y += 0.5
+        })
+
+        socketHandler.returnShootingTarget({
             id: options.parent.id,
-            process: {
-                paths: path
-            }
+            unit: options.saved_unit.id,
+            path: path
         })
 
     }

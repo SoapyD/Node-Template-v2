@@ -144,8 +144,11 @@ module.exports = class game_collisions {
         
         x_path = _.times(total_itts, (i) => {
         return {
-        x:start.x+((i*x_itt) * x_dir)
-        ,y:start.y+((i*y_itt) * y_dir)
+          // x:start.x+((i*x_itt) * x_dir)
+          // ,y:start.y+((i*y_itt) * y_dir)
+          x: Math.floor(start.x+((i*x_itt) * x_dir))
+          ,y: Math.floor(start.y+((i*y_itt) * y_dir))
+
         }})
       }      
 
@@ -160,10 +163,21 @@ module.exports = class game_collisions {
 
         y_path = _.times(total_itts, (i) => {
         return {
-          x:start.x+((i*x_itt) * x_dir)
-          ,y:start.y+((i*y_itt) * y_dir)
+          // x:start.x+((i*x_itt) * x_dir)
+          // ,y:start.y+((i*y_itt) * y_dir)
+          x: Math.floor(start.x+((i*x_itt) * x_dir))
+          ,y: Math.floor(start.y+((i*y_itt) * y_dir))          
         }})
       }
+
+      let order_rank = ['asc','asc']
+      if(x_dir === -1){
+        order_rank[0] = 'desc'
+      }
+      if(y_dir === -1){
+        order_rank[1] = 'desc'
+      }      
+
 
       //COMBINE THE TWO SETS OF PATHS THEN GET A UNIQUE LIST OF TILES FROM IT
       let combined_path = x_path.concat(y_path)
@@ -172,7 +186,7 @@ module.exports = class game_collisions {
       .uniqBy((e) => {
         return e.x + '_' + e.y;
       })
-      .sortBy(['x', 'y'])
+      .orderBy(['x', 'y'], order_rank)
       .value()  
   }
 
