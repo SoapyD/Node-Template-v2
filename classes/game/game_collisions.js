@@ -143,23 +143,26 @@ module.exports = class game_collisions {
       {
         n_height *= -1;
         y_dir = -1;
-      }      
+      }
+      
+      let steps = 0.25
+      let multiplier = 1 / steps
 
       //GET THE X ITTERATIONS AND Y RELATED POSITIONS
       let x_path = []
       if(n_width !== 0){      
         itts = n_width
 
-        x_itt = 0.5
-        y_itt = n_height / ((n_width) * 2)
-        total_itts = (itts*2)+1
+        x_itt = steps
+        y_itt = n_height / ((n_width) * multiplier)
+        total_itts = (itts*multiplier)+1
         
         x_path = _.times(total_itts, (i) => {
         return {
-          // x:start.x+((i*x_itt) * x_dir)
-          // ,y:start.y+((i*y_itt) * y_dir)
-          x: Math.floor(start.x+((i*x_itt) * x_dir))
-          ,y: Math.floor(start.y+((i*y_itt) * y_dir)) 
+          x:start.x+((i*x_itt) * x_dir)
+          ,y:start.y+((i*y_itt) * y_dir)
+          ,tileX: Math.floor(start.x+((i*x_itt) * x_dir))
+          ,tileY: Math.floor(start.y+((i*y_itt) * y_dir)) 
         }})
       }      
 
@@ -168,16 +171,16 @@ module.exports = class game_collisions {
       if(n_height !== 0){
         itts = n_height
 
-        x_itt = n_width / ((n_height) * 2)
-        y_itt = 0.5
-        total_itts = (itts*2)+1
+        x_itt = n_width / ((n_height) * multiplier)
+        y_itt = steps
+        total_itts = (itts*multiplier)+1
 
         y_path = _.times(total_itts, (i) => {
         return {
-          // x:start.x+((i*x_itt) * x_dir)
-          // ,y:start.y+((i*y_itt) * y_dir)
-          x: Math.floor(start.x+((i*x_itt) * x_dir))
-          ,y: Math.floor(start.y+((i*y_itt) * y_dir))         
+          x:start.x+((i*x_itt) * x_dir)
+          ,y:start.y+((i*y_itt) * y_dir)
+          ,tileX: Math.floor(start.x+((i*x_itt) * x_dir))
+          ,tileY: Math.floor(start.y+((i*y_itt) * y_dir))       
         }})
       }
 
@@ -194,9 +197,9 @@ module.exports = class game_collisions {
       let combined_path = x_path.concat(y_path)
       
       return _(combined_path)
-      .uniqBy((e) => {
-        return e.x + '_' + e.y;
-      })
+      // .uniqBy((e) => {
+      //   return e.x + '_' + e.y;
+      // })
       .orderBy(['x', 'y'], order_rank)
       .value()  
   }

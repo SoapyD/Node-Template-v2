@@ -397,12 +397,31 @@ clientSocketHandler.setShootingTargets = (options) => {
     try{
         let unit = gameCore.assets.units[options.data.unit];
 
+
+        // console.log(options.data.path)
+
         unit.targets = [];
         unit.targets.push(options.data.target)
         unit.drawTarget();
         
-        // gameCore.live_tiles = options.data.path
-        // gameCore.drawLiveTiles(1, 0xff3333)
+        let saved_tiles = []
+        gameCore.live_tiles = []
+        options.data.path.forEach((el) => {
+            gameCore.live_tiles.push({
+                x: el.x
+                ,y: el.y
+            })
+            saved_tiles.push({
+                x: el.tileX
+                ,y: el.tileY
+            })            
+        })
+        gameCore.drawLiveTiles(1, 0xff3333)
+
+
+        gameCore.live_tiles = saved_tiles
+        gameCore.drawLiveTiles(0)
+
 
     }catch(e){
 

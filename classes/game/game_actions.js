@@ -269,12 +269,14 @@ module.exports = class game_actions {
         let skip = false
         path.forEach((e, i) => {
 
-            let cell = options.matrix[e.y][e.x]            
+            let cell = options.matrix[e.tileY][e.tileX]            
 
             if(skip === false){
+                e.cell = cell
                 saved_path.push(e)
             }
 
+            
             //break the loop if this isn't an acceptable tile
             if(!options.acceptable_tiles.includes(cell)){
                 skip = true;
@@ -284,17 +286,20 @@ module.exports = class game_actions {
             let unit_search = collisionHandler.checkUnitClash(
                 {
                     game_data: options.parent.game_data
-                    ,check_pos: e
+                    ,check_pos: {x: e.tileX, y: e.tileY}
                 })
-            if(unit_search.length > 0 && i > 0){
+            if(unit_search.length > 0){
                 let unit = unit_search[0]
-                skip = true;
+                if(unit.id !== options.saved_unit.id && unit.side !== options.saved_unit.side){
+                    skip = true;
+                }
             }
+            /**/
         })
 
         saved_path.forEach((e, i) => {
-            e.x += 0.5
-            e.y += 0.5
+            e.tileX += 0.5
+            e.tileY += 0.5
         })
 
         socketHandler.returnShootingTarget({
