@@ -27,12 +27,11 @@ const unit = class {
 		this.scene = options.scene;
 		this.type = 'unit'
 
-		this.path = [];
-		this.is_moving = false;
-		this.cohesion_check = true;
-		this.targets = [];						
-		
-		this.fight_targets = [];
+		// this.core.path = [];
+		// this.is_moving = false;
+		// this.core.cohesion_check = true;
+		// this.core.targets = [];						
+		// this.core.fight_targets = [];
 
 		this.depth_sprite_flash = 6;		
 		this.depth_sprite = 4;
@@ -138,7 +137,7 @@ const unit = class {
 	
 resetColours(){
 	try{	
-		if(this.path.length > 0){
+		if(this.core.path.length > 0){
 			let colours = {
 				line_colour: 0x808080,
 				fill_colour: 0x2ECC40,
@@ -147,7 +146,7 @@ resetColours(){
 				fill_alpha: 0.15,
 				width: 5
 			}
-			if(this.cohesion_check === false){
+			if(this.core.cohesion_check === false){
 				colours.fill_colour = 0xFF0000; //0x6666ff				
 			}
 			this.drawPath(colours)
@@ -180,9 +179,9 @@ resetColours(){
 
 resetActions() {
 	try{	
-		this.path = [];
-		this.targets = [];
-		this.fight_targets = [];	
+		this.core.path = [];
+		this.core.targets = [];
+		this.core.fight_targets = [];	
 
 		
 		// this.resetGhost();
@@ -216,7 +215,7 @@ resetActions() {
 
 resetMove() {
 	try{	
-		this.path = [];
+		this.core.path = [];
 		this.path_graphic.clear();		
 		this.resetGhost();
 		this.updateElements(this.sprite_ghost);
@@ -550,10 +549,10 @@ drawInfo(sprite)
 		let string = ""
 		switch(gameCore.data.mode){
 			case "shoot":
-				string = this.targets.length + "/" + this.gun_class[this.core.selected_gun].max_targets
+				string = this.core.targets.length + "/" + this.gun_class[this.core.selected_gun].max_targets
 				break;
 			case "fight":
-				string = this.fight_targets.length + "/" + this.melee_class[this.core.selected_melee].max_targets
+				string = this.core.fight_targets.length + "/" + this.melee_class[this.core.selected_melee].max_targets
 				break;				
 		}
 
@@ -690,13 +689,13 @@ drawPath(colours) {
 
 	try{	
 		//UPDATE THE POSITIONAL DATA AND ANGLE OF THE SPRITE GHOST
-		if(this.path.length > 1){
+		if(this.core.path.length > 1){
 			this.sprite.alpha = 0.75
 			this.sprite.setTint(0x808080) //turn unit grey if it has a ghost path			
 
-			let pos = this.path[this.path.length - 1];
+			let pos = this.core.path[this.core.path.length - 1];
 
-			let angle = this.checkAngle(this.path[this.path.length - 2], this.path[this.path.length - 1])
+			let angle = this.checkAngle(this.core.path[this.core.path.length - 2], this.core.path[this.core.path.length - 1])
 
 			if(this.sprite_ghost){
 				this.sprite_ghost.x = pos.x * gameCore.data.tile_size;
@@ -723,12 +722,12 @@ drawPath(colours) {
 		this.path_graphic.clear();
 		this.cohesion_graphic.clear();
 		
-		if (this.path && this.path.length > 1){
+		if (this.core.path && this.core.path.length > 1){
 			
 			this.path_graphic.lineStyle(colours.width, colours.line_colour, colours.line_alpha);
 			this.path_graphic.beginPath();
 
-			this.path.forEach((pos, i) => {
+			this.core.path.forEach((pos, i) => {
 
 				if (i !== 0){
 					this.path_graphic.lineTo(pos.x * gameCore.data.tile_size, pos.y * gameCore.data.tile_size);
@@ -790,14 +789,14 @@ drawPath(colours) {
 drawTarget() {	
 
 	try{	
-		if (this.targets){
+		if (this.core.targets){
 			
 			//RESET THE DRAW GRAPHICS
 			this.path_graphic.clear()
 			this.path_graphic.lineStyle(8, 0x00cccc, 0.5);	
 			this.path_graphic.beginPath();
 			
-			this.targets.forEach((target, i) => {
+			this.core.targets.forEach((target, i) => {
 				
 				this.path_graphic.moveTo(this.sprite.x, this.sprite.y);
 				this.path_graphic.lineTo(target.x * gameCore.data.tile_size, target.y * gameCore.data.tile_size);

@@ -260,7 +260,7 @@ clientSocketHandler.setPath = (options) => {
 
     try{
         let unit = gameCore.assets.units[options.data.id]
-        unit.path = options.data.path
+        unit.core.path = options.data.path
 
         let colours = {
             line_colour: 0x00cccc,
@@ -311,7 +311,7 @@ clientSocketHandler.moveUnit = (options) => {
     try{
         if(options.data.start){
             // resetMove
-            GameScene.game_assets.resetTempSprites()
+            gameCore.resetTempSprites()
         }
 
 
@@ -400,9 +400,11 @@ clientSocketHandler.setShootingTargets = (options) => {
 
         // console.log(options.data.path)
 
-        unit.targets = [];
-        unit.targets.push(options.data.target)
+        unit.core.targets = [];
+        unit.core.targets.push(options.data.target)
         unit.drawTarget();
+        
+        /*
         
         let saved_tiles = []
         gameCore.live_tiles = []
@@ -421,7 +423,7 @@ clientSocketHandler.setShootingTargets = (options) => {
 
         gameCore.live_tiles = saved_tiles
         gameCore.drawLiveTiles(0)
-
+        */
 
     }catch(e){
 

@@ -405,7 +405,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             data: {
                 message: "Potential Paths",
                 unit: options.unit,
-                path: options.path,
+                // path: options.path,
                 target: options.target,
             }
         }

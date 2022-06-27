@@ -70,7 +70,14 @@ const game_squad_setup = class {
 						fought: false,
 
 						selected_gun: 0,
-						selected_melee: 0,						
+						selected_melee: 0,	
+						
+						path: [],
+						is_moving: false,
+						cohesion_check: true,
+						targets: [],						
+						fight_targets: [],						
+
 					}
 
 

@@ -64,15 +64,6 @@ const gameSchema = new mongoose.Schema({
 		,selected_gun: Number
 		,selected_melee: Number
 
-		,path: [{
-			x: Number
-			,y: Number
-		}]
-		
-		,movement: Number
-		,size: Number
-		,sprite_offset: Number
-
 		,unit_class:
 		{
 			type: mongoose.Schema.Types.ObjectId,
@@ -93,6 +84,29 @@ const gameSchema = new mongoose.Schema({
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Melee"
 		}]		
+
+		,path: [{
+			x: Number
+			,y: Number
+		}]
+		,targets: [{
+			x: Number
+			,y: Number
+		}]		
+
+		,fight_targets: [{
+			x: Number
+			,y: Number
+		}]
+
+		,is_moving: Boolean
+		,cohesion_check: Boolean
+		
+		//MAYBE SOURCE THESE FROM THE LINKED UNIT DATA INSTEAD
+		,movement: Number
+		,size: Number
+		,sprite_offset: Number
+
 	}]
 
    ,created_date: {type: Date, default: Date.now}

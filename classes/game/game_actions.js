@@ -83,6 +83,8 @@ module.exports = class game_actions {
         try{
 
 
+            //IF LEFT CLICK
+
             let select_options = {
                 parent: options
                 ,unit_selected: false
@@ -137,7 +139,7 @@ module.exports = class game_actions {
                 }
             }
             
-            let action = "shoot"
+            let action = "move"
 
             //WHEN A NEW UNIT IS SELECTED
             if(select_options.unit_selected === true){
@@ -253,6 +255,12 @@ module.exports = class game_actions {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     getBulletPath = (options) => {
+
+        //GET WEAPON DETAILS
+
+        //IF TARGETS AVAILABLE TO SET
+
+
         let end = {
             x: options.player.pointerX + 0.5
             ,y: options.player.pointerY + 0.5
@@ -302,10 +310,12 @@ module.exports = class game_actions {
             e.tileY += 0.5
         })
 
+        //SET TARGETS IN GAME_DATA FOR UNIT
+
         socketHandler.returnShootingTarget({
             id: options.parent.id,
             unit: options.saved_unit.id,
-            path: saved_path,
+            // path: saved_path,
             target: saved_path[saved_path.length - 1]
         })
 
