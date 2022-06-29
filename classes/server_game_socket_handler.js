@@ -63,7 +63,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     ,acceptable_tiles: gameMap.acceptable_tiles
                     ,matrix: gameMap.matrix
                     ,forces: forces
-                    ,players: players            
+                    ,players: players
+                    ,mode: "shoot"            
                 }]  
             })
             
@@ -221,7 +222,13 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 options.game_data = game_data[0]
                 options.socket = socket
 
-                actionHandler.checkUnitSelection(options)
+                if(options.data.button === 'left-mouse'){
+                    actionHandler.checkUnitSelection(options)
+                }
+                if(options.data.button === 'right-mouse'){
+                    actionHandler.rightClick(options)
+                }
+
             }
    
         }
@@ -406,7 +413,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 message: "Potential Paths",
                 unit: options.unit,
                 // path: options.path,
-                target: options.target,
+                targets: options.targets,
             }
         }
         this.sendMessage(return_options)        

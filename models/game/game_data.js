@@ -7,6 +7,8 @@ const gameSchema = new mongoose.Schema({
     ,acceptable_tiles: [Number]
     ,matrix: [[Number]]    
 
+	,mode: String
+
 	,forces: [{
 		side: {type: Number, default: -1}
 		,start: {type: Number, default: -1}

@@ -138,12 +138,10 @@ module.exports = class game_actions {
 
                 }
             }
-            
-            let action = "move"
 
             //WHEN A NEW UNIT IS SELECTED
             if(select_options.unit_selected === true){
-                switch(action){
+                switch(options.game_data.mode){
                     case "move":
                         this.getPotentialPaths(select_options)
                     break;      
@@ -156,7 +154,7 @@ module.exports = class game_actions {
 
                     select_options.saved_unit = options.game_data.units[select_options.player.selected_unit]
 
-                    switch(action){
+                    switch(options.game_data.mode){
                         case "move":
                             this.getPath(select_options)
                         break;      
@@ -263,66 +261,127 @@ module.exports = class game_actions {
             ,params: {_id: options.saved_unit.gun_class[options.saved_unit.selected_gun]}
         })            
 
-        //IF TARGETS AVAILABLE TO SET
+        if(gun[0]){
 
+            //IF TARGETS AVAILABLE TO SET
+            gun = gun[0];
+            if(options.saved_unit.targets.length < gun.max_targets){
 
-        let end = {
-            x: options.player.pointerX + 0.5
-            ,y: options.player.pointerY + 0.5
-        }
-        let start = {
-            x: options.saved_unit.tileX + options.saved_unit.sprite_offset
-            ,y: options.saved_unit.tileY + options.saved_unit.sprite_offset
-        }
-
-        let path = collisionHandler.gridRayTracing(start, end)
-
-        //CHECK THROUGH TILES AND SEE IF THEY CLASH WITH ANY TERRAIN
-        let saved_path = []
-        let skip = false
-        path.forEach((e, i) => {
-
-            let cell = options.matrix[e.tileY][e.tileX]            
-
-            if(skip === false){
-                e.cell = cell
-                saved_path.push(e)
-            }
-
-            
-            //break the loop if this isn't an acceptable tile
-            if(!options.acceptable_tiles.includes(cell)){
-                skip = true;
-            }
-
-            //break the loop if the position hits another unit
-            let unit_search = collisionHandler.checkUnitClash(
-                {
-                    game_data: options.parent.game_data
-                    ,check_pos: {x: e.tileX, y: e.tileY}
-                })
-            if(unit_search.length > 0){
-                let unit = unit_search[0]
-                if(unit.id !== options.saved_unit.id && unit.side !== options.saved_unit.side){
-                    skip = true;
+                let end = {
+                    x: options.player.pointerX + 0.5
+                    ,y: options.player.pointerY + 0.5
                 }
+                let start = {
+                    x: options.saved_unit.tileX + options.saved_unit.sprite_offset
+                    ,y: options.saved_unit.tileY + options.saved_unit.sprite_offset
+                }
+        
+                let path = collisionHandler.gridRayTracing(start, end)
+        
+                //CHECK THROUGH TILES AND SEE IF THEY CLASH WITH ANY TERRAIN
+                let saved_path = []
+                let skip = false
+                path.forEach((e, i) => {
+        
+                    let cell = options.matrix[e.tileY][e.tileX]            
+        
+                    if(skip === false){
+                        e.cell = cell
+                        saved_path.push(e)
+                    }
+        
+                    
+                    //break the loop if this isn't an acceptable tile
+                    if(!options.acceptable_tiles.includes(cell)){
+                        skip = true;
+                    }
+        
+                    //break the loop if the position hits another unit
+                    let unit_search = collisionHandler.checkUnitClash(
+                        {
+                            game_data: options.parent.game_data
+                            ,check_pos: {x: e.tileX, y: e.tileY}
+                        })
+                    if(unit_search.length > 0){
+                        let unit = unit_search[0]
+                        if(unit.id !== options.saved_unit.id && unit.side !== options.saved_unit.side){
+                            skip = true;
+                        }
+                    }
+                    /**/
+                })
+        
+                saved_path.forEach((e, i) => {
+                    e.tileX += 0.5
+                    e.tileY += 0.5
+                })
+                let target = saved_path[saved_path.length - 1]
+
+                //UPDATE GAME DATA SO IT SAVES THE TARGET FOR THAT UNIT
+                let update = {}
+                update["units."+options.saved_unit.id+".targets."+options.saved_unit.targets.length] = target; 
+        
+                let update_options = 
+                {
+                    model: "GameData"
+                    ,params: [
+                        {
+                            filter: {_id: options.parent.game_data.id}, 
+                            value: {$set: update}
+                        }
+                    ]
+                }   
+        
+                await databaseHandler.updateOne(update_options)                  
+
+        
+                //SET TARGETS IN GAME_DATA FOR UNIT
+                let return_targets = options.parent.game_data.units[options.saved_unit.id].targets
+                return_targets.push(target)
+        
+                socketHandler.returnShootingTarget({
+                    id: options.parent.id,
+                    unit: options.saved_unit.id,
+                    // path: saved_path,
+                    targets: return_targets
+                })
+
             }
-            /**/
-        })
+        } 
 
-        saved_path.forEach((e, i) => {
-            e.tileX += 0.5
-            e.tileY += 0.5
-        })
+    }
 
-        //SET TARGETS IN GAME_DATA FOR UNIT
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    // ######  ###  #####  #     # #######        #####  #       ###  #####  #    # 
+    // #     #  #  #     # #     #    #          #     # #        #  #     # #   #  
+    // #     #  #  #       #     #    #          #       #        #  #       #  #   
+    // ######   #  #  #### #######    #    ##### #       #        #  #       ###    
+    // #   #    #  #     # #     #    #          #       #        #  #       #  #   
+    // #    #   #  #     # #     #    #          #     # #        #  #     # #   #  
+    // #     # ###  #####  #     #    #           #####  ####### ###  #####  #    # 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
 
-        socketHandler.returnShootingTarget({
-            id: options.parent.id,
-            unit: options.saved_unit.id,
-            // path: saved_path,
-            target: saved_path[saved_path.length - 1]
-        })
+    rightClick = async(options) => {
+
+        // if(select_options.unit_selected === false){
+        //IF PLAYER HAS A SELECTED UNIT
+        switch(options.game_data.mode){
+            case "move":
+            case "charge":
+                //REMOVE PATH FROM SELECTED UNIT
+                //SEND DATA TO CLIENTS
+            break; 
+            case "shoot":
+                //REMOVE LAST TARGET FROM UNIT
+                //SEND DATA TO CLIENTS
+            break;     
+            case "fight":
+                //REMOVE LAST TARGET FROM UNIT
+                //SEND DATA TO CLIENTS
+            break;                          
+        }        
 
     }
 

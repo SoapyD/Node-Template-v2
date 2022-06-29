@@ -400,8 +400,7 @@ clientSocketHandler.setShootingTargets = (options) => {
 
         // console.log(options.data.path)
 
-        unit.core.targets = [];
-        unit.core.targets.push(options.data.target)
+        unit.core.targets = options.data.targets;
         unit.drawTarget();
         
         /*
