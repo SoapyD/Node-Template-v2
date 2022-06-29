@@ -254,9 +254,14 @@ module.exports = class game_actions {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    getBulletPath = (options) => {
+    getBulletPath = async(options) => {
 
         //GET WEAPON DETAILS
+        let gun = await databaseHandler.findData({
+            model: "Gun"
+            ,search_type: "findOne"
+            ,params: {_id: options.saved_unit.gun_class[options.saved_unit.selected_gun]}
+        })            
 
         //IF TARGETS AVAILABLE TO SET
 
