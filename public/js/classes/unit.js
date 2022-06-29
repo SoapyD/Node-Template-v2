@@ -708,6 +708,18 @@ drawPath(colours) {
 					this.drawFightRadius();
 				// }
 			}
+		}else{
+			if(this.sprite_ghost){
+				this.sprite_ghost.x = this.sprite.x;
+				this.sprite_ghost.y = this.sprite.y;
+				this.sprite_ghost.angle = this.sprite.angle;
+
+				this.updateElements(this.sprite_ghost)
+
+				// if(gameCore.data.mode === "charge"){
+					this.drawFightRadius();
+				// }
+			}			
 		}
 		
 		

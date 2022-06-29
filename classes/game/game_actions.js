@@ -365,23 +365,77 @@ module.exports = class game_actions {
 
     rightClick = async(options) => {
 
-        // if(select_options.unit_selected === false){
+        let player = options.game_data.players[options.data.player];
+
         //IF PLAYER HAS A SELECTED UNIT
-        switch(options.game_data.mode){
-            case "move":
-            case "charge":
-                //REMOVE PATH FROM SELECTED UNIT
-                //SEND DATA TO CLIENTS
-            break; 
-            case "shoot":
-                //REMOVE LAST TARGET FROM UNIT
-                //SEND DATA TO CLIENTS
-            break;     
-            case "fight":
-                //REMOVE LAST TARGET FROM UNIT
-                //SEND DATA TO CLIENTS
-            break;                          
-        }        
+        if(player.selected_unit !== -1){
+
+            let unit = options.game_data.units[player.selected_unit];
+            let update = {}
+            let new_targets = []
+
+            switch(options.game_data.mode){
+                case "move":
+                case "charge":
+                    //REMOVE PATH FROM SELECTED UNIT
+                    update["units."+unit.id+".path"] = []; 
+                break; 
+                case "shoot":
+                    //REMOVE LAST TARGET FROM UNIT
+                    new_targets = unit.targets
+                    new_targets.pop()
+                    update["units."+unit.id+".targets"] = new_targets;
+                    //SEND DATA TO CLIENTS
+                break;     
+                case "fight":
+                    //REMOVE LAST TARGET FROM UNIT
+                    //SEND DATA TO CLIENTS
+                break;                          
+            }        
+
+            
+            if(Object.keys(update).length !== 0){
+                let update_options = 
+                {
+                    model: "GameData"
+                    ,params: [
+                        {
+                            filter: {_id: options.game_data.id}, 
+                            value: {$set: update}
+                        }
+                    ]
+                }   
+        
+                await databaseHandler.updateOne(update_options)  
+            } 
+
+
+            switch(options.game_data.mode){
+                case "move":
+                case "charge":
+                    socketHandler.returnPath({
+                        id: options.id,
+                        process: {
+                            id: unit.id,
+                            path: []
+                        }
+                    })
+                break; 
+                case "shoot":
+                    socketHandler.returnShootingTarget({
+                        id: options.id,
+                        unit: unit.id,
+                        targets: new_targets
+                    })
+                break;     
+                case "fight":
+                    //REMOVE LAST TARGET FROM UNIT
+                    //SEND DATA TO CLIENTS
+                break;                          
+            }  
+
+
+        }
 
     }
 

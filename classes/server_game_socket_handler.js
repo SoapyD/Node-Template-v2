@@ -64,7 +64,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     ,matrix: gameMap.matrix
                     ,forces: forces
                     ,players: players
-                    ,mode: "shoot"            
+                    ,mode: "move"            
                 }]  
             })
             
