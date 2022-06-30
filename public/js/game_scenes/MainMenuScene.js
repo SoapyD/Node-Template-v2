@@ -13,7 +13,8 @@ var MainMenuScene = new Phaser.Class({
 
     preload: function()
     {
-
+        MainMenuScene.scene = this.scene.get('MainMenuScene')
+        MainMenuScene.scene.scene.launch('StartUIScene');
     },
 
 

@@ -30,7 +30,7 @@ exports.getGameRoom = async(req,res) => {
 			// room.forces.push({})
 
 
-			let deleted_army = await databaseHandler.destroyData({
+			let deleted_room = await databaseHandler.destroyData({
 				model: "Room"
 				,search_type: "deleteMany"
 				,params: [{room_name: "test room"}]

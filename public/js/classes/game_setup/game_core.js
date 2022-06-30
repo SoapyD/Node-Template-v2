@@ -57,7 +57,7 @@ const game_core = class {
     setScenes = () => {
         switch(instance_type){
             case "DEV":
-                this.config.scene = [ MainMenuScene, GameScene, GameUIScene ]
+                this.config.scene = [ MainMenuScene, GameScene, StartUIScene, GameUIScene ]
                 break;
             // case "DEV-ONLINE":
             //     this.config.scene = [ MainMenuScene, ArmySelectMenuScene, ArmySelectUIScene, GameScene, GameUIScene, ArmySetupUIScene]

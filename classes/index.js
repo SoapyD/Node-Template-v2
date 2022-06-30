@@ -12,3 +12,4 @@ exports.game_pathfinder = require("./game/game_pathfinder");
 exports.game_collisions = require("./game/game_collisions");
 exports.game_maps = require("./game/game_maps");
 exports.game_actions = require("./game/game_actions");
+exports.game_actions = require("./game/game_state");

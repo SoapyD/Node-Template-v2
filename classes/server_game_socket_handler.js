@@ -1,6 +1,7 @@
 
 var server_socket_handler = require("./server_socket_handler")
-
+const game_state = require("./game/game_state")
+const stateHandler = new game_state()
 
 const _ = require('lodash');
 
@@ -91,16 +92,16 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }        
             this.sendMessage(return_options) 
 
-            return_options = {}
-            return_options = {
-                type: "room",
-                id: options.data.room_name,
-                functionGroup: "core",
-                function: "transitionScene",
-                scene: 'GameScene'  
-            }        
+            // return_options = {}
+            // return_options = {
+            //     type: "room",
+            //     id: options.data.room_name,
+            //     functionGroup: "core",
+            //     function: "transitionScene",
+            //     scene: 'GameScene'  
+            // }        
 
-            this.sendMessage(return_options) 
+            // this.sendMessage(return_options) 
         }
         catch(e){
             let options = {
@@ -191,7 +192,35 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     }
 
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    // ready up
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
 
+    readyUp = async(socket, options) => {
+        try{
+
+            let game_data = await databaseHandler.findData({
+                model: "GameData"
+                ,search_type: "findOne"
+                ,params: {_id: options.data.id}
+            }, false)          
+
+            if(game_data[0]){
+                options.game_data = game_data[0];
+                stateHandler.readyUp(options)
+            }
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "readyUp",
+                "e": e
+            }
+            errorHandler.log(options)
+        }        
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    

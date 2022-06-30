@@ -47,12 +47,18 @@ clientSocketHandler.startRoom = () => {
             data: {
                 room_name: clientRoomHandler.core.room_name
 
-                ,selected_forces: [{
-                    user: clientRoomHandler.core.users[0]
-                    ,army: "Test"
-                }]
+                ,selected_forces: []
             }     
         }                
+
+        clientRoomHandler.core.users.forEach((user) => {
+
+            options.data.selected_forces.push({
+                user: user
+                ,army: "Test"
+            })
+        })
+
 
         clientSocketHandler.messageServer(options)
     }catch(e){
@@ -207,7 +213,7 @@ clientSocketHandler.readyUp = (options) => {
     try{
         let options = {
             functionGroup: "core",  
-            function: "followPath",
+            function: "readyUp",
             id: clientRoomHandler.core.room_name,
             data: {
                 id: gameCore.data.id,

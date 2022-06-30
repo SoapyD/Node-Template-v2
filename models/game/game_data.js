@@ -8,6 +8,7 @@ const gameSchema = new mongoose.Schema({
     ,matrix: [[Number]]    
 
 	,mode: String
+	,game_state: {type: Number, default: 0}
 
 	,forces: [{
 		side: {type: Number, default: -1}
@@ -29,7 +30,8 @@ const gameSchema = new mongoose.Schema({
 		y: {type: Number, default: -1},
 		pointerX: {type: Number, default: -1},
 		pointerY: {type: Number, default: -1},
-		selected_unit: {type: Number, default: -1}						
+		selected_unit: {type: Number, default: -1},
+		ready: {type: Boolean, default: false}						
 	}]
 	
 	,units: [{
