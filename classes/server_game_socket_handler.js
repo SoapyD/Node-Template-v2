@@ -68,6 +68,33 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             const gameMap = new classes.game_maps()
             await gameMap.setup();
 
+            let  find_items = {
+                model: "Army"
+                ,search_type: "find"
+                ,multiple_search: []
+            }
+
+            options.data.selected_forces.forEach((force) => {
+                find_items.multiple_search.push({params: {name: force.army}})
+            })
+
+            let armies = await databaseHandler.findData(find_items)
+
+            let forces = []
+
+
+            options.data.selected_forces.forEach((force, i) => {
+                let force_info = {
+                    side: i,
+                    start: 0,
+                    army: armies[i][0]._id,
+                    user: force.user
+                }
+                forces.push(force_info)
+            })
+
+
+            /*
             let selected_force = options.data.selected_forces[0]
             //LOAD UP THE FORCE THE USER WILL USE
             let army = await databaseHandler.findData({
@@ -84,6 +111,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 user: selected_force.user
             }
             forces.push(force)
+            */
 
             let players = []
             options.data.selected_forces.forEach((player) => {
@@ -112,7 +140,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             })            
 
             // let data = game_datas[0].forces[0].user
-            let data2 = game_datas[0].forces[0].army.squads
+            // let data2 = game_datas[0].forces[0].army.squads
 
             let return_options = {
                 type: "room",
