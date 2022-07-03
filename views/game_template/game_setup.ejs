@@ -1,7 +1,5 @@
 
-<%- include("../socket_template/socket_setup") %>
 
-<script src="/js/classes/client_game_socket_handler.js"></script>
 
 <script src="/js/classes/game_setup/game_core.js"></script>
 <script src="/js/classes/game_setup/game_loading_screen.js"></script>
@@ -15,6 +13,7 @@
 <!-- <script src="/js/classes/game_collisions.js"></script>
 <script src="/js/classes/game_pathfinder.js"></script> -->
 
+<script src="/js/classes/client_game_socket_handler.js"></script>
 <script src="/js/classes/unit.js"></script>
 
 <script src="/js/game_scenes/MainMenuScene.js"></script>
@@ -24,42 +23,4 @@
 
 <script>
     const gameCore = new game_core();
-</script>
-
-<script>
-    <% if(typeof data.room !== 'undefined') { %>
-    
-        let user_data = <%- JSON.stringify(data.user) %>
-        let room_data = <%- JSON.stringify(data.room) %>
-    
-        gameCore.assets.forces.forEach((force, i) => {
-            force.army = army_data[i]
-        })
-    
-        let action = 'create'
-        options = {
-                functionGroup: "core",  
-                function: "checkRoom",
-                message: action+" room",
-                data: {
-                    action: action
-                    ,room_name: room_data.name
-                    ,password: room_data.password
-                    ,users: [user_data._id]
-                    ,admins: [user_data._id]
-                    ,use_waiting_room: false
-                }     
-            }       
-
-            let max_users = room_data.max_players
-            if(max_users !== ""){
-                options.data.max_users = Number(max_users)
-            }
-            // if(use_waiting_room !== "false"){
-            //     options.data.use_waiting_room = true
-            // }            
-
-            clientSocketHandler.messageServer(options)     
-
-    <% } %>
 </script>

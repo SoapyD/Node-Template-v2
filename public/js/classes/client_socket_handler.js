@@ -300,7 +300,31 @@ const client_socket_handler = class {
 	// ##################################################################################
 	// ##################################################################################
 
-    startRoom = () => {
+    sendStartRoom = () => {
+        try{
+
+            let options = {
+                functionGroup: "core",  
+                function: "startSocketRoom",
+                id: clientRoomHandler.core.room_name,
+                // data: {
+                // }     
+            }                
+    
+            clientSocketHandler.messageServer(options)            
+
+        }catch(e){
+
+            let options = {
+                "class": "socketHandler",
+                "function": "sendStartRoom",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	                    
+    }
+
+    startSocketRoom = () => {
 
         try{
             let timer = 2000;

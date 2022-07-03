@@ -25,6 +25,41 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    startGameRoom = (socket, options) => {
+
+        try{    
+            
+            let return_options = {
+                type: "room",
+                id: options.id,
+                functionGroup: "core",
+                function: "startGameRoom", 
+            }        
+
+            this.sendMessage(return_options)             
+
+            // return_options = {};
+            // return_options = {
+            //     type: "room",
+            //     id: options.id,
+            //     functionGroup: "core",
+            //     function: "transitionScene",
+            //     scene: 'GameScene',
+            //     uiscene: 'StartUIScene'   
+            // }        
+
+            // this.sendMessage(return_options) 
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "startGameRoom",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	        
+    }
+
     setupGameData = async(socket, options) => {
 
         try{
@@ -81,7 +116,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
             let return_options = {
                 type: "room",
-                id: options.data.room_name,
+                id: options.id,
                 functionGroup: "core",
                 function: "setupGameData",
                 scene: 'GameScene',
@@ -92,16 +127,19 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }        
             this.sendMessage(return_options) 
 
-            // return_options = {}
-            // return_options = {
-            //     type: "room",
-            //     id: options.data.room_name,
-            //     functionGroup: "core",
-            //     function: "transitionScene",
-            //     scene: 'GameScene'  
-            // }        
 
-            // this.sendMessage(return_options) 
+            return_options = {};
+            return_options = {
+                type: "room",
+                id: options.id,
+                functionGroup: "core",
+                function: "transitionScene",
+                scene: 'GameScene',
+                uiscene: 'StartUIScene'   
+            }        
+
+            this.sendMessage(return_options) 
+
         }
         catch(e){
             let options = {

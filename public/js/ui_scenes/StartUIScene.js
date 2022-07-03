@@ -69,7 +69,7 @@ StartUIScene.loadSingleButton = (scene) => {
 			label:  "START GAME",
 			array: gameCore.assets.btn_sprite,
 
-			clickAction: clientSocketHandler.readyUp,
+			clickAction: clientSocketHandler.sendStartGameRoom,
 			callbackParams: {},
 		}
 		

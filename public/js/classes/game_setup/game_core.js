@@ -26,6 +26,7 @@ const game_core = class {
             max_sides: 2,
         }
         this.current_scene = {};
+        this.current_uiscene = {};
 
         this.setConfig();
         this.setScenes();
@@ -117,7 +118,8 @@ const game_core = class {
     
     
     uiSceneTransition = (options) => {
-        this.current_uiscene.scene.stop()	
+        this.current_uiscene.scene.stop()
+        // this.current_uiscene.scene.start(options.uiscene)	
     }
 
 

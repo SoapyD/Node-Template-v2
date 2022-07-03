@@ -379,7 +379,8 @@ const server_socket_handler = class {
                 if(room.use_waiting_room === true){
                     this.sendToWaitingRoom(socket, room)                
                 }else{
-                    this.startRoom(socket, room)                    
+                    await this.sendRoomData(room)
+                    this.startSocketRoom(socket, {id: room.room_name})                    
                 }
             }
 
@@ -449,16 +450,16 @@ const server_socket_handler = class {
 	// ##################################################################################
 	// ##################################################################################
 
-    startRoom = async(socket, room) => {
+    startSocketRoom = async(socket, options) => {
         
         try{
-            await this.sendRoomData(room)
+            // await this.sendRoomData(room)
 
             let return_options = {
-                type: "source",
-                id: socket.id,
+                type: "room",
+                id: options.id,
                 functionGroup: "core",
-                function: "startRoom"
+                function: "startSocketRoom"
             }        
 
             this.sendMessage(return_options) 
@@ -466,7 +467,7 @@ const server_socket_handler = class {
         catch(e){
             let options = {
                 "class": "socket_handler",
-                "function": "startRoom",
+                "function": "startSocketRoom",
                 "e": e
             }
             errorHandler.log(options)

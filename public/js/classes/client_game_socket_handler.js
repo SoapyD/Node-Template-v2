@@ -12,8 +12,14 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
 clientSocketHandler.transitionScene = (options) => {
+
+
     try{
-        gameCore.sceneTransition({scene:options.scene})
+        if(options.uiscene){
+            gameCore.uiSceneTransition(options)
+        }
+        gameCore.sceneTransition(options)
+
     }catch(e){
 
         let options = {
@@ -38,29 +44,55 @@ clientSocketHandler.transitionScene = (options) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
-clientSocketHandler.startRoom = () => {
-
+clientSocketHandler.sendStartGameRoom = () => {
     try{
+
         let options = {
             functionGroup: "core",  
-            function: "setupGameData",
-            data: {
-                room_name: clientRoomHandler.core.room_name
-
-                ,selected_forces: []
-            }     
+            function: "startGameRoom",
+            id: clientRoomHandler.core.room_name,
+            // data: {
+            // }     
         }                
 
-        clientRoomHandler.core.users.forEach((user) => {
+        clientSocketHandler.messageServer(options)            
 
-            options.data.selected_forces.push({
-                user: user
-                ,army: "Test"
+    }catch(e){
+
+        let options = {
+            "class": "socketHandler",
+            "function": "sendStartRoom",
+            "e": e
+        }
+        errorHandler.log(options)
+    }	         
+}
+
+clientSocketHandler.startGameRoom = () => {
+
+    try{
+        if(clientRoomHandler.user.username === "tom"){
+            let options = {
+                functionGroup: "core",  
+                function: "setupGameData",
+                id: clientRoomHandler.core.room_name,
+                data: {
+                    // room_name: clientRoomHandler.core.room_name,
+                    selected_forces: []
+                }     
+            }                
+    
+            clientRoomHandler.core.users.forEach((user) => {
+    
+                options.data.selected_forces.push({
+                    user: user
+                    ,army: "Test"
+                })
             })
-        })
-
-
-        clientSocketHandler.messageServer(options)
+    
+    
+            clientSocketHandler.messageServer(options)
+        }
     }catch(e){
 
         let options = {

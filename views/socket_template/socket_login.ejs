@@ -20,12 +20,12 @@
         </div>
         
         <div class="form-floating mb-3">
-            <input type="number" class="form-control" id="floatingMaxUsers" placeholder="Max Users", min="1">
+            <input type="number" class="form-control" id="floatingMaxUsers" placeholder="Max Users", min="1" value="1">
             <label for="floatingMaxUsers">Max Users</label>
         </div>
 
         <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" value="" id="useWaitingRoom">
+            <input class="form-check-input" type="checkbox" value="" id="useWaitingRoom" checked>
             <label class="form-check-label" for="useWaitingRoom">
                 Use Waiting Room
             </label>
@@ -56,7 +56,7 @@
 
 <button class="btn btn-primary socket__join_button" id="socket__join_button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Join / Create Room</button>
 <div id="login__blackout" class="container">
-
+<div id="gameContainer"></div>
 <%- include("./socket_room") %>
 
 </div>

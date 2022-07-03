@@ -69,6 +69,7 @@ const client_room_handler = class {
         try{
             this.core = options;
 
+            //UPDATE THE WAITING ROOM USER LIST IF THERE IS ONE
             let element = $( "#user_list");
             if(element){
                 element.empty();
@@ -88,7 +89,15 @@ const client_room_handler = class {
                             element.append('<li>'+name+'</li>')
                         }
                     })
+
+                    if(this.core.max_users === this.core.users.length){
+                        let btn_element = $( "#socket__start_room_button");
+                        if(btn_element){
+                            btn_element.removeClass("hide-display")
+                        }                        
+                    }
                 }
+
             }
         }catch(e){
 
