@@ -166,6 +166,7 @@ clientSocketHandler.saveGame = () => {
         }
         data.units = [];
         gameCore.assets.units.forEach((unit) => {
+            //THIS IS THE REASON WHY UNITS AREN'T BEING SAVED CORRECTLY
             if(unit.core.player === gameCore.data.player){
 
                 unit.core.x = unit.sprite.x
@@ -214,7 +215,9 @@ clientSocketHandler.moveMarker = (options) => {
         let id = options.data.i;
         GameScene.markers[id].x = options.data.x;
         GameScene.markers[id].y = options.data.y;
-        GameScene.markers[id].setVisible(!GameScene.game_maps.checkCollision(options.data.pointerX,options.data.pointerY)); 
+        if(options.data.pointerX && options.data.pointerY){
+            GameScene.markers[id].setVisible(!GameScene.game_maps.checkCollision(options.data.pointerX,options.data.pointerY)); 
+        }
     }catch(e){
 
         let options = {

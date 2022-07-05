@@ -74,7 +74,7 @@ const game_maps = class {
 
         clientRoomHandler.core.users.forEach((user, i) => {
 
-            let colour = gameCore.getSideColour(gameCore.data.side);
+            let colour = gameCore.getSideColour(gameCore.assets.forces[i].side);
             this.parent.markers[i] = this.scene.add.graphics();
             this.parent.markers[i].lineStyle(3, colour.colour, 1);
             this.parent.markers[i].strokeRect(0, 0, this.parent.map.tileWidth, this.parent.map.tileHeight);        
@@ -154,7 +154,10 @@ const game_maps = class {
     }
 
 	checkCollision = function(x,y){
-		var tile = this.parent.map.getTileAt(x, y);
+        let tile;
+        // if(this.parent.map){
+        tile = this.parent.map.getTileAt(x, y);
+        // }
 		if (tile){
 			return tile.properties.collide == true; //DON'T SHOW MARKER IF IT COLLIDES WITH A COLLIDABLE TILE		
 		}
