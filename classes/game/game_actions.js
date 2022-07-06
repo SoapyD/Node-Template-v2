@@ -195,7 +195,7 @@ module.exports = class game_actions {
             this.findPotentialPathsWorker({
                 worker_path: 'workers/potential_paths.js',
                 message: 'Potential Path Test',
-                id: options.parent.id,
+                id: options.parent.socket.id,
                 grid: options.matrix,
                 acceptable_tiles: options.acceptable_tiles,
                 setup_data: {
@@ -224,7 +224,7 @@ module.exports = class game_actions {
             {
             worker_path: 'workers/pathfinder.js',
             message: 'Pathfinding Test',
-            id: options.parent.socket.id,
+            id: options.parent.id,
             grid: options.matrix,
             acceptable_tiles: options.acceptable_tiles,
             setup_data: {

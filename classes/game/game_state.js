@@ -41,9 +41,12 @@ module.exports = class game_state {
                 ]
             }   
 
-            await databaseHandler.updateOne(update_options)
-
-            this.checkReady(options)
+            let updated_items = await databaseHandler.updateOne(update_options)
+            if(updated_items[0]){
+                options.game_data = updated_items[0]
+                this.checkReady(options)
+            }
+            
         }catch(e){
 
             let options = {
@@ -59,18 +62,18 @@ module.exports = class game_state {
         try{
             if(options.game_data){
                 //CHECK TO SEE IF ALL PLAYERS ARE READY
-                let game_data = await databaseHandler.findData({
-                    model: "GameData"
-                    ,search_type: "findOne"
-                    ,params: {_id: options.game_data._id}
-                }, false)
+                // let game_data = await databaseHandler.findData({
+                //     model: "GameData"
+                //     ,search_type: "findOne"
+                //     ,params: {_id: options.game_data._id}
+                // }, false)
 
-                if(game_data[0]){
-                    game_data = game_data[0];
+                // if(game_data[0]){
+                //     game_data = game_data[0];
                     let all_ready = true
                     options.game_data.players.forEach((player) => {
                         if(player.ready === false){
-                            //all_ready = false;
+                            all_ready = false;
                         }
                     })
 
@@ -78,7 +81,7 @@ module.exports = class game_state {
                     if(all_ready){
                         this.checkState(options)
                     }
-                }           
+                // }           
             }
         }catch(e){
 

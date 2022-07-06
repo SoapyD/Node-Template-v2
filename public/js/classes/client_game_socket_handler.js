@@ -155,38 +155,39 @@ clientSocketHandler.saveGame = () => {
 
     try{
 
-        let options = {
-            functionGroup: "core",  
-            function: "saveUnitData",            
-            data: {}     
-        }                
+        if(gameCore.data.player === 0){
 
-        let data = {
-            // id: gameCore.data.id,
-        }
-        data.units = [];
-        gameCore.assets.units.forEach((unit) => {
-            //THIS IS THE REASON WHY UNITS AREN'T BEING SAVED CORRECTLY
-            if(unit.core.player === gameCore.data.player){
+            let options = {
+                functionGroup: "core",  
+                function: "saveUnitData",            
+                data: {}     
+            }                
 
-                unit.core.x = unit.sprite.x
-                unit.core.y = unit.sprite.y		
-                unit.core.x -= gameCore.data.tile_size * unit.unit_class.sprite_offset;
-                unit.core.y -= gameCore.data.tile_size * unit.unit_class.sprite_offset;	
-                
-                unit.core.tileX = unit.core.x / gameCore.data.tile_size,
-                unit.core.tileY = unit.core.y / gameCore.data.tile_size,               
-                
-                data.units.push(unit.core)
+            let data = {
+                // id: gameCore.data.id,
             }
+            data.units = [];
+            gameCore.assets.units.forEach((unit) => {
+                //THIS IS THE REASON WHY UNITS AREN'T BEING SAVED CORRECTLY
+                // if(unit.core.player === gameCore.data.player){
+                
 
-        })
+                    unit.core.x = unit.sprite.x
+                    unit.core.y = unit.sprite.y		
+                    unit.core.x -= gameCore.data.tile_size * unit.unit_class.sprite_offset;
+                    unit.core.y -= gameCore.data.tile_size * unit.unit_class.sprite_offset;	
+                    
+                    unit.core.tileX = unit.core.x / gameCore.data.tile_size,
+                    unit.core.tileY = unit.core.y / gameCore.data.tile_size,               
+                    
+                    data.units.push(unit.core)
+            })
 
-        options.data.update = data;
-        options.data.id = gameCore.data.id
+            options.data.update = data;
+            options.data.id = gameCore.data.id
 
-        clientSocketHandler.messageServer(options)
-
+            clientSocketHandler.messageServer(options)
+        }
     }catch(e){
 
         let options = {

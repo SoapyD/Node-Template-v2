@@ -275,7 +275,8 @@ const mongoose_db_handler = class {
 
         if(options.params){
             options.params.forEach((item) => {
-                promises.push(this.models[options.model].updateOne(item.filter, item.value))
+                // promises.push(this.models[options.model].updateOne(item.filter, item.value))
+                promises.push(this.models[options.model].findOneAndUpdate(item.filter, item.value, {new: true}))
             })            
         }
 
