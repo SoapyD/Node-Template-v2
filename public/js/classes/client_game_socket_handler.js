@@ -71,7 +71,8 @@ clientSocketHandler.sendStartGameRoom = () => {
 clientSocketHandler.startGameRoom = () => {
 
     try{
-        if(clientRoomHandler.user.username === "tom"){
+        //THIS NEEDS CHANGING AT SOME POINT
+        // if(clientRoomHandler.user.username === "tom"){
             let options = {
                 functionGroup: "core",  
                 function: "setupGameData",
@@ -92,7 +93,7 @@ clientSocketHandler.startGameRoom = () => {
     
     
             clientSocketHandler.messageServer(options)
-        }
+        // }
     }catch(e){
 
         let options = {
@@ -122,10 +123,10 @@ clientSocketHandler.setupGameData = (options) => {
             gameCore.data.id = options.data.id
             gameCore.assets.forces = options.data.forces
             gameCore.assets.forces.forEach((force, i) => {
-                if(force.user._id === clientRoomHandler.user.id){
+                // if(force.user._id === clientRoomHandler.user.id){
                     gameCore.data.player = i
                     gameCore.data.side = force.side
-                }
+                // }
             })
         }
     }catch(e){

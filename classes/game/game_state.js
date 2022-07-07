@@ -97,6 +97,12 @@ module.exports = class game_state {
     checkState = (options) => {
         console.log("all ready")
 
+        switch(options.game_data.mode){
+            case "move":
+                socketHandler.followPath(options)
+                break;
+        }
+
         this.resetReady(options)
     }
 

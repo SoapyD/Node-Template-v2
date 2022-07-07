@@ -404,19 +404,19 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
-    followPath = async(socket, options) => {
+    followPath = async(options) => {
 
         //GET THE POPULATE GAMES DATA
-        let game_data = await databaseHandler.findData({
-            model: "GameData"
-            ,search_type: "findOne"
-            ,params: {_id: options.data.id}
-        }, false)
+        // let game_data = await databaseHandler.findData({
+        //     model: "GameData"
+        //     ,search_type: "findOne"
+        //     ,params: {_id: options.data.id}
+        // }, false)
 
         //COUNT THROUGH PATH POSITIONS UP TO MAXIMUM
 
-        if(game_data[0]){
-            game_data = game_data[0];
+        if(options.game_data){
+            let game_data = options.game_data;
 
             //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
             let lengths = _(game_data.units)
