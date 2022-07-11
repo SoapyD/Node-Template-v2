@@ -71,8 +71,8 @@ clientSocketHandler.sendStartGameRoom = () => {
 clientSocketHandler.startGameRoom = () => {
 
     try{
-        //THIS NEEDS CHANGING AT SOME POINT
-        // if(clientRoomHandler.user.username === "tom"){
+        //CHECK TO SEE IF USER IS ADMIN SO CAN START ROOM
+        if(clientRoomHandler.core.admins.includes(clientRoomHandler.user.id)){
             let options = {
                 functionGroup: "core",  
                 function: "setupGameData",
@@ -93,7 +93,7 @@ clientSocketHandler.startGameRoom = () => {
     
     
             clientSocketHandler.messageServer(options)
-        // }
+        }
     }catch(e){
 
         let options = {
@@ -123,10 +123,10 @@ clientSocketHandler.setupGameData = (options) => {
             gameCore.data.id = options.data.id
             gameCore.assets.forces = options.data.forces
             gameCore.assets.forces.forEach((force, i) => {
-                // if(force.user._id === clientRoomHandler.user.id){
+                if(force.user._id === clientRoomHandler.user.id){
                     gameCore.data.player = i
                     gameCore.data.side = force.side
-                // }
+                }
             })
         }
     }catch(e){
@@ -349,6 +349,19 @@ clientSocketHandler.setPotentialPaths = (options) => {
     }        
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// #     # ####### #     # #######       #     # #     # ### ####### 
+// ##   ## #     # #     # #             #     # ##    #  #     #    
+// # # # # #     # #     # #             #     # # #   #  #     #    
+// #  #  # #     # #     # #####   ##### #     # #  #  #  #     #    
+// #     # #     #  #   #  #             #     # #   # #  #     #    
+// #     # #     #   # #   #             #     # #    ##  #     #    
+// #     # #######    #    #######        #####  #     # ###    #    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+
 
 clientSocketHandler.moveUnit = (options) => {
     try{
@@ -478,7 +491,81 @@ clientSocketHandler.setShootingTargets = (options) => {
     }        
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+// #     #    #    #    # #######       ######  #     # #       #       ####### #######  #####  
+// ##   ##   # #   #   #  #             #     # #     # #       #       #          #    #     # 
+// # # # #  #   #  #  #   #             #     # #     # #       #       #          #    #       
+// #  #  # #     # ###    #####   ##### ######  #     # #       #       #####      #     #####  
+// #     # ####### #  #   #             #     # #     # #       #       #          #          # 
+// #     # #     # #   #  #             #     # #     # #       #       #          #    #     # 
+// #     # #     # #    # #######       ######   #####  ####### ####### #######    #     #####   
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
+
+clientSocketHandler.generateBullets = (options) => {
+    try{
+        
+        // if(options.data.start){
+        //     gameCore.resetTempSprites()
+        // }
+
+        const getTweenData = (unit, position) => {
+            let game_pos = {
+                x: position.x * gameCore.data.tile_size,
+                y: position.y * gameCore.data.tile_size,                    
+            }
+            
+            let tween_data = {
+                // targets: unit.sprite_ghost,
+                x: {value: game_pos.x, duration: 200},
+                y: {value: game_pos.y, duration: 200},
+                // delay: 0,
+                angle: {value: unit.checkAngle(unit.sprite_ghost, game_pos), duration: 0},
+            }
+
+            return tween_data
+        }
+
+
+        options.data.targets.forEach((target, i) => {
+
+            //ONLY APPLY AN POSITION MOVE IF THERE'S ONE PASSED FROM THE SERVER
+            if(target){
+                let unit = gameCore.assets.units[i]
+                let tween = getTweenData(unit, target);
+                
+                //UPDATE PLAYER ELEMENTS AS IT MOVES
+                // tween.on('update',(target) => {
+                //     let unit = target.targets[0].parent
+                //     unit.updateElements(unit.sprite_ghost)
+                // })
+
+				let options = {
+					scene: GameScene.scene,
+					spritesheet: "bullet",
+					angle: tween.angle,
+					unit: unit,
+					target: {x: tween.x.value, y: tween.y.value}
+				}
+
+			    gameCore.assets.bullets.push(new bullet(options))
+
+                //make unit shot=true
+            }
+        })
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "generateBullets",
+            "e": e
+        }
+        errorHandler.log(options)
+    }  
+}
 
 
 clientSocketHandler.defineCoreFunctions();

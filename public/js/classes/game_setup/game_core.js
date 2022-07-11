@@ -6,6 +6,7 @@ const game_core = class {
         this.assets = {
             btn_sprite: [],
             units: [],
+            bullets: [],
             units_preload: [],
             forces: []           
         }

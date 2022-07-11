@@ -128,7 +128,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     ,matrix: gameMap.matrix
                     ,forces: forces
                     ,players: players
-                    ,mode: "move"            
+                    ,mode: "shoot"            
                 }]  
             })
             
@@ -363,33 +363,54 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
     returnPotentialPaths = (options) => {
-        let return_options =  {
-            type: "source",
-            id: options.id,                
-            functionGroup: "core",
-            function: "setPotentialPaths",
-            data: {
-                message: "Potential Paths",
-                id: options.process.id,
-                live_tiles: options.process.paths,
+
+        try{        
+            let return_options =  {
+                type: "source",
+                id: options.id,                
+                functionGroup: "core",
+                function: "setPotentialPaths",
+                data: {
+                    message: "Potential Paths",
+                    id: options.process.id,
+                    live_tiles: options.process.paths,
+                }
             }
+            this.sendMessage(return_options)     
         }
-        this.sendMessage(return_options)        
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "returnPotentialPaths",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	               
     }
 
     returnPath = (options) => {
-        let return_options =  {
-            type: "room",
-            id: options.id,                
-            functionGroup: "core",
-            function: "setPath",
-            data: {
-                // message: "Left Click",
-                id: options.process.id,
-                path: options.process.path,
+        try{
+            let return_options =  {
+                type: "room",
+                id: options.id,                
+                functionGroup: "core",
+                function: "setPath",
+                data: {
+                    // message: "Left Click",
+                    id: options.process.id,
+                    path: options.process.path,
+                }
             }
+            this.sendMessage(return_options)        
         }
-        this.sendMessage(return_options)        
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "returnPath",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -406,70 +427,82 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
     followPath = async(options) => {
 
-        //GET THE POPULATE GAMES DATA
-        // let game_data = await databaseHandler.findData({
-        //     model: "GameData"
-        //     ,search_type: "findOne"
-        //     ,params: {_id: options.data.id}
-        // }, false)
+        try{
 
-        //COUNT THROUGH PATH POSITIONS UP TO MAXIMUM
+            //GET THE POPULATE GAMES DATA
+            // let game_data = await databaseHandler.findData({
+            //     model: "GameData"
+            //     ,search_type: "findOne"
+            //     ,params: {_id: options.data.id}
+            // }, false)
 
-        if(options.game_data){
-            let game_data = options.game_data;
+            //COUNT THROUGH PATH POSITIONS UP TO MAXIMUM
 
-            //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
-            let lengths = _(game_data.units)
-            .map(row => row.path.length)
-            .value()
-            let max_pos = lengths[lengths.indexOf(Math.max(...lengths))]
-            let pos = 0 
+            if(options.game_data){
+                let game_data = options.game_data;
 
-            //SETUP TROOP MOVING
-            options = {
-                id: options.id
-                ,pos: pos
-                ,max_pos: max_pos
-                ,game_data: game_data
-            }
-            
-            const advancePos = (pos) => {
-              pos++;
-              return pos
-            }
-            
-            //SET AN INTERVAL THAT'LL COUNT THROUGH TROOP POSITIONS AND COMMUNCATE THEM BACK THE EACH PLAYER
-            var myInterval =setInterval(() => {
-
-                //USE LOBASE TO GET PATH POSITIONS
-                let positions = _(options.game_data.units)
-                .map(row => row.path[options.pos])
+                //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
+                let lengths = _(game_data.units)
+                .map(row => row.path.length)
                 .value()
-              
-                // console.log(positions)
+                let max_pos = lengths[lengths.indexOf(Math.max(...lengths))]
+                let pos = 0 
 
-                let return_options =  {
-                    type: "room",
-                    id: options.id,                
-                    functionGroup: "core",
-                    function: "moveUnit",
-                    data: {
-                        positions: positions
+                //SETUP TROOP MOVING
+                options = {
+                    id: options.id
+                    ,pos: pos
+                    ,max_pos: max_pos
+                    ,game_data: game_data
+                }
+                
+                const advancePos = (pos) => {
+                pos++;
+                return pos
+                }
+                
+                //SET AN INTERVAL THAT'LL COUNT THROUGH TROOP POSITIONS AND COMMUNCATE THEM BACK THE EACH PLAYER
+                var myInterval =setInterval(() => {
+
+                    //USE LOBASE TO GET PATH POSITIONS
+                    let positions = _(options.game_data.units)
+                    .map(row => row.path[options.pos])
+                    .value()
+                
+                    // console.log(positions)
+
+                    let return_options =  {
+                        type: "room",
+                        id: options.id,                
+                        functionGroup: "core",
+                        function: "moveUnit",
+                        data: {
+                            positions: positions
+                        }
                     }
-                }
-                if(options.pos === 0){
-                    return_options.data.start = true;
-                }
+                    if(options.pos === 0){
+                        return_options.data.start = true;
+                    }
 
-                this.sendMessage(return_options) 
+                    this.sendMessage(return_options) 
 
 
-                options.pos = advancePos(options.pos)                
-                if(options.pos === options.max_pos){
-                    clearInterval(myInterval);
-                }
+                    options.pos = advancePos(options.pos)                
+                    if(options.pos === options.max_pos){
+                        clearInterval(myInterval);
+                    }
 
-            },250, options)
+                },250, options)
+            }
+
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "followPath",
+                "e": e
+            }
+            errorHandler.log(options)
         }
 
     }
@@ -499,20 +532,118 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
     returnShootingTarget = (options) => {
-        let return_options =  {
-            type: "source",
-            id: options.id,                
-            functionGroup: "core",
-            function: "setShootingTargets",
-            data: {
-                message: "Potential Paths",
-                unit: options.unit,
-                // path: options.path,
-                targets: options.targets,
+
+        try{
+
+            let return_options =  {
+                type: "source",
+                id: options.id,                
+                functionGroup: "core",
+                function: "setShootingTargets",
+                data: {
+                    message: "Potential Paths",
+                    unit: options.unit,
+                    // path: options.path,
+                    targets: options.targets,
+                }
             }
+            this.sendMessage(return_options)       
+            
         }
-        this.sendMessage(return_options)        
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "returnShootingTarget",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	            
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    // #     #    #    #    # #######       ######  #     # #       #       ####### #######  #####  
+    // ##   ##   # #   #   #  #             #     # #     # #       #       #          #    #     # 
+    // # # # #  #   #  #  #   #             #     # #     # #       #       #          #    #       
+    // #  #  # #     # ###    #####   ##### ######  #     # #       #       #####      #     #####  
+    // #     # ####### #  #   #             #     # #     # #       #       #          #          # 
+    // #     # #     # #   #  #             #     # #     # #       #       #          #    #     # 
+    // #     # #     # #    # #######       ######   #####  ####### ####### #######    #     #####   
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+
+    generateBullets = (options) => {
+
+        try{
+
+            if(options.game_data){
+                let game_data = options.game_data;
+
+                //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
+                let lengths = _(game_data.units)
+                .map(row => row.targets.length)
+                .value()
+                let max_pos = lengths[lengths.indexOf(Math.max(...lengths))]
+                let pos = 0 
+
+                //SETUP TROOP MOVING
+                options = {
+                    id: options.id
+                    ,pos: pos
+                    ,max_pos: max_pos
+                    ,game_data: game_data
+                }
+
+                const advancePos = (pos) => {
+                    pos++;
+                    return pos
+                    }
+
+                //SET AN INTERVAL THAT'LL COUNT THROUGH TROOP POSITIONS AND COMMUNCATE THEM BACK THE EACH PLAYER
+                var myInterval =setInterval(() => {
+
+                    //USE LOBASE TO GET PATH POSITIONS
+                    let targets = _(options.game_data.units)
+                    .map(row => row.targets[options.pos])
+                    .value()
+                
+                    console.log(targets)
+
+                    let return_options =  {
+                        type: "room",
+                        id: options.id,                
+                        functionGroup: "core",
+                        function: "generateBullets",
+                        data: {
+                            targets: targets
+                        }
+                    }
+                    if(options.pos === 0){
+                        return_options.data.start = true;
+                    }
+
+                    this.sendMessage(return_options) 
+
+
+                    options.pos = advancePos(options.pos)                
+                    if(options.pos === options.max_pos){
+                        clearInterval(myInterval);
+                    }
+
+                },2000, options)
+
+            }
+
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "generateBullets",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	               
+
+    }
 
 }

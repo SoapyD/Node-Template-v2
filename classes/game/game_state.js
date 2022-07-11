@@ -101,6 +101,9 @@ module.exports = class game_state {
             case "move":
                 socketHandler.followPath(options)
                 break;
+            case "shoot":
+                socketHandler.generateBullets(options)
+                break;                
         }
 
         this.resetReady(options)

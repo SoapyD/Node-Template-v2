@@ -18,6 +18,8 @@ const server_socket_handler = class {
             //THIS IS A GENERIC MESSAGE HANDLER, ALLOWS CLIENT SIDE TO SEND VARIABLE FUNCTIONGROUP AND FUNCTION NAME TO RUN ON SERVER
             socket.on('message_server', (options) => {
 
+                // console.log(options)
+
                 try{
                     this.functions[options.functionGroup][options.function](socket,options);
                 }
