@@ -534,7 +534,11 @@ clientSocketHandler.generateBullets = (options) => {
             //ONLY APPLY AN POSITION MOVE IF THERE'S ONE PASSED FROM THE SERVER
             if(target){
                 let unit = gameCore.assets.units[i]
-                let tween = getTweenData(unit, target);
+                let game_pos = {
+                    x: target.x * gameCore.data.tile_size,
+                    y: target.y * gameCore.data.tile_size,                    
+                }
+                let angle = Phaser.Math.Angle.BetweenPoints(unit.sprite, game_pos);
                 
                 //UPDATE PLAYER ELEMENTS AS IT MOVES
                 // tween.on('update',(target) => {
@@ -545,9 +549,9 @@ clientSocketHandler.generateBullets = (options) => {
 				let options = {
 					scene: GameScene.scene,
 					spritesheet: "bullet",
-					angle: tween.angle,
+					angle: angle,
 					unit: unit,
-					target: {x: tween.x.value, y: tween.y.value}
+					target: {x: game_pos.x, y: game_pos.y}
 				}
 
 			    gameCore.assets.bullets.push(new bullet(options))

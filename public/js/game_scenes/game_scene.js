@@ -62,12 +62,13 @@ var GameScene = new Phaser.Class({
 				break;			
 			case 1:
 				// gameFunctions.current_uiscene.scene.start("GameUIScene")
-				// GameScene.game_state++;
+				gameCore.data.game_state++;
 				break;			
 
 			case 2:
 				// GameScene.game_setup.checkUnitClicks();
 				// GameScene.game_setup.updateElements(worldPoint);
+				gameCore.updateElements()
 				// GameScene.pathfinder.update();
 				break;
 		}

@@ -173,5 +173,103 @@ const game_core = class {
         }
     }
 
+ 
+	// ██    ██ ██████  ██████   █████  ████████ ███████       ███████ ██      ███████ ███    ███ ███████ ███    ██ ████████ ███████ 
+	// ██    ██ ██   ██ ██   ██ ██   ██    ██    ██            ██      ██      ██      ████  ████ ██      ████   ██    ██    ██      
+	// ██    ██ ██████  ██   ██ ███████    ██    █████   █████ █████   ██      █████   ██ ████ ██ █████   ██ ██  ██    ██    ███████ 
+	// ██    ██ ██      ██   ██ ██   ██    ██    ██            ██      ██      ██      ██  ██  ██ ██      ██  ██ ██    ██         ██ 
+	//  ██████  ██      ██████  ██   ██    ██    ███████       ███████ ███████ ███████ ██      ██ ███████ ██   ████    ██    ███████ 
+
+
+	// checkCollisionsBarriers = () => {
+	// 	this.scene_container.barriers.forEach((barrier) => {
+	// 		barrier.checkCollisions();
+	// 	})
+	// }
+
+	// updateBarriers = () => {
+	// 	let new_list = []
+	// 	this.scene_container.barriers.forEach((barrier) => {
+	// 		barrier.checkDeath();
+	// 		if(barrier.alive === true){
+	// 			new_list.push(barrier)
+	// 		}
+	// 	})
+	// 	this.scene_container.barriers = new_list;
+	// }
+
+	updateElements = (worldPoint) => {
+																																	  
+		//CHECK BULLET DEATH
+		let bullets = [];
+		if(this.assets.bullets){
+			this.assets.bullets.forEach((bullet) => {
+
+				bullet.checkRange();
+				if(bullet.delete === false){
+					bullets.push(bullet)
+				}
+
+				// this.assets.barriers.forEach((barrier) => {
+				// 	if(barrier.side != bullet.side){
+				// 		barrier.checkAction(bullet)
+				// 	}
+				// })
+			})
+		}
+		
+		this.assets.bullets = bullets;
+		
+
+		// let click_circle = new u_circle({
+		// 	x: worldPoint.x,
+		// 	y: worldPoint.y,
+		// 	r: 1
+		// });
+
+
+		// let touching_unit = false;
+		// if(gameFunctions.units){
+		// 	gameFunctions.units.forEach((unit) => {
+		// 		if(unit.core.side === gameFunctions.current_side){
+
+		// 			if(unit.is_moving === true){
+		// 				unit.updateUnitElements(unit.sprite);
+		// 			}
+		// 		}
+
+		// 		let unit_circle = new u_circle({
+		// 			x: unit.sprite.x,
+		// 			y: unit.sprite.y,
+		// 			r: unit.sprite.width / 2
+		// 		});
+		// 		let clash = GameScene.u_collisions.circleCircle(click_circle, unit_circle);
+
+		// 		if(clash === true){
+		// 			touching_unit = true;
+		// 			if(this.scene_container.hovered_unit_id !== unit.core.id){
+		// 				this.scene_container.hovered_unit_id = unit.core.id
+		// 				GameUIScene.setUnitHUD(unit)
+
+		// 				if(this.scene_container.selected_unit.length > 0){
+		// 					let selected_unit = this.scene_container.selected_unit[0];
+		// 					if(selected_unit.core.side !== unit.core.side){
+		// 						GameUIScene.setChanceHUD(selected_unit, unit)
+		// 					}
+		// 				}						
+		// 			}
+		// 		}
+		// 	})
+		// }		
+
+		// if(touching_unit === false){
+		// 	GameUIScene.hideUnitHUD();
+		// 	GameUIScene.hideChanceHUD();
+		// 	this.scene_container.hovered_unit_id = -1;
+		// }
+	}
+
+
+
 
 }

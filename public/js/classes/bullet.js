@@ -43,12 +43,14 @@ const bullet = class {
 		this.sprite.setOrigin(0.5,0.5);	
 		this.sprite.body.setSize(5, 5); //set the size of the bounding box
 		this.sprite.parent = this;
+
+		console.log(options)
 		
         this.sprite.rotation = options.angle;
 		
-		// this.sprite.enableBody(true, options.unit.sprite.x, options.unit.sprite.y, true, true);
+		this.sprite.enableBody(true, options.unit.sprite.x, options.unit.sprite.y, true, true);
 
-		// options.scene.physics.velocityFromAngle(Phaser.Math.RadToDeg(options.angle), this.speed, this.sprite.body.velocity);	
+		options.scene.physics.velocityFromAngle(Phaser.Math.RadToDeg(options.angle), this.speed, this.sprite.body.velocity);	
 		
 		this.colliders = [];
 
@@ -147,11 +149,11 @@ const bullet = class {
 		//WOUND ANY UNITS IF ITS IN THE BLAST RADIUS
         /*
 		if(this.blast_radius > 1){
-			gameFunctions.units.forEach((unit) => {
+			gameCore.assets.units.forEach((unit) => {
 				
 				let val = Math.pow(this.sprite.x - unit.sprite.x, 2) + Math.pow(this.sprite.y - unit.sprite.y, 2)
 				let dist = Math.round(Math.sqrt(val),0)
-				if(unit.core.in_combat === false && dist <= (this.blast_radius / 2) * gameFunctions.tile_size){
+				if(unit.core.in_combat === false && dist <= (this.blast_radius / 2) * gameCore.data.tile_size){
 					
 					let ap = this.unit.gun_class[this.unit.selected_gun].ap
 					if(this.blunt === true){
@@ -229,14 +231,14 @@ const bullet = class {
 	
 	checkRange(bullet){
 
-        /*
+        
 		//RESET THE RANGE TO MAXIMUM RANGE IF THE ORIGINAL TARGET IS A UNIT THAT'S NOW DEAD
-		if(this.target.unit !== -1){
-			let target_unit = gameFunctions.units[this.target.unit];
-			if(target_unit.alive === false){
-				this.range = this.saved_range;
-			}
-		}
+		// if(this.target.unit !== -1){
+		// 	let target_unit = gameCore.assets.units[this.target.unit];
+		// 	if(target_unit.alive === false){
+		// 		this.range = this.saved_range;
+		// 	}
+		// }
 
 		//CHECK THE CURRENT RANGE AND KILL THE BULLET IF IT GOES BEYOND IT'S MAXIMUM RANGE
 		let current_range = Math.sqrt(Math.pow(this.origin.x - this.sprite.x, 2) + Math.pow(this.origin.y - this.sprite.y, 2))
@@ -247,18 +249,18 @@ const bullet = class {
 		}
 		
 		//GET THE CURRENT GRID POSITION OF THE BULLET
-		let gridX = Math.floor(this.sprite.x/gameFunctions.tile_size);
-		let gridY = Math.floor(this.sprite.y/gameFunctions.tile_size);	
+		let gridX = Math.floor(this.sprite.x/gameCore.data.tile_size);
+		let gridY = Math.floor(this.sprite.y/gameCore.data.tile_size);	
 		
-		let cell = GameScene.grid[gridY][gridX]
+		// let cell = GameScene.grid[gridY][gridX]
 		
 		//KILL THE BULLET IF IT HITS A BLOCKING TILE AND ISN'T DEAD ALREADY NOR A BARRAGE WEAPON
-		if(this.unit.checkSpecialRule("barrage") === false){
-			if(!GameScene.pathfinder.acceptable_tiles.includes(cell) && this.delete === false){		
-				this.kill();
-			}
-		}
+		// if(this.unit.checkSpecialRule("barrage") === false){
+		// 	if(!GameScene.pathfinder.acceptable_tiles.includes(cell) && this.delete === false){		
+		// 		this.kill();
+		// 	}
+		// }
 
-        */
+        
 	}
 }

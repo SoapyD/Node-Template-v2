@@ -606,8 +606,6 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     let targets = _(options.game_data.units)
                     .map(row => row.targets[options.pos])
                     .value()
-                
-                    console.log(targets)
 
                     let return_options =  {
                         type: "room",
