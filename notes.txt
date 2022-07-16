@@ -1,32 +1,40 @@
 
+actions
+----------------------------
+SHOOTING
+-DONE -Limit the range to the maximum range of a gun
+-Keep a list of potential unit shooting targets that can be referred back to later
 
--liveMessage alert is spawning for a second or two, causing a stutter
--Grey out the offscene menu when a room is succesfully join or created then close it after the message bar is removed
+-save the potential targets to the gamedata table
+-generate blast markers
+-generate barrier
+-generate wounding
+-Figure out in the timeline exactly where a bullet will die
+
+-Full Check
+    -Generate target paths for all units
+    -When all units are readied up
+        -tick through bullets, deciding what order they'll hit in, and what wounding occurs
+        -figure out if a unit is dead in this step phase so when the next bullet is figured out, it'll then carry past any "dead units"
+
+-Smart Check
+    -Maybe instead of stopping a bullet entirely when it's path is checked, all unit stops are logged
+    -Then pass a set number of wounding scores that can then be applied to any unit it hits
+    -There would need to be a way for the server to figure out who's actually hit though
+
+MOVEMENT
+-Finalise movemement once it's completed
+-Update positions of units
+
+FIGHTING
+-
+
+
+
 -modernize the login and register input fields
 
 
--DONE -use the game template setup and connect to the socket using a guest login
--DONE -Move the pathfinder script to the server and load the MAP JSON file
--DONE -Strip down the unit class to completely seperate out any functions that can be carried out on the server with those those must be on the client side
-    -Sprite generation and movement, CLIENT
-    -setting actions, SERVER
-    -path checking to show available spaces, SERVER
--DONE -Tie the marker to an actual user ID instead of just the first one
 
-
-
--Create a means of generating a path on the server then passing back a series of positions and angles for the sprite to follow
--Control the game state on the Server now its been seperated from the GameUI class
-
--Position a unit then generate possible positions for them to move in the server
-    -run a loop x number of times a second then cancel it when it's no longer needed
-    -return all possible movement position
--When a possible position is clicked on
-    -recognise the click
-    -generate path to that position then send it to the client
-    -draw the client path
-    -set a timer on the server that calculates which marker the unit should be on over x seconds then send that position to the client to align the client
-    -make the unit interpolate along the given path
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -41,3 +49,29 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -liveMessage alert is spawning for a second or two, causing a stutter
+-DONE -Grey out the offscene menu when a room is succesfully join or created then close it after the message bar is removed
+
+-DONE -use the game template setup and connect to the socket using a guest login
+-DONE -Move the pathfinder script to the server and load the MAP JSON file
+-DONE -Strip down the unit class to completely seperate out any functions that can be carried out on the server with those those must be on the client side
+    -DONE -Sprite generation and movement, CLIENT
+    -DONE -setting actions, SERVER
+    -DONE -path checking to show available spaces, SERVER
+-DONE -Tie the marker to an actual user ID instead of just the first one
+
+
+
+-DONE -Create a means of generating a path on the server then passing back a series of positions and angles for the sprite to follow
+-DONE -Control the game state on the Server now its been seperated from the GameUI class
+
+-DONE -Position a unit then generate possible positions for them to move in the server
+    -run a loop x number of times a second then cancel it when it's no longer needed
+    -return all possible movement position
+-DONE -When a possible position is clicked on
+    -recognise the click
+    -generate path to that position then send it to the client
+    -draw the client path
+    -set a timer on the server that calculates which marker the unit should be on over x seconds then send that position to the client to align the client
+    -make the unit interpolate along the given path

@@ -96,6 +96,14 @@ const gameSchema = new mongoose.Schema({
 		,targets: [{
 			x: Number
 			,y: Number
+		}]
+		,potential_shoot_targets: [{
+			range: Number,
+			id: Number,
+			tile_pos: {
+				x: Number,
+				y: Number
+			}
 		}]		
 
 		,fight_targets: [{

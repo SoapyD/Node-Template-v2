@@ -586,6 +586,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 let max_pos = lengths[lengths.indexOf(Math.max(...lengths))]
                 let pos = 0 
 
+
+
                 //SETUP TROOP MOVING
                 options = {
                     id: options.id

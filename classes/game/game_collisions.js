@@ -1,4 +1,6 @@
 
+// const utils = require("../utils");
+
 // code sourced from here: https://www.jeffreythompson.org/collision-detection/table_of_contents.php
 const _ = require('lodash');
 

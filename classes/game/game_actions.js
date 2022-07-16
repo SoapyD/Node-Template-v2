@@ -1,6 +1,8 @@
 
 const { Worker, workerData } = require('worker_threads')
 const _ = require('lodash');
+const utils = require("../../utils");
+const unit = require('../../models/game/unit');
 
 module.exports = class game_actions {
 	constructor(options) {	
@@ -219,25 +221,36 @@ module.exports = class game_actions {
     }
 
     getPath = (options) => {
-        this.setupPathFinderWorker(
-            options.parent.game_data,
-            {
-            worker_path: 'workers/pathfinder.js',
-            message: 'Pathfinding Test',
-            id: options.parent.id,
-            grid: options.matrix,
-            acceptable_tiles: options.acceptable_tiles,
-            setup_data: {
-                id: options.player.selected_unit
-                ,sprite_offset: options.saved_unit.sprite_offset
-                ,movement: options.saved_unit.movement
-                ,obj_size: options.saved_unit.size
-                ,x_start: (options.saved_unit.tileX)
-                ,y_start: (options.saved_unit.tileY)
-                ,x_end: (options.player.pointerX)
-                ,y_end: (options.player.pointerY)                              
+
+        try{
+            this.setupPathFinderWorker(
+                options.parent.game_data,
+                {
+                worker_path: 'workers/pathfinder.js',
+                message: 'Pathfinding Test',
+                id: options.parent.id,
+                grid: options.matrix,
+                acceptable_tiles: options.acceptable_tiles,
+                setup_data: {
+                    id: options.player.selected_unit
+                    ,sprite_offset: options.saved_unit.sprite_offset
+                    ,movement: options.saved_unit.movement
+                    ,obj_size: options.saved_unit.size
+                    ,x_start: (options.saved_unit.tileX)
+                    ,y_start: (options.saved_unit.tileY)
+                    ,x_end: (options.player.pointerX)
+                    ,y_end: (options.player.pointerY)                              
+                }
+            })
+        }catch(e){
+
+            let options = {
+                "class": "actionHandler",
+                "function": "getPath",
+                "e": e
             }
-        })
+            errorHandler.log(options)
+        }           
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
@@ -254,100 +267,141 @@ module.exports = class game_actions {
 
     getBulletPath = async(options) => {
 
-        //GET WEAPON DETAILS
-        let gun = await databaseHandler.findData({
-            model: "Gun"
-            ,search_type: "findOne"
-            ,params: {_id: options.saved_unit.gun_class[options.saved_unit.selected_gun]}
-        })            
+        try{
 
-        if(gun[0]){
-
-            //IF TARGETS AVAILABLE TO SET
-            gun = gun[0];
-            if(options.saved_unit.targets.length < gun.max_targets){
-
-                let end = {
-                    x: options.player.pointerX + 0.5
-                    ,y: options.player.pointerY + 0.5
-                }
-                let start = {
-                    x: options.saved_unit.tileX + options.saved_unit.sprite_offset
-                    ,y: options.saved_unit.tileY + options.saved_unit.sprite_offset
-                }
-        
-                let path = collisionHandler.gridRayTracing(start, end)
-        
-                //CHECK THROUGH TILES AND SEE IF THEY CLASH WITH ANY TERRAIN
-                let saved_path = []
-                let skip = false
-                path.forEach((e, i) => {
-        
-                    let cell = options.matrix[e.tileY][e.tileX]            
-        
-                    if(skip === false){
-                        e.cell = cell
-                        saved_path.push(e)
+            //GET WEAPON DETAILS
+            let gun = await databaseHandler.findData({
+                model: "Gun"
+                ,search_type: "findOne"
+                ,params: {_id: options.saved_unit.gun_class[options.saved_unit.selected_gun]}
+            })            
+    
+            if(gun[0]){
+    
+                //IF TARGETS AVAILABLE TO SET
+                gun = gun[0];
+                if(options.saved_unit.targets.length < gun.max_targets){
+    
+                    let end = {
+                        x: options.player.pointerX + 0.5
+                        ,y: options.player.pointerY + 0.5
                     }
-        
-                    
-                    //break the loop if this isn't an acceptable tile
-                    if(!options.acceptable_tiles.includes(cell)){
-                        skip = true;
+                    let start = {
+                        x: options.saved_unit.tileX + options.saved_unit.sprite_offset
+                        ,y: options.saved_unit.tileY + options.saved_unit.sprite_offset
                     }
-        
-                    //break the loop if the position hits another unit
-                    let unit_search = collisionHandler.checkUnitClash(
-                        {
-                            game_data: options.parent.game_data
-                            ,check_pos: {x: e.tileX, y: e.tileY}
-                        })
-                    if(unit_search.length > 0){
-                        let unit = unit_search[0]
-                        if(unit.id !== options.saved_unit.id && unit.side !== options.saved_unit.side){
+            
+                    let path = collisionHandler.gridRayTracing(start, end)
+            
+                    //CHECK THROUGH TILES AND SEE IF THEY CLASH WITH ANY TERRAIN
+                    let potential_shoot_targets = [];
+                    let saved_path = []
+                    let skip = false
+                    path.forEach((e, i) => {
+            
+                        let cell = options.matrix[e.tileY][e.tileX]            
+            
+                        if(skip === false){
+                            e.cell = cell
+                            saved_path.push(e)
+                        }
+            
+                        //break the loop if this isn't an acceptable tile
+                        if(!options.acceptable_tiles.includes(cell)){
                             skip = true;
                         }
-                    }
-                    /**/
-                })
-        
-                saved_path.forEach((e, i) => {
-                    e.tileX += 0.5
-                    e.tileY += 0.5
-                })
-                let target = saved_path[saved_path.length - 1]
-
-                //UPDATE GAME DATA SO IT SAVES THE TARGET FOR THAT UNIT
-                let update = {}
-                update["units."+options.saved_unit.id+".targets."+options.saved_unit.targets.length] = target; 
-        
-                let update_options = 
-                {
-                    model: "GameData"
-                    ,params: [
-                        {
-                            filter: {_id: options.parent.game_data.id}, 
-                            value: {$set: update}
+    
+                        //break the loop if it's beyond the range of the weapon
+                        let range = utils.functions.distanceBetweenPoints(
+                            {
+                                x:e.x* options.parent.game_data.tile_size
+                                ,y:e.y* options.parent.game_data.tile_size
+                            },
+                            options.saved_unit
+                        )
+    
+                        if(range > gun.range){
+                            skip = true;
+                        }                    
+    
+                        //break the loop if the position hits another unit
+                        let unit_search = collisionHandler.checkUnitClash(
+                            {
+                                game_data: options.parent.game_data
+                                ,check_pos: {x: e.tileX, y: e.tileY}
+                            })
+                        if(unit_search.length > 0){
+                            let unit = unit_search[0]
+                            if(unit.id !== options.saved_unit.id){ // && unit.side !== options.saved_unit.side){
+                                // skip = true;
+                                if(!JSON.stringify(potential_shoot_targets).includes('"id":'+unit.id)){
+                                    potential_shoot_targets.push({
+                                        range: range,
+                                        id: unit.id,
+                                        tile_pos: {
+                                            x: e.tileX,
+                                            y: e.tileY                                            
+                                        }  
+                                    })
+                                }
+                            }
                         }
-                    ]
-                }   
-        
-                await databaseHandler.updateOne(update_options)                  
+    
+    
+                    })
+    
+                    // console.log("units")
+                    // potential_shoot_targets.forEach((item) => {
+                    //     console.log(item.id)
+                    // })
+            
+                    saved_path.forEach((e, i) => {
+                        e.tileX += 0.5
+                        e.tileY += 0.5
+                    })
+                    let target = saved_path[saved_path.length - 1]
+    
+                    //UPDATE GAME DATA SO IT SAVES THE TARGET FOR THAT UNIT
+                    let update = {}
+                    update["units."+options.saved_unit.id+".targets."+options.saved_unit.targets.length] = target; 
+            
+                    let update_options = 
+                    {
+                        model: "GameData"
+                        ,params: [
+                            {
+                                filter: {_id: options.parent.game_data.id}, 
+                                value: {$set: update}
+                            }
+                        ]
+                    }   
+            
+                    await databaseHandler.updateOne(update_options)                  
+    
+            
+                    //SET TARGETS IN GAME_DATA FOR UNIT
+                    let return_targets = options.parent.game_data.units[options.saved_unit.id].targets
+                    return_targets.push(target)
+            
+                    socketHandler.returnShootingTarget({
+                        id: options.parent.id,
+                        unit: options.saved_unit.id,
+                        // path: saved_path,
+                        targets: return_targets
+                    })
+    
+                }
+            } 
+        }catch(e){
 
-        
-                //SET TARGETS IN GAME_DATA FOR UNIT
-                let return_targets = options.parent.game_data.units[options.saved_unit.id].targets
-                return_targets.push(target)
-        
-                socketHandler.returnShootingTarget({
-                    id: options.parent.id,
-                    unit: options.saved_unit.id,
-                    // path: saved_path,
-                    targets: return_targets
-                })
-
+            let options = {
+                "class": "actionHandler",
+                "function": "getBulletPath",
+                "e": e
             }
-        } 
+            errorHandler.log(options)
+        }  
+
 
     }
 

@@ -35,3 +35,10 @@ exports.sortDynamic = (array, item, is_number=true) => {
 
   return array
 }
+
+exports.distanceBetweenPoints = (startPos, endPos) => {
+    // get distance from closest edges
+    let distX = startPos.x-endPos.x;
+    let distY = startPos.y-endPos.y;
+    return Math.sqrt( (distX*distX) + (distY*distY) );    
+}
