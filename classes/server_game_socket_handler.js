@@ -2,6 +2,7 @@
 var server_socket_handler = require("./server_socket_handler")
 const game_state = require("./game/game_state")
 const stateHandler = new game_state()
+const utils = require("../utils");
 
 const _ = require('lodash');
 
@@ -586,7 +587,39 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 let max_pos = lengths[lengths.indexOf(Math.max(...lengths))]
                 let pos = 0 
 
+                let shooting_data = [];
+                
+                //figure out the wounding that needs to be applied as well as what target units get hit
+                for(let i=0;i<max_pos;i++){
+                    //USE LOBASE TO GET PATH POSITIONS
+                    let targets = _(game_data.units)
+                    .map(row => row.targets[i])
+                    .value()
+                    
+                    targets.forEach((target, n) => {
+                        //if there aren't any potential targets, still check if there's any splash damage targets
 
+                        if(target){
+                            if(target.potential_targets){
+                                target.potential_targets.forEach((potential_target) => {
+                                    let data = {
+                                        id: shooting_data.length,
+                                        origin: n,
+                                        shot: i,
+                                        hit_time: potential_target.hit_time,
+                                        target: potential_target.id,
+                                        //sub_targets
+                                    }
+                                    shooting_data.push(data);
+                                })
+                            }
+                        }
+                    })
+                }
+
+                shooting_data = utils.functions.sortDynamic(shooting_data, "hit_time")
+                console.log(shooting_data)
+                
 
                 //SETUP TROOP MOVING
                 options = {

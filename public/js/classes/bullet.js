@@ -44,7 +44,7 @@ const bullet = class {
 		this.sprite.body.setSize(5, 5); //set the size of the bounding box
 		this.sprite.parent = this;
 
-		console.log(options)
+		// console.log(options)
 		
         this.sprite.rotation = options.angle;
 		

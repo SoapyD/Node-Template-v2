@@ -2,7 +2,7 @@
 const { Worker, workerData } = require('worker_threads')
 const _ = require('lodash');
 const utils = require("../../utils");
-const unit = require('../../models/game/unit');
+// const unit = require('../../models/game/unit');
 
 module.exports = class game_actions {
 	constructor(options) {	
@@ -265,6 +265,8 @@ module.exports = class game_actions {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
     getBulletPath = async(options) => {
 
         try{
@@ -294,7 +296,7 @@ module.exports = class game_actions {
                     let path = collisionHandler.gridRayTracing(start, end)
             
                     //CHECK THROUGH TILES AND SEE IF THEY CLASH WITH ANY TERRAIN
-                    let potential_shoot_targets = [];
+                    let potential_targets = [];
                     let saved_path = []
                     let skip = false
                     path.forEach((e, i) => {
@@ -334,13 +336,14 @@ module.exports = class game_actions {
                             let unit = unit_search[0]
                             if(unit.id !== options.saved_unit.id){ // && unit.side !== options.saved_unit.side){
                                 // skip = true;
-                                if(!JSON.stringify(potential_shoot_targets).includes('"id":'+unit.id)){
-                                    potential_shoot_targets.push({
+                                if(!JSON.stringify(potential_targets).includes('"id":'+unit.id)){
+                                    potential_targets.push({
                                         range: range,
                                         id: unit.id,
-                                        tile_pos: {
-                                            x: e.tileX + 0.5,
-                                            y: e.tileY + 0.5                                            
+                                        hit_time: (range / 200) + (options.saved_unit.targets.length * 2), //range/pixels per second + bullet_pos * 2 seconds
+                                        pos: {
+                                            x: e.x,
+                                            y: e.y                                            
                                         }  
                                     })
                                 }
@@ -351,7 +354,7 @@ module.exports = class game_actions {
                     })
     
                     // console.log("units")
-                    // potential_shoot_targets.forEach((item) => {
+                    // potential_targets.forEach((item) => {
                     //     console.log(item.id)
                     // })
             
@@ -362,8 +365,13 @@ module.exports = class game_actions {
                     let target = {
                         x: saved_path[saved_path.length - 1].x,
                         y: saved_path[saved_path.length - 1].y,
-                        potential_shoot_targets: potential_shoot_targets                        
+                        potential_targets: potential_targets                        
                     }
+                    // if(potential_targets.length > 0){
+                    //     target.x = potential_targets[0].pos.x
+                    //     target.y = potential_targets[0].pos.y
+                    //     target.target_id = potential_targets[0].id                         
+                    // }
 
                     //UPDATE GAME DATA SO IT SAVES THE TARGET FOR THAT UNIT
                     let update = {}
@@ -443,7 +451,7 @@ module.exports = class game_actions {
                     new_targets = unit.targets
                     new_targets.pop()
                     update["units."+unit.id+".targets"] = new_targets;
-                    // update["units."+unit.id+".potential_shoot_targets"] = unit.potential_shoot_targets.pop();
+                    // update["units."+unit.id+".potential_targets"] = unit.potential_targets.pop();
                     //SEND DATA TO CLIENTS
                 break;     
                 case "fight":
