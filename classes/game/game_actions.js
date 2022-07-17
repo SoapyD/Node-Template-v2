@@ -339,8 +339,8 @@ module.exports = class game_actions {
                                         range: range,
                                         id: unit.id,
                                         tile_pos: {
-                                            x: e.tileX,
-                                            y: e.tileY                                            
+                                            x: e.tileX + 0.5,
+                                            y: e.tileY + 0.5                                            
                                         }  
                                     })
                                 }
@@ -359,12 +359,16 @@ module.exports = class game_actions {
                         e.tileX += 0.5
                         e.tileY += 0.5
                     })
-                    let target = saved_path[saved_path.length - 1]
-    
+                    let target = {
+                        x: saved_path[saved_path.length - 1].x,
+                        y: saved_path[saved_path.length - 1].y,
+                        potential_shoot_targets: potential_shoot_targets                        
+                    }
+
                     //UPDATE GAME DATA SO IT SAVES THE TARGET FOR THAT UNIT
                     let update = {}
                     update["units."+options.saved_unit.id+".targets."+options.saved_unit.targets.length] = target; 
-            
+
                     let update_options = 
                     {
                         model: "GameData"
@@ -372,7 +376,7 @@ module.exports = class game_actions {
                             {
                                 filter: {_id: options.parent.game_data.id}, 
                                 value: {$set: update}
-                            }
+                            },                           
                         ]
                     }   
             
@@ -439,6 +443,7 @@ module.exports = class game_actions {
                     new_targets = unit.targets
                     new_targets.pop()
                     update["units."+unit.id+".targets"] = new_targets;
+                    // update["units."+unit.id+".potential_shoot_targets"] = unit.potential_shoot_targets.pop();
                     //SEND DATA TO CLIENTS
                 break;     
                 case "fight":
