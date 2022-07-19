@@ -632,6 +632,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         if(target_unit.alive){
 
                             //CALCULATE WOUNDING HERE AND APPLY DAMAGE
+                            // Math.floor(Math.random() * 20)+1
 
                             shots_hit.push(item)
 
