@@ -630,6 +630,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         //check if target is hit
                         let target_unit = game_data.units[item.target];
                         if(target_unit.alive){
+
+                            //CALCULATE WOUNDING HERE AND APPLY DAMAGE
+
                             shots_hit.push(item)
 
                             target_unit.alive = false;
