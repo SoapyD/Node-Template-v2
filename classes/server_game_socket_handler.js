@@ -604,6 +604,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                 target.potential_targets.forEach((potential_target) => {
                                     let data = {
                                         id: shooting_data.length,
+                                        uid: '_'+n+'_'+i+'_',
                                         origin: n,
                                         shot: i,
                                         hit_time: potential_target.hit_time,
@@ -618,8 +619,23 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 }
 
                 shooting_data = utils.functions.sortDynamic(shooting_data, "hit_time")
-                console.log(shooting_data)
+                // console.log(shooting_data)
+
+                //loop through shooting data and figure out which units hit
                 
+                let shots_hit = [];
+                shooting_data.forEach((item) => {
+                    if(!JSON.stringify(shots_hit).includes(item.uid)){
+                        
+                        //check if target is hit
+                        let target_unit = game_data.units[item.target];
+                        if(target_unit.alive){
+                            shots_hit.push(item)
+
+                            target_unit.alive = false;
+                        }
+                    }
+                })
 
                 //SETUP TROOP MOVING
                 options = {

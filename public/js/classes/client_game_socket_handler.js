@@ -172,7 +172,8 @@ clientSocketHandler.saveGame = () => {
                 //THIS IS THE REASON WHY UNITS AREN'T BEING SAVED CORRECTLY
                 // if(unit.core.player === gameCore.data.player){
                 
-
+                    // unit.core.alive = unit.core.alive
+                    unit.core.alive = true //NEEDS SETTING WHEN UNITS ARE PLACED CORRECTLY
                     unit.core.x = unit.sprite.x
                     unit.core.y = unit.sprite.y		
                     unit.core.x -= gameCore.data.tile_size * unit.unit_class.sprite_offset;
