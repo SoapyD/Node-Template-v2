@@ -88,8 +88,18 @@ const mongoose_db_handler = class {
                                 }]                                
                             }
                         },
-                    ],  
+                    ], 
                 })  
+
+                populate_list.push({
+                    path: "units",                 
+                    populate: [
+                        {path: 'unit_class', model:'Unit'},  
+                        {path: 'gun_class', model:'Gun'},
+                        {path: 'melee_class', model:'Melee'},
+                        {path: 'armour_class', model:'Armour'},
+                    ]                     
+                })
                 
                 break;
 

@@ -573,12 +573,21 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
-    generateBullets = (options) => {
+    generateBullets = async(options) => {
 
         try{
 
             if(options.game_data){
+
                 let game_data = options.game_data;
+
+                let game_datas = await databaseHandler.findData({
+                    model: "GameData"
+                    ,search_type: "findOne"
+                    ,params: {_id: game_data._id}
+                })     
+
+                game_data = game_datas[0]
 
                 //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
                 let lengths = _(game_data.units)
