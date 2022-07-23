@@ -573,6 +573,91 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
+    checkWounding = (options) => {
+        try{
+            let random_roll = Math.floor(Math.random() * 20)+1
+
+            let min_roll_needed = options.defender.armour_class.value - (options.ap + options.bonus);
+            if(options.hit_override !== undefined){
+                min_roll_needed = options.hit_override;
+            }
+
+            // HALF THE RANDOM ROLL IF THE PLAYER IS OUT OF COHESION
+            // if(options.attacker_id){
+            // 	if(gameFunctions.units[options.attacker_id].cohesion_check === false){
+            // 		random_roll = Math.round(random_roll / 2,0);
+            // 	}
+            // }
+
+            let result = ""
+            if(random_roll === -1){
+                result = "pass"
+            }
+            if(random_roll >= min_roll_needed){
+                result = "pass"
+            }
+            if(random_roll < min_roll_needed && random_roll >= 0){
+                result = "fail"
+            }		
+            if(random_roll === 20){
+                result = "critical success"
+            }
+            if(random_roll === 1){
+                result = "critical fail"
+            }
+
+            let print_text = "";
+            let target;
+            switch(result){
+                case "critical success":
+                    options.damage *= 2;
+                    print_text = "crit success!\n-"+options.damage;
+                    target = options.defender;	
+                break;
+                case "pass":
+                    print_text = "-"+options.damage;
+                    target = options.defender;
+                break;
+                case "fail":
+                    print_text = "miss";
+                    options.damage = 0;
+                    target = options.defender;
+                break;
+                case "critical fail":
+                    options.damage = 0;
+                    print_text = "crit fail!";
+                    target = options.defender;
+                break;
+            }
+            
+            if(target){
+                if(target.alive === true){
+    
+                    console.log(print_text)	
+                    
+                    target.health -= options.damage;
+                    // target.drawHealth(this.sprite)
+                    if(target.health <= 0){
+                    //     this.core.killed_by = options.attacker_id;
+                    //     GameUIScene.updatePointsHUD();
+                    //     target.kill();
+
+                        target.alive = false;
+                    }
+                }
+            }
+
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "wound",
+                "e": e
+            }
+            errorHandler.log(options)
+        }
+    }
+
     generateBullets = async(options) => {
 
         try{
@@ -580,7 +665,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             if(options.game_data){
 
                 let game_data = options.game_data;
-
+                //GET FULL GAME DATA
                 let game_datas = await databaseHandler.findData({
                     model: "GameData"
                     ,search_type: "findOne"
@@ -618,6 +703,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                         shot: i,
                                         hit_time: potential_target.hit_time,
                                         target: potential_target.id,
+                                        pos: potential_target.pos
                                         //sub_targets
                                     }
                                     shooting_data.push(data);
@@ -634,21 +720,44 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 
                 let shots_hit = [];
                 shooting_data.forEach((item) => {
+                    //CHECK TO SEE THE SHOT BY X UNIT HASN'T BEEN HANDLED YET
+                    //uid is the origin of the bullet and the shot number
                     if(!JSON.stringify(shots_hit).includes(item.uid)){
                         
+                        let attacker = game_data.units[item.origin];
+                        // let defender = game_data.units[item.target];                                                
                         //check if target is hit
                         let target_unit = game_data.units[item.target];
                         if(target_unit.alive){
 
-                            //CALCULATE WOUNDING HERE AND APPLY DAMAGE
-                            // Math.floor(Math.random() * 20)+1
+                            //CALCULATE WOUNDING AND APPLY DAMAGE
+                            this.checkWounding({
+                                defender: target_unit,
+                                damage: attacker.gun_class[attacker.selected_gun].damage,
+                                ap: attacker.gun_class[attacker.selected_gun].ap,
+                                bonus: attacker.unit_class.shooting_bonus
+                            })
+
+                            //ALSO NEED TO APPLY SPLASH DAMAGE HERE
+
+                            //APPLY DAMAGE OUTCOMES TO TARGETS AND SUB TARGETS (HIT OR MISS)
+                            //SO THAT DATA CAN BE PASSED BACK TO PLAYERS AND APPLIED
 
                             shots_hit.push(item)
-
-                            target_unit.alive = false;
+                            
+                            //SET THE TARGET OF THE BULLET IF IT'S HIT A UNIT
+                            let shot_data = attacker.targets[item.shot];
+                            shot_data.x = item.pos.x
+                            shot_data.y = item.pos.y                           
                         }
                     }
                 })
+
+                //UPDATE THE UNITS TO SAVE SHOT AND DAMAGE DATA HERE
+                databaseHandler.updateData(game_data,
+                {
+                    params: [{units: game_data.units}]
+                })                
 
                 //SETUP TROOP MOVING
                 options = {

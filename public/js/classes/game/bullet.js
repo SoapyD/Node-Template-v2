@@ -195,7 +195,11 @@ const bullet = class {
 				}
 			})	
 		}
-		
+
+		this.colliders.forEach((collider) => {
+			options.scene.physics.world.removeCollider(collider);
+		})
+        */
 		
 		let options = {
 			scene: GameScene.scene,
@@ -213,17 +217,7 @@ const bullet = class {
 		}
 		new particle(options)	
 
-		this.colliders.forEach((collider) => {
-			options.scene.physics.world.removeCollider(collider);
-		})
-        */
-		
 		this.sprite.destroy();
-		// GameScene.active_actions--;
-
-		// if(GameScene.active_actions === 0){
-		// 	modeHandler.readyAdvanceMode();
-		// }		
 
 		this.delete = true;
 
