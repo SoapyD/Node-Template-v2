@@ -512,22 +512,22 @@ clientSocketHandler.generateBullets = (options) => {
         //     gameCore.resetTempSprites()
         // }
 
-        const getTweenData = (unit, position) => {
-            let game_pos = {
-                x: position.x * gameCore.data.tile_size,
-                y: position.y * gameCore.data.tile_size,                    
-            }
+        // const getTweenData = (unit, position) => {
+        //     let game_pos = {
+        //         x: position.x * gameCore.data.tile_size,
+        //         y: position.y * gameCore.data.tile_size,                    
+        //     }
             
-            let tween_data = {
-                // targets: unit.sprite_ghost,
-                x: {value: game_pos.x, duration: 200},
-                y: {value: game_pos.y, duration: 200},
-                // delay: 0,
-                angle: {value: unit.checkAngle(unit.sprite_ghost, game_pos), duration: 0},
-            }
+        //     let tween_data = {
+        //         x: {value: game_pos.x, duration: 200},
+        //         y: {value: game_pos.y, duration: 200},
+        //         angle: {value: unit.checkAngle(unit.sprite_ghost, game_pos), duration: 0},
+        //     }
 
-            return tween_data
-        }
+        //     return tween_data
+        // }
+
+        console.log(options)
 
 
         options.data.targets.forEach((target, i) => {

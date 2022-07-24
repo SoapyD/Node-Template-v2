@@ -1,4 +1,7 @@
 
+-remove NULL moving and shooting elements so they don't tax the socket emit
+-
+
 actions
 ----------------------------
 SHOOTING

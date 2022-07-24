@@ -563,13 +563,13 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
-    // #     #    #    #    # #######       ######  #     # #       #       ####### #######  #####  
-    // ##   ##   # #   #   #  #             #     # #     # #       #       #          #    #     # 
-    // # # # #  #   #  #  #   #             #     # #     # #       #       #          #    #       
-    // #  #  # #     # ###    #####   ##### ######  #     # #       #       #####      #     #####  
-    // #     # ####### #  #   #             #     # #     # #       #       #          #          # 
-    // #     # #     # #   #  #             #     # #     # #       #       #          #    #     # 
-    // #     # #     # #    # #######       ######   #####  ####### ####### #######    #     #####   
+    //  #####  #     # #######  #####  #    #       #     # ####### #     # #     # ######  ### #     #  #####  
+    // #     # #     # #       #     # #   #        #  #  # #     # #     # ##    # #     #  #  ##    # #     # 
+    // #       #     # #       #       #  #         #  #  # #     # #     # # #   # #     #  #  # #   # #       
+    // #       ####### #####   #       ###    ##### #  #  # #     # #     # #  #  # #     #  #  #  #  # #  #### 
+    // #       #     # #       #       #  #         #  #  # #     # #     # #   # # #     #  #  #   # # #     # 
+    // #     # #     # #       #     # #   #        #  #  # #     # #     # #    ## #     #  #  #    ## #     # 
+    //  #####  #     # #######  #####  #    #        ## ##  #######  #####  #     # ######  ### #     #  #####  
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
@@ -633,7 +633,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             if(target){
                 if(target.alive === true){
     
-                    console.log(print_text)	
+                    // console.log(print_text)	
                     
                     target.health -= options.damage;
                     // target.drawHealth(this.sprite)
@@ -647,6 +647,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 }
             }
 
+            return options.damage
         }
         catch(e){
             let options = {
@@ -657,6 +658,18 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             errorHandler.log(options)
         }
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    // #     #    #    #    # #######       ######  #     # #       #       ####### #######  #####  
+    // ##   ##   # #   #   #  #             #     # #     # #       #       #          #    #     # 
+    // # # # #  #   #  #  #   #             #     # #     # #       #       #          #    #       
+    // #  #  # #     # ###    #####   ##### ######  #     # #       #       #####      #     #####  
+    // #     # ####### #  #   #             #     # #     # #       #       #          #          # 
+    // #     # #     # #   #  #             #     # #     # #       #       #          #    #     # 
+    // #     # #     # #    # #######       ######   #####  ####### ####### #######    #     #####   
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
     generateBullets = async(options) => {
 
@@ -731,24 +744,25 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         if(target_unit.alive){
 
                             //CALCULATE WOUNDING AND APPLY DAMAGE
-                            this.checkWounding({
+                            let damage_applied = this.checkWounding({
                                 defender: target_unit,
                                 damage: attacker.gun_class[attacker.selected_gun].damage,
                                 ap: attacker.gun_class[attacker.selected_gun].ap,
                                 bonus: attacker.unit_class.shooting_bonus
                             })
 
-                            //ALSO NEED TO APPLY SPLASH DAMAGE HERE
-
-                            //APPLY DAMAGE OUTCOMES TO TARGETS AND SUB TARGETS (HIT OR MISS)
-                            //SO THAT DATA CAN BE PASSED BACK TO PLAYERS AND APPLIED
-
                             shots_hit.push(item)
-                            
+ 
+                            //APPLY DAMAGE OUTCOMES TO TARGETS AND SUB TARGETS (HIT OR MISS)
+                            //SO THAT DATA CAN BE PASSED BACK TO PLAYERS AND APPLIED                            
                             //SET THE TARGET OF THE BULLET IF IT'S HIT A UNIT
                             let shot_data = attacker.targets[item.shot];
                             shot_data.x = item.pos.x
-                            shot_data.y = item.pos.y                           
+                            shot_data.y = item.pos.y
+                            shot_data.target_id = item.target;
+                            shot_data.damage = damage_applied;     
+                            
+                            //ALSO NEED TO APPLY SPLASH DAMAGE HERE                            
                         }
                     }
                 })
