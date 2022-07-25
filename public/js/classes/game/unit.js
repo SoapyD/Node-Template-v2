@@ -384,7 +384,7 @@ kill(){
 		})
 		this.delete = true;
 
-		modeHandler.checkGameEnd();
+		// modeHandler.checkGameEnd();
 	}catch(e){
 
 		let options = {
@@ -411,6 +411,10 @@ wound = (options) => {
 	}
 
 	this.drawTextParticle(print_text)
+
+	if(this.core.health === 0){
+		this.kill();
+	}
 }
 	
 // ######  ######     #    #     # 
