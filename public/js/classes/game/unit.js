@@ -394,7 +394,24 @@ kill(){
 		}
 		errorHandler.log(options)
 	}		
-}		
+}
+
+wound = (options) => {
+	console.log(options)
+
+	let print_text = '-'+options.damage+' damage'
+	if(options.damage > 0) {
+		this.core.health -= options.damage
+		if(this.core.health < 0){
+			this.core.health = 0;
+		}
+		gameCore.assets.units[this.id] -= options.damage		
+	}else{
+		print_text = 'miss'
+	}
+
+	this.drawTextParticle(print_text)
+}
 	
 // ######  ######     #    #     # 
 // #     # #     #   # #   #  #  # 

@@ -527,7 +527,7 @@ clientSocketHandler.generateBullets = (options) => {
         //     return tween_data
         // }
 
-        console.log(options)
+        // console.log(options)
 
 
         options.data.targets.forEach((target, i) => {
@@ -547,16 +547,17 @@ clientSocketHandler.generateBullets = (options) => {
                 //     unit.updateElements(unit.sprite_ghost)
                 // })
 
-				let options = {
+				let bullet_options = {
 					scene: GameScene.scene,
 					spritesheet: "bullet",
 					angle: angle,
 					unit: unit,
-					target: {x: game_pos.x, y: game_pos.y}
+					target: {x: game_pos.x, y: game_pos.y},
+                    server_options: target
 				}
 
-			    gameCore.assets.bullets.push(new bullet(options))
-
+			    gameCore.assets.bullets.push(new bullet(bullet_options))
+                // console.log(gameCore.assets.bullets)
                 //make unit shot=true
             }
         })

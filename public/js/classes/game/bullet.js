@@ -37,6 +37,11 @@ const bullet = class {
 		this.angle = options.angle;
 		this.target = options.target;
 		
+		if(options.server_options.target_id){
+			this.target_id = options.server_options.target_id;
+			this.damage = options.server_options.damage;		
+		}
+
 		this.sprite = options.scene.physics.add.image(options.unit.sprite.x,options.unit.sprite.y,options.spritesheet)
 
 		this.sprite.setDepth(20);
@@ -216,6 +221,12 @@ const bullet = class {
 			}
 		}
 		new particle(options)	
+
+		if(this.target_id){
+			let unit = gameCore.assets.units[this.target_id];
+			unit.wound({damage:this.damage})
+		}
+
 
 		this.sprite.destroy();
 

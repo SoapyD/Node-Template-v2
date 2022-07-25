@@ -576,6 +576,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     checkWounding = (options) => {
         try{
             let random_roll = Math.floor(Math.random() * 20)+1
+            // random_roll = 20
+            console.log(random_roll)
 
             let min_roll_needed = options.defender.armour_class.value - (options.ap + options.bonus);
             if(options.hit_override !== undefined){
