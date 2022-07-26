@@ -162,7 +162,6 @@ resetColours(){
 	}	
 }
 
-
 // resetCohesionGraphic() {
 // 	try{	
 // 		this.cohesion_graphic.clear()
@@ -241,6 +240,26 @@ resetMove() {
 		}
 		errorHandler.log(options)
 	}	
+}
+
+resetShoot = () => {
+	try{
+		//RESET THE DRAW GRAPHICS
+		this.path_graphic.clear()
+		
+		this.blast_graphics.forEach((graphic) => {
+			graphic.clear();
+		})	
+	}catch(e){
+
+		let options = {
+			"class": "unit",
+			"function": "resetShoot",
+			"e": e
+		}
+		errorHandler.log(options)
+	}	
+
 }
 
 resetFightRadius() {
@@ -824,15 +843,28 @@ drawTarget() {
 	try{	
 		if (this.core.targets){
 			
-			//RESET THE DRAW GRAPHICS
-			this.path_graphic.clear()
+			this.resetShoot();
+
 			this.path_graphic.lineStyle(8, 0x00cccc, 0.5);	
 			this.path_graphic.beginPath();
 			
 			this.core.targets.forEach((target, i) => {
+				let x =  target.x * gameCore.data.tile_size;
+				let y =  target.y * gameCore.data.tile_size;				
 				
 				this.path_graphic.moveTo(this.sprite.x, this.sprite.y);
-				this.path_graphic.lineTo(target.x * gameCore.data.tile_size, target.y * gameCore.data.tile_size);
+				this.path_graphic.lineTo(x, y);
+
+				let gun = this.gun_class[this.core.selected_gun];
+				if(gun.blast_radius > 1){
+					let blast_graphic = this.blast_graphics[i];
+					blast_graphic.fillStyle(0x0000FF, 0.5);
+
+					let circle = new Phaser.Geom.Circle(x, y, (gun.blast_radius / 2) * gameCore.data.tile_size);
+					blast_graphic.fillCircleShape(circle).setDepth(this.depth_explosion);
+
+					blast_graphic.strokePath();
+				}
 
 				/*
 				let pos = {x:0,y:0};

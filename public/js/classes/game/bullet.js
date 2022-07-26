@@ -223,8 +223,10 @@ const bullet = class {
 		new particle(options)	
 
 		if(this.target_id){
-			let unit = gameCore.assets.units[this.target_id];
-			unit.wound({damage:this.damage})
+			if(this.target_id > -1){
+				let unit = gameCore.assets.units[this.target_id];
+				unit.wound({damage:this.damage})
+			}
 		}
 
 

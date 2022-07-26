@@ -119,6 +119,31 @@ module.exports = class game_collisions {
     })    
   }
 
+  checkBlastClash = (options) => {
+      
+    let start = {
+      x: options.start.x * options.game_data.tile_size ,
+      y: options.start.y * options.game_data.tile_size            
+    }
+
+    //USE LODASH TO SEARCH FOR ALL UNITS THAT CENTER POSITION IS WITHIN THE BLAST RADIUS
+    return _.filter(options.game_data.units, (unit) => {
+     
+      let end = {
+        x: unit.x,
+        y: unit.y           
+      }      
+
+      let dist = Math.round(Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2)),0)
+      let max_dist = ((options.blast_radius * options.game_data.tile_size) / 2);
+      console.log(dist, max_dist)
+      
+      return (
+          dist <= max_dist
+      )
+    })     
+
+  }
 
   gridRayTracing = (start, end) => {
 

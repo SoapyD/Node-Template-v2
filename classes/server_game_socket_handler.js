@@ -577,7 +577,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         try{
             let random_roll = Math.floor(Math.random() * 20)+1
             // random_roll = 20
-            console.log(random_roll)
+            // console.log(random_roll)
 
             let min_roll_needed = options.defender.armour_class.value - (options.ap + options.bonus);
             if(options.hit_override !== undefined){
@@ -724,6 +724,21 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                     shooting_data.push(data);
                                 })
                             }
+                            //ADD ON THE END PATH POINT
+                            let data = {
+                                id: shooting_data.length,
+                                uid: '_'+n+'_'+i+'_',
+                                origin: n,
+                                shot: i,
+                                hit_time: 999,
+                                target: -1,
+                                pos: {
+                                    x: target.x,
+                                    y: target.y
+                                }
+                                //sub_targets
+                            }
+                            shooting_data.push(data);                            
                         }
                     })
                 }
@@ -742,30 +757,42 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         let attacker = game_data.units[item.origin];
                         // let defender = game_data.units[item.target];                                                
                         //check if target is hit
-                        let target_unit = game_data.units[item.target];
-                        if(target_unit.alive){
-
-                            //CALCULATE WOUNDING AND APPLY DAMAGE
-                            let damage_applied = this.checkWounding({
-                                defender: target_unit,
-                                damage: attacker.gun_class[attacker.selected_gun].damage,
-                                ap: attacker.gun_class[attacker.selected_gun].ap,
-                                bonus: attacker.unit_class.shooting_bonus
-                            })
-
-                            shots_hit.push(item)
- 
-                            //APPLY DAMAGE OUTCOMES TO TARGETS AND SUB TARGETS (HIT OR MISS)
-                            //SO THAT DATA CAN BE PASSED BACK TO PLAYERS AND APPLIED                            
-                            //SET THE TARGET OF THE BULLET IF IT'S HIT A UNIT
-                            let shot_data = attacker.targets[item.shot];
-                            shot_data.x = item.pos.x
-                            shot_data.y = item.pos.y
-                            shot_data.target_id = item.target;
-                            shot_data.damage = damage_applied;     
-                            
-                            //ALSO NEED TO APPLY SPLASH DAMAGE HERE                            
+                        if(item.target > -1){
+                            let target_unit = game_data.units[item.target];
+                            if(target_unit.alive){
+    
+                                //CALCULATE WOUNDING AND APPLY DAMAGE
+                                let damage_applied = this.checkWounding({
+                                    defender: target_unit,
+                                    damage: attacker.gun_class[attacker.selected_gun].damage,
+                                    ap: attacker.gun_class[attacker.selected_gun].ap,
+                                    bonus: attacker.unit_class.shooting_bonus
+                                })
+    
+                                shots_hit.push(item)
+     
+                                //APPLY DAMAGE OUTCOMES TO TARGETS AND SUB TARGETS (HIT OR MISS)
+                                //SO THAT DATA CAN BE PASSED BACK TO PLAYERS AND APPLIED                            
+                                //SET THE TARGET OF THE BULLET IF IT'S HIT A UNIT
+                                let shot_data = attacker.targets[item.shot];
+                                shot_data.x = item.pos.x
+                                shot_data.y = item.pos.y
+                                shot_data.target_id = item.target;
+                                shot_data.damage = damage_applied;     
+                            }
                         }
+
+                        //ALSO NEED TO APPLY SPLASH DAMAGE HERE  
+                        // console.log(attacker.gun_class[attacker.selected_gun]) 
+                        if(attacker.gun_class[attacker.selected_gun].blast_radius > 1){
+                            let blast_units = collisionHandler.checkBlastClash({
+                                game_data: game_data
+                                ,start: item.pos
+                                ,blast_radius: attacker.gun_class[attacker.selected_gun].blast_radius
+                            })
+                            console.log(blast_units)
+                        }
+
                     }
                 })
 
