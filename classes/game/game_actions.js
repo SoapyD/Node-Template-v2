@@ -297,8 +297,9 @@ module.exports = class game_actions {
             
                     //CHECK THROUGH TILES AND SEE IF THEY CLASH WITH ANY TERRAIN
                     let potential_targets = [];
-                    let saved_path = []
-                    let skip = false
+                    let saved_path = [];
+                    let skip = false;
+                    let dest_time = -1;
                     path.forEach((e, i) => {
             
                         let cell = options.matrix[e.tileY][e.tileX]            
@@ -324,7 +325,13 @@ module.exports = class game_actions {
     
                         if(range > gun.range){
                             skip = true;
-                        }                    
+                        }
+
+                        let hit_time = (range / 200) + (options.saved_unit.targets.length * 2);
+                        
+                        if(skip === false){
+                            dest_time = hit_time;
+                        }
     
                         //break the loop if the position hits another unit
                         let unit_search = collisionHandler.checkUnitClash(
@@ -340,7 +347,7 @@ module.exports = class game_actions {
                                     potential_targets.push({
                                         range: range,
                                         id: unit.id,
-                                        hit_time: (range / 200) + (options.saved_unit.targets.length * 2), //range/pixels per second + bullet_pos * 2 seconds
+                                        hit_time: hit_time, //range/pixels per second + bullet_pos * 2 seconds
                                         pos: {
                                             x: e.x,
                                             y: e.y                                            
@@ -365,6 +372,7 @@ module.exports = class game_actions {
                     let target = {
                         x: saved_path[saved_path.length - 1].x,
                         y: saved_path[saved_path.length - 1].y,
+                        hit_time: dest_time,
                         potential_targets: potential_targets                        
                     }
                     // if(potential_targets.length > 0){

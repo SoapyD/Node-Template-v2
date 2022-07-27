@@ -2,6 +2,7 @@
 // const utils = require("../utils");
 
 // code sourced from here: https://www.jeffreythompson.org/collision-detection/table_of_contents.php
+const { mixin } = require('lodash');
 const _ = require('lodash');
 
 const u_circle = class {
@@ -85,25 +86,38 @@ module.exports = class game_collisions {
     let max = {
         x: -1,
         y: -1,
-    }        
+    }
+    let mid = {
+      x: -1,
+      y: -1,
+  }            
 
     if(unit.sprite_offset === 0){
         min.x = unit.tileX - unit.size;
         min.y = unit.tileY - unit.size;            
         max.x = unit.tileX
-        max.y = unit.tileY             
+        max.y = unit.tileY         
+
+        mid.x = ((max.x - min.x) / 2) + min.x;
+        mid.y = ((max.y - min.y) / 2) + min.y;        
     }
 
     if(unit.sprite_offset === 0.5){
         min.x = unit.tileX - unit.size;
         min.y = unit.tileY - unit.size;            
         max.x = unit.tileX + unit.size;
-        max.y = unit.tileY + unit.size;             
+        max.y = unit.tileY + unit.size;       
+        
+        mid.x = ((max.x - min.x) / 2) + min.x + unit.sprite_offset;
+        mid.y = ((max.y - min.y) / 2) + min.y + unit.sprite_offset;        
     }
+
+    
 
     return {
         min: min,
-        max: max
+        max: max,
+        mid: mid
     }
   }
 
@@ -129,14 +143,14 @@ module.exports = class game_collisions {
     //USE LODASH TO SEARCH FOR ALL UNITS THAT CENTER POSITION IS WITHIN THE BLAST RADIUS
     return _.filter(options.game_data.units, (unit) => {
      
-      let end = {
-        x: unit.x,
-        y: unit.y           
-      }      
+      let range = this.getUnitTileRange(unit)
+      let unit_mid = range.mid;
+      unit_mid.x *= options.game_data.tile_size;
+      unit_mid.y *= options.game_data.tile_size;      
 
-      let dist = Math.round(Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2)),0)
+      let dist = Math.round(Math.sqrt(Math.pow(start.x - unit_mid.x, 2) + Math.pow(start.y - unit_mid.y, 2)),0)
       let max_dist = ((options.blast_radius * options.game_data.tile_size) / 2);
-      console.log(dist, max_dist)
+      // console.log(dist, max_dist)
       
       return (
           dist <= max_dist

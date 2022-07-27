@@ -730,7 +730,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                 uid: '_'+n+'_'+i+'_',
                                 origin: n,
                                 shot: i,
-                                hit_time: 999,
+                                hit_time: target.hit_time,
                                 target: -1,
                                 pos: {
                                     x: target.x,
@@ -790,7 +790,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                 ,start: item.pos
                                 ,blast_radius: attacker.gun_class[attacker.selected_gun].blast_radius
                             })
-                            console.log(blast_units)
+                            // console.log(blast_units)
                         }
 
                     }

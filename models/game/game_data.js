@@ -96,6 +96,7 @@ const gameSchema = new mongoose.Schema({
 		,targets: [{
 			x: Number
 			,y: Number
+			,hit_time: Number
 			,target_id: {type: Number, default: -1}
 			,damage: {type: Number, default: 0}
 			,potential_targets: [{
