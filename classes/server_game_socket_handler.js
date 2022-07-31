@@ -696,6 +696,13 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 let max_pos = lengths[lengths.indexOf(Math.max(...lengths))]
                 let pos = 0 
 
+                //reset blast_units arrays
+                game_data.units.forEach((unit) => {
+                    unit.targets.forEach((target) => {
+                        target.blast_targets = [];
+                    })
+                })
+
                 let shooting_data = [];
                 
                 //figure out the wounding that needs to be applied as well as what target units get hit
@@ -755,11 +762,18 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     if(!JSON.stringify(shots_hit).includes(item.uid)){
                         
                         let attacker = game_data.units[item.origin];
-                        // let defender = game_data.units[item.target];                                                
+                        // let defender = game_data.units[item.target];
+                        
+                        let check_splash = false;
+
+                        if(item.target === -1){
+                            check_splash = true;
+                        }
                         //check if target is hit
                         if(item.target > -1){
                             let target_unit = game_data.units[item.target];
                             if(target_unit.alive){
+                                check_splash = true;
     
                                 //CALCULATE WOUNDING AND APPLY DAMAGE
                                 let damage_applied = this.checkWounding({
@@ -782,15 +796,35 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             }
                         }
 
-                        //ALSO NEED TO APPLY SPLASH DAMAGE HERE  
-                        // console.log(attacker.gun_class[attacker.selected_gun]) 
-                        if(attacker.gun_class[attacker.selected_gun].blast_radius > 1){
-                            let blast_units = collisionHandler.checkBlastClash({
-                                game_data: game_data
-                                ,start: item.pos
-                                ,blast_radius: attacker.gun_class[attacker.selected_gun].blast_radius
-                            })
-                            // console.log(blast_units)
+                        if(check_splash){
+                            //ALSO NEED TO APPLY SPLASH DAMAGE HERE  
+                            // console.log(attacker.gun_class[attacker.selected_gun]) 
+                            if(attacker.gun_class[attacker.selected_gun].blast_radius > 1){
+                                let blast_units = collisionHandler.checkBlastClash({
+                                    game_data: game_data
+                                    ,start: item.pos
+                                    ,blast_radius: attacker.gun_class[attacker.selected_gun].blast_radius
+                                })
+    
+                                blast_units.forEach((blast_unit) => {
+                                    
+                                    if(blast_unit.alive){
+                                        //CALCULATE WOUNDING AND APPLY DAMAGE
+                                        let damage_applied = this.checkWounding({
+                                            defender: blast_unit,
+                                            damage: attacker.gun_class[attacker.selected_gun].damage,
+                                            ap: attacker.gun_class[attacker.selected_gun].ap,
+                                            bonus: attacker.unit_class.shooting_bonus
+                                        })
+                                        
+                                        game_data.units[item.origin].targets[item.shot].blast_targets.push({
+                                            id: blast_unit.id
+                                            ,damage: damage_applied
+                                        })
+                                    }
+                                })
+    
+                            }
                         }
 
                     }

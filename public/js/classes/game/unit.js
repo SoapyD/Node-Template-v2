@@ -418,7 +418,7 @@ kill(){
 wound = (options) => {
 	console.log(options)
 
-	let print_text = '-'+options.damage+' damage'
+	let print_text = options.damage+' dmg'
 	if(options.damage > 0) {
 		this.core.health -= options.damage
 		if(this.core.health < 0){

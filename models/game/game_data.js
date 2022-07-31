@@ -100,13 +100,17 @@ const gameSchema = new mongoose.Schema({
 			,target_id: {type: Number, default: -1}
 			,damage: {type: Number, default: 0}
 			,potential_targets: [{
-				range: Number,
-				id: Number,
-				hit_time: Number,
-				pos: {
-					x: Number,
-					y: Number
+				range: Number
+				,id: Number
+				,hit_time: Number
+				,pos: {
+					x: Number
+					,y: Number
 				}
+			}]
+			,blast_targets: [{
+				id: Number
+				,damage: {type: Number, default: 0}
 			}]	
 		}]	
 

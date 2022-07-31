@@ -42,6 +42,10 @@ const bullet = class {
 			this.damage = options.server_options.damage;		
 		}
 
+		if(options.server_options.blast_targets){
+			this.blast_targets = options.server_options.blast_targets;		
+		}		
+
 		this.sprite = options.scene.physics.add.image(options.unit.sprite.x,options.unit.sprite.y,options.spritesheet)
 
 		this.sprite.setDepth(20);
@@ -227,6 +231,13 @@ const bullet = class {
 				let unit = gameCore.assets.units[this.target_id];
 				unit.wound({damage:this.damage})
 			}
+		}
+
+		if(this.blast_targets){
+			this.blast_targets.forEach((blast_target) => {
+				let unit = gameCore.assets.units[blast_target.id];
+				unit.wound({damage:blast_target.damage})				
+			})
 		}
 
 

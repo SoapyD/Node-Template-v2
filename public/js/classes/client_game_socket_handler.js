@@ -507,28 +507,6 @@ clientSocketHandler.setShootingTargets = (options) => {
 
 clientSocketHandler.generateBullets = (options) => {
     try{
-        
-        // if(options.data.start){
-        //     gameCore.resetTempSprites()
-        // }
-
-        // const getTweenData = (unit, position) => {
-        //     let game_pos = {
-        //         x: position.x * gameCore.data.tile_size,
-        //         y: position.y * gameCore.data.tile_size,                    
-        //     }
-            
-        //     let tween_data = {
-        //         x: {value: game_pos.x, duration: 200},
-        //         y: {value: game_pos.y, duration: 200},
-        //         angle: {value: unit.checkAngle(unit.sprite_ghost, game_pos), duration: 0},
-        //     }
-
-        //     return tween_data
-        // }
-
-        // console.log(options)
-
 
         options.data.targets.forEach((target, i) => {
 
@@ -540,12 +518,6 @@ clientSocketHandler.generateBullets = (options) => {
                     y: target.y * gameCore.data.tile_size,                    
                 }
                 let angle = Phaser.Math.Angle.BetweenPoints(unit.sprite, game_pos);
-                
-                //UPDATE PLAYER ELEMENTS AS IT MOVES
-                // tween.on('update',(target) => {
-                //     let unit = target.targets[0].parent
-                //     unit.updateElements(unit.sprite_ghost)
-                // })
 
 				let bullet_options = {
 					scene: GameScene.scene,
@@ -557,7 +529,7 @@ clientSocketHandler.generateBullets = (options) => {
 				}
 
 			    gameCore.assets.bullets.push(new bullet(bullet_options))
-                // console.log(gameCore.assets.bullets)
+
                 //make unit shot=true
             }
         })
