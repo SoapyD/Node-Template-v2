@@ -92,10 +92,20 @@ const mongoose_db_handler = class {
                 })  
 
                 populate_list.push({
+                    path: "barriers",                 
+                    populate: [
+                        {path: 'barrier_class', model:'Barrier'}, 
+                    ]
+                })
+
+                populate_list.push({
                     path: "units",                 
                     populate: [
                         {path: 'unit_class', model:'Unit'},  
-                        {path: 'gun_class', model:'Gun'},
+                        {
+                            path: 'gun_class', model:'Gun'
+                            ,populate: {path: "barrier", model: "Barrier"}
+                        },
                         {path: 'melee_class', model:'Melee'},
                         {path: 'armour_class', model:'Armour'},
                     ]                     

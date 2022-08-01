@@ -398,7 +398,6 @@ module.exports = class game_actions {
             
                     await databaseHandler.updateOne(update_options)                  
     
-            
                     //SET TARGETS IN GAME_DATA FOR UNIT
                     let return_targets = options.parent.game_data.units[options.saved_unit.id].targets
                     return_targets.push(target)

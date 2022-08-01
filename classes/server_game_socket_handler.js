@@ -5,6 +5,7 @@ const stateHandler = new game_state()
 const utils = require("../utils");
 
 const _ = require('lodash');
+const barrier = require("../models/game/barrier");
 
 module.exports = class server_game_socket_handler extends server_socket_handler {
 	constructor(options) {	
@@ -762,24 +763,25 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     if(!JSON.stringify(shots_hit).includes(item.uid)){
                         
                         let attacker = game_data.units[item.origin];
+                        let attacker_gun = attacker.gun_class[attacker.selected_gun];
                         // let defender = game_data.units[item.target];
                         
-                        let check_splash = false;
+                        let bullet_hit = false;
 
                         if(item.target === -1){
-                            check_splash = true;
+                            bullet_hit = true;
                         }
                         //check if target is hit
                         if(item.target > -1){
                             let target_unit = game_data.units[item.target];
                             if(target_unit.alive){
-                                check_splash = true;
+                                bullet_hit = true;
     
                                 //CALCULATE WOUNDING AND APPLY DAMAGE
                                 let damage_applied = this.checkWounding({
                                     defender: target_unit,
-                                    damage: attacker.gun_class[attacker.selected_gun].damage,
-                                    ap: attacker.gun_class[attacker.selected_gun].ap,
+                                    damage: attacker_gun.damage,
+                                    ap: attacker_gun.ap,
                                     bonus: attacker.unit_class.shooting_bonus
                                 })
     
@@ -796,14 +798,26 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             }
                         }
 
-                        if(check_splash){
+                        if(bullet_hit){
+                            //CHECK FOR BARRIER CREATION
+                            if(attacker_gun.barrier){
+                                let barrier = {
+                                    barrier_class: attacker_gun.barrier.id
+                                    ,life: attacker_gun.barrier.life
+                                    ,x: item.pos.x
+                                    ,y: item.pos.y
+                                }
+
+                                game_data.barriers.push(barrier)
+                            }
+
                             //ALSO NEED TO APPLY SPLASH DAMAGE HERE  
                             // console.log(attacker.gun_class[attacker.selected_gun]) 
-                            if(attacker.gun_class[attacker.selected_gun].blast_radius > 1){
+                            if(attacker_gun.blast_radius > 1){
                                 let blast_units = collisionHandler.checkBlastClash({
                                     game_data: game_data
                                     ,start: item.pos
-                                    ,blast_radius: attacker.gun_class[attacker.selected_gun].blast_radius
+                                    ,blast_radius: attacker_gun.blast_radius
                                 })
     
                                 blast_units.forEach((blast_unit) => {
@@ -812,8 +826,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                         //CALCULATE WOUNDING AND APPLY DAMAGE
                                         let damage_applied = this.checkWounding({
                                             defender: blast_unit,
-                                            damage: attacker.gun_class[attacker.selected_gun].damage,
-                                            ap: attacker.gun_class[attacker.selected_gun].ap,
+                                            damage: attacker_gun.damage,
+                                            ap: attacker_gun.ap,
                                             bonus: attacker.unit_class.shooting_bonus
                                         })
                                         

@@ -33,6 +33,17 @@ const gameSchema = new mongoose.Schema({
 		selected_unit: {type: Number, default: -1},
 		ready: {type: Boolean, default: false}						
 	}]
+
+	,barriers: [{
+		barrier_class:
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Barrier"
+		}
+		,life: Number
+		,x: {type: Number, default: -1}
+		,y: {type: Number, default: -1}					
+	}]
 	
 	,units: [{
 		

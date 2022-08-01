@@ -8,7 +8,8 @@ const game_core = class {
             units: [],
             bullets: [],
             units_preload: [],
-            forces: []           
+            forces: [],
+            barriers: []           
         }
 
         this.data = {
