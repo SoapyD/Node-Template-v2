@@ -80,17 +80,14 @@ const bullet = class {
 
 		if(this.unit.gun_class[this.unit.core.selected_gun].barrier){
 
-			let barrier_info = this.unit.gun_class[this.unit.core.selected_gun].barrier;
+			let barrier_class = this.unit.gun_class[this.unit.core.selected_gun].barrier;
 
 			new barrier({
 				scene: this.scene,
 				x: this.sprite.x,
 				y: this.sprite.y,
-				blast_radius: barrier_info.blast_radius,
-				blast_spritesheet: barrier_info.blast_sprite,
 				unit: this.unit,
-				life: barrier_info.life,
-				effects: barrier_info.effects			
+				barrier: barrier_class			
 			})				
 		}
 
@@ -142,8 +139,7 @@ const bullet = class {
 		}
 		
 		//GET THE CURRENT GRID POSITION OF THE BULLET
-		let gridX = Math.floor(this.sprite.x/gameCore.data.tile_size);
-		let gridY = Math.floor(this.sprite.y/gameCore.data.tile_size);	
-        
+		// let gridX = Math.floor(this.sprite.x/gameCore.data.tile_size);
+		// let gridY = Math.floor(this.sprite.y/gameCore.data.tile_size);	
 	}
 }

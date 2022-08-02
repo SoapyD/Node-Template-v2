@@ -122,7 +122,7 @@ const gameSchema = new mongoose.Schema({
 			,blast_targets: [{
 				id: Number
 				,damage: {type: Number, default: 0}
-			}]	
+			}]
 		}]	
 
 		,fight_targets: [{

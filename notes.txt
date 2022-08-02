@@ -1,29 +1,13 @@
 
 -remove NULL moving and shooting elements so they don't tax the socket emit
--
+
 
 actions
 ----------------------------
 SHOOTING
--DONE -Limit the range to the maximum range of a gun
--Keep a list of potential unit shooting targets that can be referred back to later
-
--save the potential targets to the gamedata table
--generate blast markers
--generate barrier
--generate wounding
--Figure out in the timeline exactly where a bullet will die
-
--Full Check
-    -Generate target paths for all units
-    -When all units are readied up
-        -tick through bullets, deciding what order they'll hit in, and what wounding occurs
-        -figure out if a unit is dead in this step phase so when the next bullet is figured out, it'll then carry past any "dead units"
-
--Smart Check
-    -Maybe instead of stopping a bullet entirely when it's path is checked, all unit stops are logged
-    -Then pass a set number of wounding scores that can then be applied to any unit it hits
-    -There would need to be a way for the server to figure out who's actually hit though
+-Check barriers to see if they affect bullets
+-apply damage reduction when shield barrier is crossed
+-apply effects for sniping units / effects when figuring out wounding
 
 MOVEMENT
 -Finalise movemement once it's completed
@@ -52,6 +36,27 @@ FIGHTING
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -Limit the range to the maximum range of a gun
+-DONE -Keep a list of potential unit shooting targets that can be referred back to later
+
+-DONE -save the potential targets to the gamedata table
+-DONE -generate blast markers
+-DONE -generate barrier
+-DONE -generate wounding
+-DONE -Figure out in the timeline exactly where a bullet will die
+
+-Full Check
+    -DONE -Generate target paths for all units
+    -DONE -When all units are readied up
+        -DONE -tick through bullets, deciding what order they'll hit in, and what wounding occurs
+        -DONE -figure out if a unit is dead in this step phase so when the next bullet is figured out, it'll then carry past any "dead units"
+
+-Smart Check
+    -Maybe instead of stopping a bullet entirely when it's path is checked, all unit stops are logged
+    -Then pass a set number of wounding scores that can then be applied to any unit it hits
+    -There would need to be a way for the server to figure out who's actually hit though
+
 
 -DONE -liveMessage alert is spawning for a second or two, causing a stutter
 -DONE -Grey out the offscene menu when a room is succesfully join or created then close it after the message bar is removed

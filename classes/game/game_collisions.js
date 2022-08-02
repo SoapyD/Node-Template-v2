@@ -75,6 +75,90 @@ module.exports = class game_collisions {
     return false;
   }
 
+  lineCircle(line, circle) {
+    // boolean lineCircle(float x1, float y1, float x2, float y2, float cx, float cy, float r) {
+
+      // is either end INSIDE the circle?
+      // if so, return true immediately
+      let inside1 = this.pointCircle(x1,y1, cx,cy,r);
+      let inside2 = this.pointCircle(x2,y2, cx,cy,r);
+      if (inside1 || inside2) return true;
+    
+      // get length of the line
+      let distX = x1 - x2;
+      let distY = y1 - y2;
+      let len = Math.sqrt( (distX*distX) + (distY*distY) );
+    
+      // get dot product of the line and circle
+      let dot = ( ((cx-x1)*(x2-x1)) + ((cy-y1)*(y2-y1)) ) / Math.pow(len,2);
+    
+      // find the closest point on the line
+      let closestX = x1 + (dot * (x2-x1));
+      let closestY = y1 + (dot * (y2-y1));
+    
+      // is this point actually on the line segment?
+      // if so keep going, but if not, return false
+      let onSegment = this.linePoint(x1,y1,x2,y2, closestX,closestY);
+      if (!onSegment) return false;
+    
+      // get distance to closest point
+      distX = closestX - cx;
+      distY = closestY - cy;
+      let distance = Math.sqrt( (distX*distX) + (distY*distY) );
+    
+      if (distance <= r) {
+        return true;
+      }
+      return false;
+    }    
+
+  // POINT/CIRCLE
+  pointCircle(px, py, cx, cy, r) {
+
+    // get distance between the point and circle's center
+    // using the Pythagorean Theorem
+    let distX = px - cx;
+    let distY = py - cy;
+    let distance = Math.sqrt( (distX*distX) + (distY*distY) );
+
+    // if the distance is less than the circle's
+    // radius the point is inside!
+    if (distance <= r) {
+      return true;
+    }
+    return false;
+  }  
+
+  dist(x1, y1, x2, y2) {
+    let distX = x1 - x2;
+    let distY = y1 - y2;
+    let distance = Math.sqrt( (distX*distX) + (distY*distY) );    
+  }
+
+  // LINE/POINT
+  linePoint(x1, y1, x2, y2, px, py) {
+
+    // get distance from the point to the two ends of the line
+    let d1 = this.dist(px,py, x1,y1);
+    let d2 = this.dist(px,py, x2,y2);
+  
+    // get the length of the line
+    let lineLen = this.dist(x1,y1, x2,y2);
+  
+    // since floats are so minutely accurate, add
+    // a little buffer zone that will give collision
+    let buffer = 0.1;    // higher # = less accurate
+  
+    // if the two distances are equal to the line's
+    // length, the point is on the line!
+    // note we use the buffer here to give a range,
+    // rather than one #
+    if (d1+d2 >= lineLen-buffer && d1+d2 <= lineLen+buffer) {
+      return true;
+    }
+    return false;
+  }
+
 
   //GET THE RANGE OF TILES A UNIT OCCUPIES
   getUnitTileRange = (unit) => {

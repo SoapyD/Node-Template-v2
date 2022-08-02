@@ -799,6 +799,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         }
 
                         if(bullet_hit){
+                            //USE LINE CIRCLE COLLISION TO CHECK TO SEE IF ANY BARRIERS ARE HIT
+
                             //CHECK FOR BARRIER CREATION
                             if(attacker_gun.barrier){
                                 let barrier = {
@@ -808,7 +810,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                     ,y: item.pos.y
                                 }
 
-                                game_data.barriers.push(barrier)
+                                game_data.barriers.push(barrier)                              
                             }
 
                             //ALSO NEED TO APPLY SPLASH DAMAGE HERE  
@@ -867,7 +869,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 var myInterval =setInterval(() => {
 
                     //USE LOBASE TO GET PATH POSITIONS
-                    let targets = _(options.game_data.units)
+                    let targets = _(game_data.units)
                     .map(row => row.targets[options.pos])
                     .value()
 

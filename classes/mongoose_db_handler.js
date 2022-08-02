@@ -59,7 +59,10 @@ const mongoose_db_handler = class {
                                     path: "squad",
                                     populate: [
                                             {path: 'unit'},  
-                                            {path: 'gun'},
+                                            {
+                                                path: 'gun'
+                                                ,populate: {path: "barrier", model: "Barrier"}
+                                            },
                                             {path: 'melee'},
                                             {path: 'armour'},
                                             {

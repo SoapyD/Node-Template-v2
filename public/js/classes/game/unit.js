@@ -865,36 +865,6 @@ drawTarget() {
 
 					blast_graphic.strokePath();
 				}
-
-				/*
-				let pos = {x:0,y:0};
-				if(target.x && target.y){
-					pos.x = target.x;
-					pos.y = target.y;
-				}else{
-					pos.x = gameCore.assets.units[target].sprite.x;
-					pos.y = gameCore.assets.units[target].sprite.y;
-				}
-				this.path_graphic.moveTo(this.sprite.x, this.sprite.y);
-				
-				
-				//OFFSET PATH POSITION TO MIDDLE OF TILE
-				pos.x += this.unit_class.sprite_offset;
-				pos.y += this.unit_class.sprite_offset;	
-				
-				this.path_graphic.lineTo(pos.x, pos.y);
-				
-				if(blast_radius > 1){
-					let blast_graphic = this.blast_graphics[i];
-					blast_graphic.fillStyle(0x0000FF, 0.5);
-
-					let circle = new Phaser.Geom.Circle(pos.x, pos.y, (blast_radius / 2) * gameCore.data.tile_size);
-					blast_graphic.fillCircleShape(circle).setDepth(this.depth_explosion);
-
-					blast_graphic.strokePath();
-				}
-				*/
-				
 			})
 
 			this.path_graphic.strokePath();		
