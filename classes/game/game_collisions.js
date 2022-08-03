@@ -75,7 +75,7 @@ module.exports = class game_collisions {
     return false;
   }
 
-  lineCircle(line, circle) {
+  lineCircle(x1, y1, x2, y2, cx, cy, r) {
     // boolean lineCircle(float x1, float y1, float x2, float y2, float cx, float cy, float r) {
 
       // is either end INSIDE the circle?
@@ -98,8 +98,8 @@ module.exports = class game_collisions {
     
       // is this point actually on the line segment?
       // if so keep going, but if not, return false
-      let onSegment = this.linePoint(x1,y1,x2,y2, closestX,closestY);
-      if (!onSegment) return false;
+      // let onSegment = this.linePoint(x1,y1,x2,y2, closestX,closestY);
+      // if (!onSegment) return false;
     
       // get distance to closest point
       distX = closestX - cx;

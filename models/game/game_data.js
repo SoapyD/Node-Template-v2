@@ -42,7 +42,9 @@ const gameSchema = new mongoose.Schema({
 		}
 		,life: Number
 		,x: {type: Number, default: -1}
-		,y: {type: Number, default: -1}					
+		,y: {type: Number, default: -1}
+		,tileX: {type: Number, default: -1}
+		,tileY: {type: Number, default: -1}							
 	}]
 	
 	,units: [{

@@ -800,14 +800,29 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
                         if(bullet_hit){
                             //USE LINE CIRCLE COLLISION TO CHECK TO SEE IF ANY BARRIERS ARE HIT
+                            if(game_data.barriers.length > 0){
+
+                                game_data.barriers.forEach((barrier) => {
+                                    if(barrier.life > 0){
+                                        let clash = collisionHandler.lineCircle(
+                                            attacker.x, attacker.y,
+                                            item.pos.x * game_data.tile_size, item.pos.y * game_data.tile_size,
+                                            barrier.x, barrier.y, (barrier.barrier_class.blast_radius / 2) * game_data.tile_size
+                                        )
+                                        console.log("clash:",clash)
+                                    }
+                                })
+                            }
 
                             //CHECK FOR BARRIER CREATION
                             if(attacker_gun.barrier){
                                 let barrier = {
                                     barrier_class: attacker_gun.barrier.id
                                     ,life: attacker_gun.barrier.life
-                                    ,x: item.pos.x
-                                    ,y: item.pos.y
+                                    ,x: item.pos.x * game_data.tile_size
+                                    ,y: item.pos.y * game_data.tile_size                                    
+                                    ,tileX: item.pos.x
+                                    ,tileY: item.pos.y
                                 }
 
                                 game_data.barriers.push(barrier)                              
@@ -846,11 +861,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     }
                 })
 
-                //UPDATE THE UNITS TO SAVE SHOT AND DAMAGE DATA HERE
-                databaseHandler.updateData(game_data,
-                {
-                    params: [{units: game_data.units}]
-                })                
+                //SAVE THE ROOM
+                databaseHandler.updateData(game_data)                
 
                 //SETUP TROOP MOVING
                 options = {
