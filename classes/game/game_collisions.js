@@ -5,23 +5,6 @@
 const { mixin } = require('lodash');
 const _ = require('lodash');
 
-const u_circle = class {
-	constructor(options) {
-        this.x = options.x;
-        this.y = options.y;
-        this.r = options.r;	   
-    }    
-}
-
-const u_rectangle = class {
-	constructor(options) {
-        this.x = options.x;
-        this.y = options.y;
-        this.w = options.w;
-        this.h = options.h;	   
-    }    
-}
-
 
 
 module.exports = class game_collisions {
@@ -98,8 +81,8 @@ module.exports = class game_collisions {
     
       // is this point actually on the line segment?
       // if so keep going, but if not, return false
-      // let onSegment = this.linePoint(x1,y1,x2,y2, closestX,closestY);
-      // if (!onSegment) return false;
+      let onSegment = this.linePoint(x1,y1,x2,y2, closestX,closestY);
+      if (!onSegment) return false;
     
       // get distance to closest point
       distX = closestX - cx;
@@ -132,7 +115,7 @@ module.exports = class game_collisions {
   dist(x1, y1, x2, y2) {
     let distX = x1 - x2;
     let distY = y1 - y2;
-    let distance = Math.sqrt( (distX*distX) + (distY*distY) );    
+    return Math.sqrt( (distX*distX) + (distY*distY) );   
   }
 
   // LINE/POINT

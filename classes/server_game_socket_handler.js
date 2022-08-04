@@ -1,6 +1,7 @@
 
 var server_socket_handler = require("./server_socket_handler")
 const game_state = require("./game/game_state")
+const collisions = require("./game/collisions")
 const stateHandler = new game_state()
 const utils = require("../utils");
 
@@ -802,6 +803,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             //USE LINE CIRCLE COLLISION TO CHECK TO SEE IF ANY BARRIERS ARE HIT
                             if(game_data.barriers.length > 0){
 
+                                game_data.units[item.origin].targets[item.shot].intersections = []
+
                                 game_data.barriers.forEach((barrier) => {
                                     if(barrier.life > 0){
                                         let clash = collisionHandler.lineCircle(
@@ -809,7 +812,27 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                             item.pos.x * game_data.tile_size, item.pos.y * game_data.tile_size,
                                             barrier.x, barrier.y, (barrier.barrier_class.blast_radius / 2) * game_data.tile_size
                                         )
-                                        console.log("clash:",clash)
+                                        //CHECK WHERE THE CLASH OCCURS
+                                        if(clash){
+                                            let bullet_line = new collisions.line({points:[
+                                                {x: attacker.x, y: attacker.y},
+                                                {x: item.pos.x * game_data.tile_size, y: item.pos.y * game_data.tile_size},
+                                            ]})
+                                            
+                                            let barrier_circle = new collisions.circle({
+                                                x: barrier.x,
+                                                y: barrier.y,
+                                                r: (barrier.barrier_class.blast_radius / 2) * game_data.tile_size,
+                                            })
+
+                                            let xPoints = bullet_line.circleCollide(barrier_circle);
+                                            let intersection_points = bullet_line.convertPointsToPos(xPoints)
+                                            if(intersection_points.length > 0){
+                                                intersection_points.forEach((intersection) => {
+                                                    game_data.units[item.origin].targets[item.shot].intersections.push(intersection);
+                                                })
+                                            }
+                                        }
                                     }
                                 })
                             }

@@ -7,6 +7,11 @@ exports.mongoose_db_handler = require("./mongoose_db_handler");
 
 exports.server_game_socket_handler = require("./server_game_socket_handler");
 
+//COLLISIONS
+exports.line = require("./game/collisions/line");
+exports.circle = require("./game/collisions/circle");
+exports.rectangle = require("./game/collisions/rectangle");
+
 //GAME 
 exports.game_pathfinder = require("./game/game_pathfinder");
 exports.game_collisions = require("./game/game_collisions");

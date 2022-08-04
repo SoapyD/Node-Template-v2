@@ -531,6 +531,13 @@ clientSocketHandler.generateBullets = (options) => {
 			    gameCore.assets.bullets.push(new bullet(bullet_options))
 
                 //make unit shot=true
+
+                target.intersections.forEach((intersection) => {
+                    gameCore.current_scene.physics.add.image(
+                        intersection.x,
+                        intersection.y,"marker").setDepth(0)
+                })
+
             }
         })
 

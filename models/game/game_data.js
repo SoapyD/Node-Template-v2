@@ -125,6 +125,12 @@ const gameSchema = new mongoose.Schema({
 				id: Number
 				,damage: {type: Number, default: 0}
 			}]
+
+
+			,intersections: [{
+				x: Number
+				,y: Number
+			}]			
 		}]	
 
 		,fight_targets: [{
