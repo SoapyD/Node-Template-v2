@@ -675,6 +675,53 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
+    checkBarrierClash = (options) => {
+        //USE LINE CIRCLE COLLISION TO CHECK TO SEE IF ANY BARRIERS ARE HIT
+        if(options.game_data.barriers.length > 0){
+
+            options.intersections_array = []
+
+            options.game_data.barriers.forEach((barrier) => {
+                if(barrier.life > 0){
+                    let clash = collisionHandler.lineCircle(
+                        options.start_pos.x, options.start_pos.y,
+                        options.end_pos.x, options.end_pos.y,
+                        barrier.x, barrier.y, (barrier.barrier_class.blast_radius / 2) * options.game_data.tile_size
+                    )
+                    //CHECK WHERE THE CLASH OCCURS
+                    if(clash){
+                        let bullet_line = new collisions.line({points:[options.start_pos,options.end_pos]})
+                        
+                        let barrier_circle = new collisions.circle({
+                            x: barrier.x,
+                            y: barrier.y,
+                            r: (barrier.barrier_class.blast_radius / 2) * options.game_data.tile_size,
+                        })
+
+                        let xPoints = bullet_line.circleCollide(barrier_circle);
+                        let intersection_points = bullet_line.convertPointsToPos(xPoints)
+                        if(intersection_points.length > 0){
+                            //CHECK WHICH INTERSECTION IS CLOSER TO THE ATTACKING PLAYER
+                            let saved_dist = -1;
+                            let saved_intersection = {};
+                            intersection_points.forEach((intersection) => {
+                                let dist = utils.functions.distanceBetweenPoints(options.start_pos, barrier)
+                                if(dist < saved_dist || saved_dist === -1){
+                                    saved_intersection = intersection;
+                                }
+                            })
+                            options.intersections_array.push(saved_intersection);                                                
+                        }
+                    }
+                }
+            })
+        }
+
+        return {
+            intersections_array: options.intersections_array
+        }
+    }
+
     generateBullets = async(options) => {
 
         try{
@@ -764,7 +811,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     if(!JSON.stringify(shots_hit).includes(item.uid)){
                         
                         let attacker = game_data.units[item.origin];
-                        let attacker_dims = collisionHandler.getUnitTileRange(attacker)
+                        let attacker_dims = collisionHandler.getUnitTileRange(attacker, game_data.tile_size);
+
                         let attacker_gun = attacker.gun_class[attacker.selected_gun];
                         // let defender = game_data.units[item.target];
                         
@@ -773,12 +821,43 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         if(item.target === -1){
                             bullet_hit = true;
                         }
+
+                        let target_unit;
                         //check if target is hit
                         if(item.target > -1){
-                            let target_unit = game_data.units[item.target];
+                            target_unit = game_data.units[item.target];
                             if(target_unit.alive){
-                                bullet_hit = true;
-    
+                                bullet_hit = true;  
+                            }
+                        }
+
+                        if(bullet_hit){
+
+                            let returned_data = this.checkBarrierClash({
+                                game_data: game_data,
+                                intersections_array: game_data.units[item.origin].targets[item.shot].intersections,
+                                start_pos: attacker_dims.mid_game,
+                                end_pos: {x: item.pos.x * game_data.tile_size, y: item.pos.y * game_data.tile_size}
+                            })
+
+                            game_data.units[item.origin].targets[item.shot].intersections = returned_data.intersections_array
+
+                            //CHECK FOR BARRIER CREATION
+                            if(attacker_gun.barrier){
+                                let barrier = {
+                                    barrier_class: attacker_gun.barrier.id
+                                    ,life: attacker_gun.barrier.life
+                                    ,x: item.pos.x * game_data.tile_size
+                                    ,y: item.pos.y * game_data.tile_size                                    
+                                    ,tileX: item.pos.x
+                                    ,tileY: item.pos.y
+                                }
+
+                                game_data.barriers.push(barrier)                              
+                            }
+
+                            //APPLY DAMAGE IF THERE'S A TARGET, NEEDS TO GO AFTER BARRIERS AS THEY CAN AFFECT DAMAGE
+                            if(target_unit){
                                 //CALCULATE WOUNDING AND APPLY DAMAGE
                                 let damage_applied = this.checkWounding({
                                     defender: target_unit,
@@ -796,61 +875,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                 shot_data.x = item.pos.x
                                 shot_data.y = item.pos.y
                                 shot_data.target_id = item.target;
-                                shot_data.damage = damage_applied;     
-                            }
-                        }
-
-                        if(bullet_hit){
-                            //USE LINE CIRCLE COLLISION TO CHECK TO SEE IF ANY BARRIERS ARE HIT
-                            if(game_data.barriers.length > 0){
-
-                                game_data.units[item.origin].targets[item.shot].intersections = []
-
-                                game_data.barriers.forEach((barrier) => {
-                                    if(barrier.life > 0){
-                                        let clash = collisionHandler.lineCircle(
-                                            attacker_dims.mid.x * game_data.tile_size, attacker_dims.mid.y * game_data.tile_size,
-                                            item.pos.x * game_data.tile_size, item.pos.y * game_data.tile_size,
-                                            barrier.x, barrier.y, (barrier.barrier_class.blast_radius / 2) * game_data.tile_size
-                                        )
-                                        //CHECK WHERE THE CLASH OCCURS
-                                        if(clash){
-                                            let bullet_line = new collisions.line({points:[
-                                                {x: attacker_dims.mid.x * game_data.tile_size, y: attacker_dims.mid.y * game_data.tile_size},
-                                                {x: item.pos.x * game_data.tile_size, y: item.pos.y * game_data.tile_size},
-                                            ]})
-                                            
-                                            let barrier_circle = new collisions.circle({
-                                                x: barrier.x,
-                                                y: barrier.y,
-                                                r: (barrier.barrier_class.blast_radius / 2) * game_data.tile_size,
-                                            })
-
-                                            let xPoints = bullet_line.circleCollide(barrier_circle);
-                                            let intersection_points = bullet_line.convertPointsToPos(xPoints)
-                                            if(intersection_points.length > 0){
-                                                intersection_points.forEach((intersection) => {
-                                                    game_data.units[item.origin].targets[item.shot].intersections.push(intersection);
-                                                })
-                                            }
-                                        }
-                                    }
-                                })
+                                shot_data.damage = damage_applied;   
                             }
 
-                            //CHECK FOR BARRIER CREATION
-                            if(attacker_gun.barrier){
-                                let barrier = {
-                                    barrier_class: attacker_gun.barrier.id
-                                    ,life: attacker_gun.barrier.life
-                                    ,x: item.pos.x * game_data.tile_size
-                                    ,y: item.pos.y * game_data.tile_size                                    
-                                    ,tileX: item.pos.x
-                                    ,tileY: item.pos.y
-                                }
-
-                                game_data.barriers.push(barrier)                              
-                            }
 
                             //ALSO NEED TO APPLY SPLASH DAMAGE HERE  
                             // console.log(attacker.gun_class[attacker.selected_gun]) 

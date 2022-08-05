@@ -144,7 +144,7 @@ module.exports = class game_collisions {
 
 
   //GET THE RANGE OF TILES A UNIT OCCUPIES
-  getUnitTileRange = (unit) => {
+  getUnitTileRange = (unit, tile_size=0) => {
 
     let min = {
         x: -1,
@@ -157,7 +157,11 @@ module.exports = class game_collisions {
     let mid = {
       x: -1,
       y: -1,
-  }            
+    }  
+    let mid_game = {
+      x: -1,
+      y: -1,
+    }                
 
     if(unit.sprite_offset === 0){
         min.x = unit.tileX - unit.size;
@@ -179,12 +183,14 @@ module.exports = class game_collisions {
         mid.y = ((max.y - min.y) / 2) + min.y + unit.sprite_offset;        
     }
 
-    
+    mid_game.x = mid.x * tile_size;
+    mid_game.y = mid.y * tile_size;    
 
     return {
         min: min,
         max: max,
-        mid: mid
+        mid: mid,
+        mid_game: mid_game
     }
   }
 
