@@ -586,6 +586,13 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 min_roll_needed = options.hit_override;
             }
 
+            if(options.barrier_effects.includes("blunt")){
+                random_roll -= 4;
+            }
+            if(options.attacker.special_rules.includes("sniper")){
+                random_roll += 4;
+            }            
+
             // HALF THE RANDOM ROLL IF THE PLAYER IS OUT OF COHESION
             // if(options.attacker_id){
             // 	if(gameFunctions.units[options.attacker_id].cohesion_check === false){
@@ -676,6 +683,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
     checkBarrierClash = (options) => {
+
+        let unique_effects = [];
         //USE LINE CIRCLE COLLISION TO CHECK TO SEE IF ANY BARRIERS ARE HIT
         if(options.game_data.barriers.length > 0){
 
@@ -705,20 +714,36 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             let saved_dist = -1;
                             let saved_intersection = {};
                             intersection_points.forEach((intersection) => {
-                                let dist = utils.functions.distanceBetweenPoints(options.start_pos, barrier)
+                                let dist = utils.functions.distanceBetweenPoints(options.start_pos, intersection)
                                 if(dist < saved_dist || saved_dist === -1){
-                                    saved_intersection = intersection;
+                                    saved_intersection.pos = {
+                                        x: intersection.x
+                                        ,y: intersection.y
+                                    }
+                                    saved_intersection.effects = barrier.barrier_class.effects;
+                                    saved_intersection.distance = dist;
+                                    saved_dist = dist;
                                 }
                             })
-                            options.intersections_array.push(saved_intersection);                                                
+                            options.intersections_array.push(saved_intersection);
+                            
+                            if(saved_dist > -1){
+                                saved_intersection.effects.forEach((effect) => {
+                                    if(!unique_effects.includes(effect)){
+                                        unique_effects.push(effect)
+                                    }
+                                })
+                            }
                         }
                     }
                 }
             })
         }
+        // console.log(unique_effects)
 
         return {
             intersections_array: options.intersections_array
+            ,effects: unique_effects
         }
     }
 
@@ -860,10 +885,12 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             if(target_unit){
                                 //CALCULATE WOUNDING AND APPLY DAMAGE
                                 let damage_applied = this.checkWounding({
+                                    attacker: attacker,
                                     defender: target_unit,
                                     damage: attacker_gun.damage,
                                     ap: attacker_gun.ap,
-                                    bonus: attacker.unit_class.shooting_bonus
+                                    bonus: attacker.unit_class.shooting_bonus,
+                                    barrier_effects: returned_data.effects
                                 })
     
                                 shots_hit.push(item)
@@ -890,13 +917,15 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     
                                 blast_units.forEach((blast_unit) => {
                                     
-                                    if(blast_unit.alive){
+                                    if(blast_unit.alive && blast_unit.id != item.target){
                                         //CALCULATE WOUNDING AND APPLY DAMAGE
                                         let damage_applied = this.checkWounding({
+                                            attacker: attacker,
                                             defender: blast_unit,
                                             damage: attacker_gun.damage,
                                             ap: attacker_gun.ap,
-                                            bonus: attacker.unit_class.shooting_bonus
+                                            bonus: attacker.unit_class.shooting_bonus,
+                                            barrier_effects: returned_data.effects
                                         })
                                         
                                         game_data.units[item.origin].targets[item.shot].blast_targets.push({

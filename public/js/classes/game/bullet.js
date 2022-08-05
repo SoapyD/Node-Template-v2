@@ -46,6 +46,11 @@ const bullet = class {
 			this.blast_targets = options.server_options.blast_targets;		
 		}		
 
+
+		if(options.server_options.intersections){
+			this.intersections = options.server_options.intersections;		
+		}			
+
 		this.sprite = options.scene.physics.add.image(options.unit.sprite.x,options.unit.sprite.y,options.spritesheet)
 
 		this.sprite.setDepth(20);
@@ -65,18 +70,6 @@ const bullet = class {
 	}
 	
 	kill(){
-		
-		/*
-			Stop bullet death if not in combat
-
-			let ap = bullet.parent.unit.gun_class[bullet.parent.unit.selected_gun].ap
-			if(bullet.parent.blunt === true){
-				ap -= 4;
-			}
-			if(bullet.parent.unit.checkSpecialRule("sniper") === false){
-				ap += 4;
-			}			
-		*/
 
 		if(this.unit.gun_class[this.unit.core.selected_gun].barrier){
 
@@ -136,6 +129,20 @@ const bullet = class {
 		
 		if (current_range >= this.range && this.delete === false){
 			this.kill(); 
+		}
+
+		if(this.intersections){
+			if(this.intersections.length > 0){
+				let intersection = this.intersections[0];
+				if(current_range >= intersection.distance){
+					gameCore.drawTextParticle({
+						text: intersection.effects[0],
+						pos: intersection.pos
+					})
+					
+					this.intersections.shift();
+				}
+			}
 		}
 		
 		//GET THE CURRENT GRID POSITION OF THE BULLET

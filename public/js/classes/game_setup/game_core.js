@@ -174,6 +174,31 @@ const game_core = class {
         }
     }
 
+    drawTextParticle(options){
+
+        let part_options = {
+            scene: GameScene.scene,
+            // parent_id: this.core.id,
+            text: options.text,
+            text_style: { 
+                font: "16px Arial",
+                fill: "#ff0044",
+                align: "center",
+                stroke: "#000000",
+                strokeThickness: 2
+            },
+            pos: {
+                x: options.pos.x,
+                y: options.pos.y
+            },
+            tween:true,
+            rise_duration: 500,
+            fadeout_duration: 500
+        }
+    
+        new particle(part_options)
+    }
+
  
 	// ██    ██ ██████  ██████   █████  ████████ ███████       ███████ ██      ███████ ███    ███ ███████ ███    ██ ████████ ███████ 
 	// ██    ██ ██   ██ ██   ██ ██   ██    ██    ██            ██      ██      ██      ████  ████ ██      ████   ██    ██    ██      

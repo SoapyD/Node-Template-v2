@@ -532,11 +532,11 @@ clientSocketHandler.generateBullets = (options) => {
 
                 //make unit shot=true
 
-                target.intersections.forEach((intersection) => {
-                    gameCore.current_scene.physics.add.image(
-                        intersection.x,
-                        intersection.y,"marker").setDepth(0)
-                })
+                // target.intersections.forEach((intersection) => {
+                //     gameCore.current_scene.physics.add.image(
+                //         intersection.x,
+                //         intersection.y,"marker").setDepth(0)           
+                // })
 
             }
         })

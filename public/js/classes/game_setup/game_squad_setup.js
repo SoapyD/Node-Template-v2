@@ -149,7 +149,7 @@ const game_squad_setup = class {
 
 		let special_rules = [];
 		options.squad.special_rules.forEach((rule) => {
-			special_rules.push(rule.name)
+			special_rules.push(rule)
 		})
 
 		if(options.universal_upgrades) {
@@ -211,7 +211,10 @@ const game_squad_setup = class {
 			options.core.gun_class.push(gun_class._id)
 
 			options.core.melee_class = []
-			options.core.melee_class.push(melee_class._id)			
+			options.core.melee_class.push(melee_class._id)		
+			
+			options.core.special_rules = []
+			options.core.special_rules = special_rules;
 
 			options.core.movement = unit_class.movement
 			options.core.size = unit_class.size

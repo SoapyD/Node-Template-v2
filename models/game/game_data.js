@@ -81,6 +81,8 @@ const gameSchema = new mongoose.Schema({
 		,selected_gun: Number
 		,selected_melee: Number
 
+		,special_rules: [String]
+
 		,unit_class:
 		{
 			type: mongoose.Schema.Types.ObjectId,
@@ -128,8 +130,12 @@ const gameSchema = new mongoose.Schema({
 
 
 			,intersections: [{
-				x: Number
-				,y: Number
+				effects: [String],
+				distance: Number,
+				pos: {
+					x: Number
+					,y: Number
+				}
 			}]			
 		}]	
 
