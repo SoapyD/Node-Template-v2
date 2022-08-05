@@ -764,6 +764,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     if(!JSON.stringify(shots_hit).includes(item.uid)){
                         
                         let attacker = game_data.units[item.origin];
+                        let attacker_dims = collisionHandler.getUnitTileRange(attacker)
                         let attacker_gun = attacker.gun_class[attacker.selected_gun];
                         // let defender = game_data.units[item.target];
                         
@@ -808,14 +809,14 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                 game_data.barriers.forEach((barrier) => {
                                     if(barrier.life > 0){
                                         let clash = collisionHandler.lineCircle(
-                                            attacker.x, attacker.y,
+                                            attacker_dims.mid.x * game_data.tile_size, attacker_dims.mid.y * game_data.tile_size,
                                             item.pos.x * game_data.tile_size, item.pos.y * game_data.tile_size,
                                             barrier.x, barrier.y, (barrier.barrier_class.blast_radius / 2) * game_data.tile_size
                                         )
                                         //CHECK WHERE THE CLASH OCCURS
                                         if(clash){
                                             let bullet_line = new collisions.line({points:[
-                                                {x: attacker.x, y: attacker.y},
+                                                {x: attacker_dims.mid.x * game_data.tile_size, y: attacker_dims.mid.y * game_data.tile_size},
                                                 {x: item.pos.x * game_data.tile_size, y: item.pos.y * game_data.tile_size},
                                             ]})
                                             
