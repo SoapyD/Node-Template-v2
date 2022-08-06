@@ -1,13 +1,15 @@
 
-const { Worker, workerData } = require('worker_threads')
+// const { Worker, workerData } = require('worker_threads')
 const _ = require('lodash');
 const utils = require("../../utils");
 // const unit = require('../../models/game/unit');
+const setupWorkers = require('./workers');
 
 module.exports = class game_actions {
 	constructor(options) {	
     }
 
+    /*
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     // ######  #     # #     #       #     # ####### ######  #    # ####### ######   #####  
@@ -65,6 +67,12 @@ module.exports = class game_actions {
 
         socketHandler.returnPath(result)
     }
+
+    findBulletPathsWorker = async(options) => {
+        const result = await this.runWorker(options)
+        socketHandler.generateBullets(result)
+    }
+    */
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -194,8 +202,8 @@ module.exports = class game_actions {
     getPotentialPaths = (options) => {
 
         try{
-            this.findPotentialPathsWorker({
-                worker_path: 'workers/potential_paths.js',
+            setupWorkers.findPotentialPathsWorker({
+                worker_path: 'potential_paths.js',
                 message: 'Potential Path Test',
                 id: options.parent.socket.id,
                 grid: options.matrix,
@@ -223,10 +231,10 @@ module.exports = class game_actions {
     getPath = (options) => {
 
         try{
-            this.setupPathFinderWorker(
+            setupWorkers.setupPathFinderWorker(
                 options.parent.game_data,
                 {
-                worker_path: 'workers/pathfinder.js',
+                worker_path: 'pathfinder.js',
                 message: 'Pathfinding Test',
                 id: options.parent.id,
                 grid: options.matrix,

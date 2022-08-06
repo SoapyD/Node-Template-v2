@@ -1,4 +1,4 @@
-
+const setupWorkers = require('./workers')
 
 module.exports = class game_state {
 	constructor(options) {	
@@ -102,7 +102,17 @@ module.exports = class game_state {
                 socketHandler.followPath(options)
                 break;
             case "shoot":
-                socketHandler.generateBullets(options)
+                // socketHandler.generateBullets(options)
+
+                // options.worker_path = 'bullet_paths.js';
+                // options.message = 'Potential Path Test';
+                // options.id = options.parent.socket.id;
+
+                setupWorkers.findBulletPathsWorker({
+                    id: options.id,
+                    worker_path: 'bullet_paths.js',
+                    game_data_id: options.game_data.id
+                })
                 break;                
         }
 

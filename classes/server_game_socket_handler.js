@@ -1,12 +1,12 @@
 
 var server_socket_handler = require("./server_socket_handler")
 const game_state = require("./game/game_state")
-const collisions = require("./game/collisions")
+// const collisions = require("./game/collisions")
 const stateHandler = new game_state()
 const utils = require("../utils");
 
 const _ = require('lodash');
-const barrier = require("../models/game/barrier");
+// const barrier = require("../models/game/barrier");
 
 module.exports = class server_game_socket_handler extends server_socket_handler {
 	constructor(options) {	
@@ -565,113 +565,6 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
-    //  #####  #     # #######  #####  #    #       #     # ####### #     # #     # ######  ### #     #  #####  
-    // #     # #     # #       #     # #   #        #  #  # #     # #     # ##    # #     #  #  ##    # #     # 
-    // #       #     # #       #       #  #         #  #  # #     # #     # # #   # #     #  #  # #   # #       
-    // #       ####### #####   #       ###    ##### #  #  # #     # #     # #  #  # #     #  #  #  #  # #  #### 
-    // #       #     # #       #       #  #         #  #  # #     # #     # #   # # #     #  #  #   # # #     # 
-    // #     # #     # #       #     # #   #        #  #  # #     # #     # #    ## #     #  #  #    ## #     # 
-    //  #####  #     # #######  #####  #    #        ## ##  #######  #####  #     # ######  ### #     #  #####  
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
-
-    checkWounding = (options) => {
-        try{
-            let random_roll = Math.floor(Math.random() * 20)+1
-            // random_roll = 20
-            // console.log(random_roll)
-
-            let min_roll_needed = options.defender.armour_class.value - (options.ap + options.bonus);
-            if(options.hit_override !== undefined){
-                min_roll_needed = options.hit_override;
-            }
-
-            if(options.barrier_effects.includes("blunt")){
-                random_roll -= 4;
-            }
-            if(options.attacker.special_rules.includes("sniper")){
-                random_roll += 4;
-            }            
-
-            // HALF THE RANDOM ROLL IF THE PLAYER IS OUT OF COHESION
-            // if(options.attacker_id){
-            // 	if(gameFunctions.units[options.attacker_id].cohesion_check === false){
-            // 		random_roll = Math.round(random_roll / 2,0);
-            // 	}
-            // }
-
-            let result = ""
-            if(random_roll === -1){
-                result = "pass"
-            }
-            if(random_roll >= min_roll_needed){
-                result = "pass"
-            }
-            if(random_roll < min_roll_needed && random_roll >= 0){
-                result = "fail"
-            }		
-            if(random_roll === 20){
-                result = "critical success"
-            }
-            if(random_roll === 1){
-                result = "critical fail"
-            }
-
-            let print_text = "";
-            let target;
-            switch(result){
-                case "critical success":
-                    options.damage *= 2;
-                    print_text = "crit success!\n-"+options.damage;
-                    target = options.defender;	
-                break;
-                case "pass":
-                    print_text = "-"+options.damage;
-                    target = options.defender;
-                break;
-                case "fail":
-                    print_text = "miss";
-                    options.damage = 0;
-                    target = options.defender;
-                break;
-                case "critical fail":
-                    options.damage = 0;
-                    print_text = "crit fail!";
-                    target = options.defender;
-                break;
-            }
-            
-            if(target){
-                if(target.alive === true){
-    
-                    // console.log(print_text)	
-                    
-                    target.health -= options.damage;
-                    // target.drawHealth(this.sprite)
-                    if(target.health <= 0){
-                    //     this.core.killed_by = options.attacker_id;
-                    //     GameUIScene.updatePointsHUD();
-                    //     target.kill();
-
-                        target.alive = false;
-                    }
-                }
-            }
-
-            return options.damage
-        }
-        catch(e){
-            let options = {
-                "class": "game_socket_handler",
-                "function": "wound",
-                "e": e
-            }
-            errorHandler.log(options)
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     // #     #    #    #    # #######       ######  #     # #       #       ####### #######  #####  
     // ##   ##   # #   #   #  #             #     # #     # #       #       #          #    #     # 
     // # # # #  #   #  #  #   #             #     # #     # #       #       #          #    #       
@@ -682,83 +575,18 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
-    checkBarrierClash = (options) => {
-
-        let unique_effects = [];
-        //USE LINE CIRCLE COLLISION TO CHECK TO SEE IF ANY BARRIERS ARE HIT
-        if(options.game_data.barriers.length > 0){
-
-            options.intersections_array = []
-
-            options.game_data.barriers.forEach((barrier) => {
-                if(barrier.life > 0){
-                    let clash = collisionHandler.lineCircle(
-                        options.start_pos.x, options.start_pos.y,
-                        options.end_pos.x, options.end_pos.y,
-                        barrier.x, barrier.y, (barrier.barrier_class.blast_radius / 2) * options.game_data.tile_size
-                    )
-                    //CHECK WHERE THE CLASH OCCURS
-                    if(clash){
-                        let bullet_line = new collisions.line({points:[options.start_pos,options.end_pos]})
-                        
-                        let barrier_circle = new collisions.circle({
-                            x: barrier.x,
-                            y: barrier.y,
-                            r: (barrier.barrier_class.blast_radius / 2) * options.game_data.tile_size,
-                        })
-
-                        let xPoints = bullet_line.circleCollide(barrier_circle);
-                        let intersection_points = bullet_line.convertPointsToPos(xPoints)
-                        if(intersection_points.length > 0){
-                            //CHECK WHICH INTERSECTION IS CLOSER TO THE ATTACKING PLAYER
-                            let saved_dist = -1;
-                            let saved_intersection = {};
-                            intersection_points.forEach((intersection) => {
-                                let dist = utils.functions.distanceBetweenPoints(options.start_pos, intersection)
-                                if(dist < saved_dist || saved_dist === -1){
-                                    saved_intersection.pos = {
-                                        x: intersection.x
-                                        ,y: intersection.y
-                                    }
-                                    saved_intersection.effects = barrier.barrier_class.effects;
-                                    saved_intersection.distance = dist;
-                                    saved_dist = dist;
-                                }
-                            })
-                            options.intersections_array.push(saved_intersection);
-                            
-                            if(saved_dist > -1){
-                                saved_intersection.effects.forEach((effect) => {
-                                    if(!unique_effects.includes(effect)){
-                                        unique_effects.push(effect)
-                                    }
-                                })
-                            }
-                        }
-                    }
-                }
-            })
-        }
-        // console.log(unique_effects)
-
-        return {
-            intersections_array: options.intersections_array
-            ,effects: unique_effects
-        }
-    }
-
     generateBullets = async(options) => {
 
         try{
 
-            if(options.game_data){
+            if(options.game_data_id){
 
                 let game_data = options.game_data;
                 //GET FULL GAME DATA
                 let game_datas = await databaseHandler.findData({
                     model: "GameData"
                     ,search_type: "findOne"
-                    ,params: {_id: game_data._id}
+                    ,params: {_id: options.game_data_id}
                 })     
 
                 game_data = game_datas[0]
@@ -768,182 +596,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 .map(row => row.targets.length)
                 .value()
                 let max_pos = lengths[lengths.indexOf(Math.max(...lengths))]
-                let pos = 0 
+                let pos = 0; 
 
-                //reset blast_units arrays
-                game_data.units.forEach((unit) => {
-                    unit.targets.forEach((target) => {
-                        target.blast_targets = [];
-                    })
-                })
-
-                let shooting_data = [];
                 
-                //figure out the wounding that needs to be applied as well as what target units get hit
-                for(let i=0;i<max_pos;i++){
-                    //USE LOBASE TO GET PATH POSITIONS
-                    let targets = _(game_data.units)
-                    .map(row => row.targets[i])
-                    .value()
-                    
-                    targets.forEach((target, n) => {
-                        //if there aren't any potential targets, still check if there's any splash damage targets
-
-                        if(target){
-                            if(target.potential_targets){
-                                target.potential_targets.forEach((potential_target) => {
-                                    let data = {
-                                        id: shooting_data.length,
-                                        uid: '_'+n+'_'+i+'_',
-                                        origin: n,
-                                        shot: i,
-                                        hit_time: potential_target.hit_time,
-                                        target: potential_target.id,
-                                        pos: potential_target.pos
-                                        //sub_targets
-                                    }
-                                    shooting_data.push(data);
-                                })
-                            }
-                            //ADD ON THE END PATH POINT
-                            let data = {
-                                id: shooting_data.length,
-                                uid: '_'+n+'_'+i+'_',
-                                origin: n,
-                                shot: i,
-                                hit_time: target.hit_time,
-                                target: -1,
-                                pos: {
-                                    x: target.x,
-                                    y: target.y
-                                }
-                                //sub_targets
-                            }
-                            shooting_data.push(data);                            
-                        }
-                    })
-                }
-
-                shooting_data = utils.functions.sortDynamic(shooting_data, "hit_time")
-                // console.log(shooting_data)
-
-                //loop through shooting data and figure out which units hit
-                
-                let shots_hit = [];
-                shooting_data.forEach((item) => {
-                    //CHECK TO SEE THE SHOT BY X UNIT HASN'T BEEN HANDLED YET
-                    //uid is the origin of the bullet and the shot number
-                    if(!JSON.stringify(shots_hit).includes(item.uid)){
-                        
-                        let attacker = game_data.units[item.origin];
-                        let attacker_dims = collisionHandler.getUnitTileRange(attacker, game_data.tile_size);
-
-                        let attacker_gun = attacker.gun_class[attacker.selected_gun];
-                        // let defender = game_data.units[item.target];
-                        
-                        let bullet_hit = false;
-
-                        if(item.target === -1){
-                            bullet_hit = true;
-                        }
-
-                        let target_unit;
-                        //check if target is hit
-                        if(item.target > -1){
-                            target_unit = game_data.units[item.target];
-                            if(target_unit.alive){
-                                bullet_hit = true;  
-                            }
-                        }
-
-                        if(bullet_hit){
-
-                            let returned_data = this.checkBarrierClash({
-                                game_data: game_data,
-                                intersections_array: game_data.units[item.origin].targets[item.shot].intersections,
-                                start_pos: attacker_dims.mid_game,
-                                end_pos: {x: item.pos.x * game_data.tile_size, y: item.pos.y * game_data.tile_size}
-                            })
-
-                            game_data.units[item.origin].targets[item.shot].intersections = returned_data.intersections_array
-
-                            //CHECK FOR BARRIER CREATION
-                            if(attacker_gun.barrier){
-                                let barrier = {
-                                    barrier_class: attacker_gun.barrier.id
-                                    ,life: attacker_gun.barrier.life
-                                    ,x: item.pos.x * game_data.tile_size
-                                    ,y: item.pos.y * game_data.tile_size                                    
-                                    ,tileX: item.pos.x
-                                    ,tileY: item.pos.y
-                                }
-
-                                game_data.barriers.push(barrier)                              
-                            }
-
-                            //APPLY DAMAGE IF THERE'S A TARGET, NEEDS TO GO AFTER BARRIERS AS THEY CAN AFFECT DAMAGE
-                            if(target_unit){
-                                //CALCULATE WOUNDING AND APPLY DAMAGE
-                                let damage_applied = this.checkWounding({
-                                    attacker: attacker,
-                                    defender: target_unit,
-                                    damage: attacker_gun.damage,
-                                    ap: attacker_gun.ap,
-                                    bonus: attacker.unit_class.shooting_bonus,
-                                    barrier_effects: returned_data.effects
-                                })
-    
-                                shots_hit.push(item)
-     
-                                //APPLY DAMAGE OUTCOMES TO TARGETS AND SUB TARGETS (HIT OR MISS)
-                                //SO THAT DATA CAN BE PASSED BACK TO PLAYERS AND APPLIED                            
-                                //SET THE TARGET OF THE BULLET IF IT'S HIT A UNIT
-                                let shot_data = attacker.targets[item.shot];
-                                shot_data.x = item.pos.x
-                                shot_data.y = item.pos.y
-                                shot_data.target_id = item.target;
-                                shot_data.damage = damage_applied;   
-                            }
-
-
-                            //ALSO NEED TO APPLY SPLASH DAMAGE HERE  
-                            // console.log(attacker.gun_class[attacker.selected_gun]) 
-                            if(attacker_gun.blast_radius > 1){
-                                let blast_units = collisionHandler.checkBlastClash({
-                                    game_data: game_data
-                                    ,start: item.pos
-                                    ,blast_radius: attacker_gun.blast_radius
-                                })
-    
-                                blast_units.forEach((blast_unit) => {
-                                    
-                                    if(blast_unit.alive && blast_unit.id != item.target){
-                                        //CALCULATE WOUNDING AND APPLY DAMAGE
-                                        let damage_applied = this.checkWounding({
-                                            attacker: attacker,
-                                            defender: blast_unit,
-                                            damage: attacker_gun.damage,
-                                            ap: attacker_gun.ap,
-                                            bonus: attacker.unit_class.shooting_bonus,
-                                            barrier_effects: returned_data.effects
-                                        })
-                                        
-                                        game_data.units[item.origin].targets[item.shot].blast_targets.push({
-                                            id: blast_unit.id
-                                            ,damage: damage_applied
-                                        })
-                                    }
-                                })
-    
-                            }
-                        }
-
-                    }
-                })
-
-                //SAVE THE ROOM
-                databaseHandler.updateData(game_data)                
-
                 //SETUP TROOP MOVING
                 options = {
                     id: options.id
