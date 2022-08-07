@@ -141,6 +141,7 @@ runProcess = async(workerData) => {
                 if(target_unit){
                     //CALCULATE WOUNDING AND APPLY DAMAGE
                     let damage_applied = utils.checkWounding({
+                        gamedata: gamedata,
                         attacker: attacker,
                         defender: target_unit,
                         damage: attacker_gun.damage,
@@ -176,6 +177,7 @@ runProcess = async(workerData) => {
                         if(blast_unit.alive && blast_unit.id != item.target){
                             //CALCULATE WOUNDING AND APPLY DAMAGE
                             let damage_applied = utils.checkWounding({
+                                gamedata: gamedata,
                                 attacker: attacker,
                                 defender: blast_unit,
                                 damage: attacker_gun.damage,

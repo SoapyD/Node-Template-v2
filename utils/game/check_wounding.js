@@ -13,6 +13,7 @@
 module.exports = (options) => {
     try{
         let random_roll = Math.floor(Math.random() * 20)+1
+        let natural_role = random_roll
         // random_roll = 20
         // console.log(random_roll)
 
@@ -21,12 +22,15 @@ module.exports = (options) => {
             min_roll_needed = options.hit_override;
         }
 
-        if(options.barrier_effects.includes("blunt")){
+        if(options.barrier_effects.includes("blunt") && options.gamedata.mode === 'shoot'){
             random_roll -= 4;
         }
-        if(options.attacker.special_rules.includes("sniper")){
+        if(options.attacker.special_rules.includes("sniper") && options.gamedata.mode === 'shoot'){
             random_roll += 4;
-        }            
+        }  
+        if(options.attacker.special_rules.includes("whirling dervish") && options.gamedata.mode === 'fight'){
+            random_roll += 4;
+        }                    
 
         // HALF THE RANDOM ROLL IF THE PLAYER IS OUT OF COHESION
         // if(options.attacker_id){
@@ -45,10 +49,10 @@ module.exports = (options) => {
         if(random_roll < min_roll_needed && random_roll >= 0){
             result = "fail"
         }		
-        if(random_roll === 20){
+        if(natural_role === 20){
             result = "critical success"
         }
-        if(random_roll === 1){
+        if(natural_role === 1){
             result = "critical fail"
         }
 

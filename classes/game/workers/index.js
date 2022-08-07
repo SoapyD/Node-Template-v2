@@ -73,15 +73,6 @@ exports.setupPathFinderWorker = async(game_data, options) => {
 exports.findBulletPathsWorker = async(options) => {
     const result = await runWorker(options)
 
-    // let game_datas = await databaseHandler.findData({
-    //     model: "GameData"
-    //     ,search_type: "findOne"
-    //     ,params: {_id: result.process.game_data_id}
-    // })     
-    
-    // let game_data = game_datas[0]
-
-    // console.log(result)
     socketHandler.generateBullets({
         id: options.id,
         game_data_id: result.process.game_data_id
