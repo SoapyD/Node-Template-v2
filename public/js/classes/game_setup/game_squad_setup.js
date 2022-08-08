@@ -40,7 +40,8 @@ const game_squad_setup = class {
 					}
 				})  
 
-				for(let i=0;i<squad_data.size; i++){
+				// for(let i=0;i<squad_data.size; i++){
+				for(let i=0;i<2; i++){					
 
 					let core = {
 						id: gameCore.assets.units.length,

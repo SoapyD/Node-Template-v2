@@ -1,5 +1,6 @@
 
 const { Worker, workerData } = require('worker_threads')
+const utils = require("../../../utils");
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -49,10 +50,31 @@ exports.findPotentialPathsWorker = async(options) => {
 
 exports.setupPathFinderWorker = async(game_data, options) => {
     const result = await runWorker(options)
-    //SAVE THE PATH TO THE UNIT
 
+    //UPDATE UNIT PATH IN TEST GAME_DATA
+    let unit = game_data.units[options.setup_data.id];
+    unit.path = result.process.path;
+    let path_pos = unit.path[unit.path.length - 1]
+    unit.x = path_pos.x * game_data.tile_size
+    unit.y = path_pos.y * game_data.tile_size
+    unit.tileX = path_pos.x - 0.5
+    unit.tileY = path_pos.y - 0.5  
+
+    //CHECK COHERANCY FOR THE UNIT
+    let squad = utils.cohesionCheck({
+        game_data: game_data,
+        unit: unit
+    });
+
+
+    //SAVE THE PATH TO THE UNIT
     let update = {}
     update["units."+options.setup_data.id+".path"] = result.process.path; 
+
+    //ADD COHESION CHECK
+    squad.forEach((unit) => {
+        update["units."+unit.id+".cohesion_check"] = unit.cohesion_check;        
+    })
 
     let update_options = 
     {

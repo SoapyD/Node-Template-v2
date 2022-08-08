@@ -131,7 +131,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     ,matrix: gameMap.matrix
                     ,forces: forces
                     ,players: players
-                    ,mode: "shoot"            
+                    ,mode: "move"            
                 }]  
             })
             
@@ -313,7 +313,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 model: "GameData"
                 ,search_type: "findOne"
                 ,params: {_id: options.data.id}
-            }, false)
+            }, true)
             
             if(game_data[0]){
 

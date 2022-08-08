@@ -5,13 +5,17 @@
 actions
 ----------------------------
 SHOOTING
--Check barriers to see if they affect bullets
+-DONE -Check barriers to see if they affect bullets
+-DONE -apply effects for sniping units / effects when figuring out wounding
+
 -apply damage reduction when shield barrier is crossed
--apply effects for sniping units / effects when figuring out wounding
+
 
 MOVEMENT
 -Finalise movemement once it's completed
 -Update positions of units
+-Cohesion checks
+
 
 FIGHTING
 -
