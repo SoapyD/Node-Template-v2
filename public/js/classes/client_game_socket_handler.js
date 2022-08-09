@@ -320,9 +320,9 @@ clientSocketHandler.setPath = (options) => {
         // console.log(options.data.squad_cohesion_info)
 
         options.data.squad_cohesion_info.forEach((c_unit) => {
-            // let unit = gameCore.assets.units[c_unit.id];
+            let unit = gameCore.assets.units[c_unit.id];
             gameCore.assets.units[c_unit.id].core.cohesion_check = c_unit.cohesion_check;
-            gameCore.assets.units[c_unit.id].drawCohesion()
+            unit.drawCohesion({sprite: unit.sprite_ghost})
 
         })
 
@@ -416,6 +416,9 @@ clientSocketHandler.moveUnit = (options) => {
                     let unit = target.targets[0].parent
 
                     unit.updateElements(unit.sprite_ghost)
+                    unit.sprite.x = unit.sprite_ghost.x
+                    unit.sprite.y = unit.sprite_ghost.y
+                    unit.sprite.angle = unit.sprite_ghost.angle
                     // unit.updateUnitElements(unit.sprite_ghost);
                 })
 

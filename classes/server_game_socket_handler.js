@@ -445,6 +445,21 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             if(options.game_data){
                 let game_data = options.game_data;
 
+                game_data.units.forEach((unit) => {
+                    if(unit.path){
+                        if(unit.path.length > 0){
+                            let path_pos = unit.path[unit.path.length - 1]
+                            unit.x = (path_pos.x - unit.sprite_offset) * game_data.tile_size
+                            unit.y = (path_pos.y - unit.sprite_offset) * game_data.tile_size
+                            unit.tileX = path_pos.x - unit.sprite_offset
+                            unit.tileY = path_pos.y - unit.sprite_offset
+                        }
+                    }
+                })
+    
+                databaseHandler.updateData(options.game_data)
+
+
                 //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
                 let lengths = _(game_data.units)
                 .map(row => row.path.length)

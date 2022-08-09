@@ -162,19 +162,19 @@ resetColours(){
 	}	
 }
 
-// resetCohesionGraphic() {
-// 	try{	
-// 		this.cohesion_graphic.clear()
-// 	}catch(e){
+resetCohesionGraphic() {
+	try{	
+		this.cohesion_graphic.clear()
+	}catch(e){
 
-// 		let options = {
-// 			"class": "unit",
-// 			"function": "resetCohesionGraphic",
-// 			"e": e
-// 		}
-// 		errorHandler.log(options)
-// 	}		
-// }
+		let options = {
+			"class": "unit",
+			"function": "resetCohesionGraphic",
+			"e": e
+		}
+		errorHandler.log(options)
+	}		
+}
 
 resetActions() {
 	try{	
@@ -444,7 +444,10 @@ wound = (options) => {
 // #     # #    #  #     # #  #  # 
 // ######  #     # #     #  ## ##  	
 
-drawCohesion(){
+drawCohesion(options){
+
+	this.resetCohesionGraphic();
+
 	let colours = {
 		line_colour: 0x00cccc,
 		fill_colour: 0x2ECC40,
@@ -478,7 +481,7 @@ drawCohesion(){
 	this.cohesion_graphic.lineStyle(colours.line_width, colours.line_colour, colours.circle_alpha);
 	this.cohesion_graphic.fillStyle(colours.fill_colour, colours.fill_alpha);
 	// let circle = new Phaser.Geom.Circle(last_pos.x * gameCore.data.tile_size, last_pos.y * gameCore.data.tile_size, this.unit_class.cohesion / 2);
-	let circle = new Phaser.Geom.Circle(this.sprite_ghost.x, this.sprite_ghost.y, this.unit_class.cohesion / 2);	
+	let circle = new Phaser.Geom.Circle(options.sprite.x, options.sprite.y, this.unit_class.cohesion / 2);	
 	this.cohesion_graphic.fillCircleShape(circle);
 	this.cohesion_graphic.strokePath();	
 
@@ -596,6 +599,8 @@ updateElements(sprite){
 		this.drawInfo(sprite);
 		this.drawHealth(sprite);
 		this.drawFightRadius();
+
+		this.drawCohesion({sprite: sprite})
 	}catch(e){
 
 		let options = {

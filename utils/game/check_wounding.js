@@ -33,11 +33,11 @@ module.exports = (options) => {
         }                    
 
         // HALF THE RANDOM ROLL IF THE PLAYER IS OUT OF COHESION
-        // if(options.attacker_id){
-        // 	if(gameFunctions.units[options.attacker_id].cohesion_check === false){
-        // 		random_roll = Math.round(random_roll / 2,0);
-        // 	}
-        // }
+        if(options.attacker){
+        	if(options.attacker.cohesion_check === false){
+        		random_roll = Math.round(random_roll / 2,0);
+        	}
+        }
 
         let result = ""
         if(random_roll === -1){
@@ -83,15 +83,8 @@ module.exports = (options) => {
         if(target){
             if(target.alive === true){
 
-                // console.log(print_text)	
-                
                 target.health -= options.damage;
-                // target.drawHealth(this.sprite)
                 if(target.health <= 0){
-                //     this.core.killed_by = options.attacker_id;
-                //     GameUIScene.updatePointsHUD();
-                //     target.kill();
-
                     target.alive = false;
                 }
             }

@@ -7,15 +7,18 @@ actions
 SHOOTING
 -DONE -Check barriers to see if they affect bullets
 -DONE -apply effects for sniping units / effects when figuring out wounding
-
--apply damage reduction when shield barrier is crossed
+-DONE -apply damage reduction when shield barrier is crossed
 
 
 MOVEMENT
--Finalise movemement once it's completed
--Update positions of units
--Cohesion checks
+-DONE -Cohesion checks
+-DONE -Update positions of units
 
+-Finalise movemement once it's completed
+-Make the selected unit stand out in terms of cohesion brightness
+-make the path line dissappear one the object is reached
+-if a unit has a saved path on the server, use the end path for the selection position instead
+-if a path is reset for a unit, waterfall any unit path resets that it affects.
 
 FIGHTING
 -
