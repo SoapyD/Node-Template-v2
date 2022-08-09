@@ -317,7 +317,7 @@ clientSocketHandler.setPath = (options) => {
 
         unit.drawPath(colours)
 
-        console.log(options.data.squad_cohesion_info)
+        // console.log(options.data.squad_cohesion_info)
 
         options.data.squad_cohesion_info.forEach((c_unit) => {
             // let unit = gameCore.assets.units[c_unit.id];
