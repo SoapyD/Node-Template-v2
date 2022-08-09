@@ -444,6 +444,47 @@ wound = (options) => {
 // #     # #    #  #     # #  #  # 
 // ######  #     # #     #  ## ##  	
 
+drawCohesion(){
+	let colours = {
+		line_colour: 0x00cccc,
+		fill_colour: 0x2ECC40,
+		line_alpha: 0.75,
+		circle_alpha: 0.75,
+		fill_alpha: 0.75,
+		width: 5,
+		line_width: 5
+	}
+
+	if(this.core.cohesion_check === false){
+		colours.line_colour = 0x00cccc;
+		colours.fill_colour = 0xFF0000; //0x6666ff	
+		colours.line_width = 1.0;
+		colours.fill_alpha = 0.5;
+	}
+
+	// if(unit.core.id !== this.core.id || GameScene.selected_unit.length === 0){
+	// 	colours.circle_alpha = 0.4,
+	// 	colours.fill_alpha = 0.35,
+	// 	colours.line_colour = 0x808080; //grey
+	// 	colours.line_alpha = 0.35;
+	// }
+	
+	// if(GameScene.selected_unit.length === 0){
+	// 	colours.fill_alpha = 0.15;
+	// 	colours.line_alpha = 0.15;
+	// }	
+
+
+	this.cohesion_graphic.lineStyle(colours.line_width, colours.line_colour, colours.circle_alpha);
+	this.cohesion_graphic.fillStyle(colours.fill_colour, colours.fill_alpha);
+	// let circle = new Phaser.Geom.Circle(last_pos.x * gameCore.data.tile_size, last_pos.y * gameCore.data.tile_size, this.unit_class.cohesion / 2);
+	let circle = new Phaser.Geom.Circle(this.sprite_ghost.x, this.sprite_ghost.y, this.unit_class.cohesion / 2);	
+	this.cohesion_graphic.fillCircleShape(circle);
+	this.cohesion_graphic.strokePath();	
+
+}
+
+
 drawTint(){
 
 	try{	
@@ -793,13 +834,7 @@ drawPath(colours) {
 			
 			this.path_graphic.strokePath();						
 		}
-		
-		
-		// this.cohesion_graphic.lineStyle(colours.line_width, colours.line_colour, colours.circle_alpha);
-		// this.cohesion_graphic.fillStyle(colours.fill_colour, colours.fill_alpha);
-		// let circle = new Phaser.Geom.Circle(last_pos.x * gameCore.data.tile_size, last_pos.y * gameCore.data.tile_size, this.unit_class.cohesion / 2);
-		// this.cohesion_graphic.fillCircleShape(circle);
-		// this.cohesion_graphic.strokePath();		
+			
 	}catch(e){
 
 		let options = {

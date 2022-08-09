@@ -57,8 +57,8 @@ exports.setupPathFinderWorker = async(game_data, options) => {
     let path_pos = unit.path[unit.path.length - 1]
     unit.x = path_pos.x * game_data.tile_size
     unit.y = path_pos.y * game_data.tile_size
-    unit.tileX = path_pos.x - 0.5
-    unit.tileY = path_pos.y - 0.5  
+    unit.tileX = path_pos.x - unit.sprite_offset
+    unit.tileY = path_pos.y - unit.sprite_offset
 
     //CHECK COHERANCY FOR THE UNIT
     let squad = utils.cohesionCheck({
@@ -69,11 +69,16 @@ exports.setupPathFinderWorker = async(game_data, options) => {
 
     //SAVE THE PATH TO THE UNIT
     let update = {}
-    update["units."+options.setup_data.id+".path"] = result.process.path; 
+    update["units."+options.setup_data.id+".path"] = result.process.path;
 
     //ADD COHESION CHECK
+    let squad_cohesion_info = []
     squad.forEach((unit) => {
-        update["units."+unit.id+".cohesion_check"] = unit.cohesion_check;        
+        update["units."+unit.id+".cohesion_check"] = unit.cohesion_check;
+        squad_cohesion_info.push({
+            id: unit.id
+            ,cohesion_check: unit.cohesion_check
+        })        
     })
 
     let update_options = 
@@ -87,9 +92,12 @@ exports.setupPathFinderWorker = async(game_data, options) => {
         ]
     }   
 
-    await databaseHandler.updateOne(update_options)   
+    await databaseHandler.updateOne(update_options)
+    
+    options = result
+    options.squad_cohesion_info = squad_cohesion_info
 
-    socketHandler.returnPath(result)
+    socketHandler.returnPath(options)
 }
 
 exports.findBulletPathsWorker = async(options) => {

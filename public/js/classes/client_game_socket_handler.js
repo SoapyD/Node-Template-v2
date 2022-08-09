@@ -317,6 +317,15 @@ clientSocketHandler.setPath = (options) => {
 
         unit.drawPath(colours)
 
+        console.log(options.data.squad_cohesion_info)
+
+        options.data.squad_cohesion_info.forEach((c_unit) => {
+            // let unit = gameCore.assets.units[c_unit.id];
+            gameCore.assets.units[c_unit.id].core.cohesion_check = c_unit.cohesion_check;
+            gameCore.assets.units[c_unit.id].drawCohesion()
+
+        })
+
     }catch(e){
 
         let options = {

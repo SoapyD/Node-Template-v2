@@ -1,6 +1,5 @@
 const _ = require('lodash');
 const functions = require("../functions");
-// const collisions = require("../../classes/game/collisions");
 
 //  #####  ####### #     # #######  #####  ### ####### #     #        #####  #     # #######  #####  #    # 
 // #     # #     # #     # #       #     #  #  #     # ##    #       #     # #     # #       #     # #   #  
@@ -12,17 +11,7 @@ const functions = require("../functions");
 
 const cohesionCheckSquad = (options) => {
 	try{	
-		//ADD UNITS IN SQUAD THAT AREN'T THE UNIT BEING CHECKED
-		// let open = [];
-		// options.game_data.units.forEach((unit) => {
-		// 	if(unit.alive === true 
-		// 		&& unit.id !== options.check_unit.id 
-		// 		&& unit.player === options.check_unit.player 
-		// 		&& unit.squad === options.check_unit.squad) //
-		// 	{
-		// 		open.push(unit);
-		// 	}
-		// })
+
 		let open = _.filter(options.squad, function(o) { 
 			return o.id !== options.check_unit.id; 
 		});
@@ -30,12 +19,14 @@ const cohesionCheckSquad = (options) => {
 		//ADD THE CHECK UNIT AS THE FIRST CLOSED UNIT
 		let closed = [];
 		closed.push(options.check_unit)
+		// console.log('////////////////////////////')
 		
 		for(let i=0; i<1000; i++){
 			
 			let new_open = []
 			let closed_add = []
 			let any_closed = false;
+
 
 			open.forEach((open_unit) => {
 				//FOR EACH OPEN UNIT, CHECK TO SEE IF THE DISTANCE BETWEEN IT AND EACH
@@ -51,7 +42,12 @@ const cohesionCheckSquad = (options) => {
 						add_closed = true;
 					}
 
-					// console.log("open",open_unit.id, "closed",closed_unit.id, distance)
+					// console.log(
+					// 	"open",open_unit.id,
+					// 	"closed",closed_unit.id, "dist", distance, 
+					// 	"open len", open.length,
+					// 	"closed len", closed.length
+					// 	)
 				})
 				
 				//IF THE UNIT IS CLOSE ENOUGH TO ANOTHER SQUAD MEMBER, CLOSE THAT UNIT OFF, ELSE ADD IT TO THE OPEN LIST TO BE RECHECKED
@@ -64,17 +60,20 @@ const cohesionCheckSquad = (options) => {
 				}
 			})
 			
-			//
+			
+			// console.log(
+			// 	"open new len", new_open.length,
+			// 	 "closed new len", closed_add.length,
+			// 	 "any closed", any_closed
+			// 	)
+
 			if(any_closed === false){
 				return false;
-				// break;
 			}
 			if(new_open.length === 0){
 				return true;
-				// break;				
-			}
+			}			
 			
-			// closed.concat(closed_add)
 			closed = closed_add
 			open = new_open
 				
@@ -99,76 +98,31 @@ module.exports = (options) => {
 		let squad = _.filter(options.game_data.units, function(o) { 
 			return o.alive === true && o.player === options.unit.player && o.squad === options.unit.squad; 
 		});
+		squad.forEach((unit) => {
+			if(unit.path.length > 0){
+				let path_pos = unit.path[unit.path.length - 1]
+				unit.x = path_pos.x * options.game_data.tile_size
+				unit.y = path_pos.y * options.game_data.tile_size
+				unit.tileX = path_pos.x - unit.sprite_offset
+				unit.tileY = path_pos.y - unit.sprite_offset			
+			}
+		})
 
 		// console.log("-----------")
 
 		if(squad.length === 1){
 			squad[0].cohesion_check = true
 		}else{
-			//CHECK TO SEE EACH UNIT IN THE SQUAD PASSES COHERANCY
+			let cohesion_check = cohesionCheckSquad({
+				game_data: options.game_data
+				,squad: squad
+				,check_unit: options.unit
+			});
+			// console.log(cohesion_check)
 			squad.forEach((unit) => {
-				unit.cohesion_check = cohesionCheckSquad({
-					game_data: options.game_data
-					,squad: squad
-					,check_unit: unit
-				});
-
-				// console.log(unit.cohesion_check)
+				unit.cohesion_check = cohesion_check;
 			})
 		}
-
-		/*
-		options.game_data.units.forEach((unit) => {
-			if(unit.alive === true && unit.player === options.unit.player && unit.squad === options.unit.squad)
-			{		
-		
-				unit.cohesion_check = unit.cohesionCheckSquad();
-
-				// let colours = {
-				// 	line_colour: 0x00cccc,
-				// 	fill_colour: 0x2ECC40,
-				// 	line_alpha: 0.75,
-				// 	circle_alpha: 0.75,
-				// 	fill_alpha: 0.75,
-				// 	width: 5,
-				// 	line_width: 5
-				// }
-
-				// if(unit.cohesion_check === false){
-				// 	colours.line_colour = 0x00cccc;
-				// 	colours.fill_colour = 0xFF0000; //0x6666ff	
-				// 	// colours.width = 1.0;
-				// 	colours.line_width = 1.0;
-				// 	colours.fill_alpha = 0.5;
-				// }
-
-				// if(unit.id !== this.id || GameScene.selected_unit.length === 0){
-				// 	colours.circle_alpha = 0.4,
-				// 	colours.fill_alpha = 0.35,
-				// 	colours.line_colour = 0x808080; //grey
-				// 	colours.line_alpha = 0.35;
-				// }
-				
-				// if(GameScene.selected_unit.length === 0){
-				// 	colours.fill_alpha = 0.15;
-				// 	colours.line_alpha = 0.15;
-				// }
-
-				// unit.drawPath(colours)
-
-				units_check++;
-			}
-			// else{
-			// 	unit.resetCohesionGraphic();
-			// }
-		})
-
-		//IF ALL OTHER UNITS IN THE SQUAD ARE DEAD, AUTO-PASS THE CHECK
-		if(units_check === 1){
-			this.cohesion_check = true
-		}
-
-		*/
 
 		return squad
 	}catch(e){
