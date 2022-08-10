@@ -24,6 +24,20 @@ FIGHTING
 -
 
 
+Special Rules
+-DONE -whirling dervish - unit adds 4 to their melee armour piercing value the turn they move into combat
+-DONE -sniper - unit adds 4 to their armour piercing value if they don't move before taking the shot
+
+-regen - 20% chance of the unit regenerating any lost wounds suffered
+-poison
+
+-swift - unit can charge even if they've shot their weapon
+-sword dance - unit can leave combat without suffering opportunity attacks from enemies
+-firing drills - unit that doesn't move can double the number of shots from their ranged weapon
+-barrage - you may fire a shot with a weapon indirectly
+-berserker - unit can double the number of targets from their melee weapon the turn they move into combat
+
+
 
 -modernize the login and register input fields
 

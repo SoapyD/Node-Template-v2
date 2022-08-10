@@ -445,6 +445,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             if(options.game_data){
                 let game_data = options.game_data;
 
+                //UPDATE POSITIONS OF UNITS
                 game_data.units.forEach((unit) => {
                     if(unit.path){
                         if(unit.path.length > 0){
@@ -456,6 +457,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         }
                     }
                 })
+
+                //SAVE ANY EFFECTS PASSING THROUGH POSITIONS WILL CAUSE
+                game_data = utils.checkStatusEffects({game_data: game_data})
     
                 databaseHandler.updateData(options.game_data)
 

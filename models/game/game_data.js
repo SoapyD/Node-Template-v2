@@ -152,6 +152,11 @@ const gameSchema = new mongoose.Schema({
 		,size: Number
 		,sprite_offset: Number
 
+		,status_effects: [{
+			name: String
+			,life: Number
+		}]
+
 	}]
 
    ,created_date: {type: Date, default: Date.now}
