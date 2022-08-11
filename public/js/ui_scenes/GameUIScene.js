@@ -81,6 +81,7 @@ GameUIScene.loadSingleButton = (scene) => {
 	try{	
 		let callbackParams;
 		let options;
+		let created_button;
 		
 		options = {
 			scene: scene, 
@@ -95,14 +96,28 @@ GameUIScene.loadSingleButton = (scene) => {
 			callbackParams: {},
 		}
 		
-		gameCore.assets.btn_sprite.push(new button(options))
+		created_button = new button(options)
+		gameCore.assets.btn_sprite.push(created_button)
+		GameUIScene.mode_button = created_button;
 
-		// if(gameCore.assets.units_preload.length === 0){
-		// 	modeHandler.advanceSide()
-		// }
-		// else{
-		// 	GameUIScene.checkButtonVisability();
-		// }
+
+		options = {
+			scene: scene, 
+			x: gameCore.config.width,
+			y: 75,
+			height: 50,
+			width: 250,
+			label:  "change mode",
+			array: gameCore.assets.btn_sprite,
+
+			clickAction: clientSocketHandler.changeMode,
+			callbackParams: {},
+		}
+		
+		created_button = new button(options)
+		gameCore.assets.btn_sprite.push(created_button)
+
+
 
 		gameCore.showButtons()
 	}catch(e){

@@ -10,17 +10,22 @@ module.exports = (options) => {
 
                 //LOOP THROUGH PATH POSITIONS
                 unit.path.forEach((pos) => {
-                    pos.x *= game_data.sprite_size
-                    pos.y *= game_data.sprite_size                    
+
+                    let path_pos = {
+                        x: pos.x * game_data.tile_size
+                        ,y: pos.y * game_data.tile_size
+                    }                  
 
                     //GET BARRIERS THAT'RE IN RANGE OF THE PATH
                     let barriers = _.filter(game_data.barriers, function(o) { 
-                        return functions.distanceBetweenPoints(pos, o) <= (barrier.barrier_class.blast_radius / 2) * game_data.sprite_size
+                        let distance = functions.distanceBetweenPoints(path_pos, o);
+                        let radius = (o.barrier_class.blast_radius / 2) * game_data.tile_size
+                        return functions.distanceBetweenPoints(path_pos, o) <= (o.barrier_class.blast_radius / 2) * game_data.tile_size
                     });
 
                     //LOOP THROUGH BARRIERS AND APPLY EFFECTS ON UNIT
                     barriers.forEach((barrier) => {
-                        barrier.effects.forEach((effect) => {
+                        barrier.barrier_class.effects.forEach((effect) => {
 
                             //ONLY APPLY EFFECT IF IT'S A STATUS EFFECT
                             switch(effect){

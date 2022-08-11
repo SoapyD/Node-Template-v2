@@ -160,7 +160,8 @@ clientSocketHandler.saveGame = () => {
 
             let options = {
                 functionGroup: "core",  
-                function: "saveUnitData",            
+                function: "saveUnitData",
+                id: clientRoomHandler.core.room_name,            
                 data: {}     
             }                
 
@@ -200,6 +201,48 @@ clientSocketHandler.saveGame = () => {
         errorHandler.log(options)
     }    
 }
+
+clientSocketHandler.setMode = (options) => {
+    try{
+        gameCore.data.mode = options.data.mode;
+
+        if(GameUIScene.mode_button){
+            GameUIScene.mode_button.updateText(gameCore.data.mode)
+        }
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "moveMarker",
+            "e": e
+        }
+        errorHandler.log(options)
+    }      
+}
+
+clientSocketHandler.changeMode = (options) => {
+    try{
+        let options = {
+            functionGroup: "core",  
+            function: "changeMode",
+            id: clientRoomHandler.core.room_name,            
+            data: {
+                id: gameCore.data.id,    
+            }
+        }             
+        clientSocketHandler.messageServer(options)
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "moveMarker",
+            "e": e
+        }
+        errorHandler.log(options)
+    }      
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -319,12 +362,14 @@ clientSocketHandler.setPath = (options) => {
 
         // console.log(options.data.squad_cohesion_info)
 
-        options.data.squad_cohesion_info.forEach((c_unit) => {
-            let unit = gameCore.assets.units[c_unit.id];
-            gameCore.assets.units[c_unit.id].core.cohesion_check = c_unit.cohesion_check;
-            unit.drawCohesion({sprite: unit.sprite_ghost})
+        if(options.data.squad_cohesion_info){
 
-        })
+            options.data.squad_cohesion_info.forEach((c_unit) => {
+                let unit = gameCore.assets.units[c_unit.id];
+                gameCore.assets.units[c_unit.id].core.cohesion_check = c_unit.cohesion_check;
+                unit.drawCohesion({sprite: unit.sprite_ghost})    
+            })
+        }
 
     }catch(e){
 

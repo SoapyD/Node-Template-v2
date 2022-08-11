@@ -193,7 +193,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     //  #####  #     #    #    #######        #####  #     # ###    #          ######  #     #    #    #     # 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    saveUnitData = (socket, options) => {
+    saveUnitData = async(socket, options) => {
         try{
             let game_data = databaseHandler.updateOne({
                 model: "GameData"
@@ -204,6 +204,18 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     }
                 ]
             })        
+
+
+            game_data = await databaseHandler.findData({
+                model: "GameData"
+                ,search_type: "findOne"
+                ,params: {_id: options.data.id}
+            }, false)         
+
+            this.setMode({
+                id: options.id,
+                game_data: game_data[0]
+            })
         }
         catch(e){
             let options = {
@@ -213,6 +225,69 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             }
             errorHandler.log(options)
         }	        
+    }
+
+
+    setMode = (options) => {
+
+        try{        
+            let return_options =  {
+                type: "room",
+                id: options.id,                
+                functionGroup: "core",
+                function: "setMode",
+                data: {
+                    message: "Set Mode",
+                    mode: options.game_data.mode,
+                }
+            }
+            this.sendMessage(return_options)     
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "setMode",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	               
+    }
+
+
+    changeMode = async(socket, options) => {
+
+        try{        
+            let game_datas = await databaseHandler.findData({
+                model: "GameData"
+                ,search_type: "findOne"
+                ,params: {_id: options.data.id}
+            }, false)
+
+            let game_data = game_datas[0]
+            switch(game_data.mode){
+                case "move":
+                    game_data.mode = 'shoot';
+                    break;
+                case "shoot":
+                    game_data.mode = 'move';
+                    break;                    
+            }
+
+            databaseHandler.updateData(game_data)
+
+            this.setMode({
+                id: options.id,
+                game_data: game_data
+            })    
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "setMode",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	               
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -434,16 +509,16 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         try{
 
             //GET THE POPULATE GAMES DATA
-            // let game_data = await databaseHandler.findData({
-            //     model: "GameData"
-            //     ,search_type: "findOne"
-            //     ,params: {_id: options.data.id}
-            // }, false)
+            let game_datas = await databaseHandler.findData({
+                model: "GameData"
+                ,search_type: "findOne"
+                ,params: {_id: options.data.id}
+            }, true)
 
             //COUNT THROUGH PATH POSITIONS UP TO MAXIMUM
 
             if(options.game_data){
-                let game_data = options.game_data;
+                let game_data = game_datas[0];
 
                 //UPDATE POSITIONS OF UNITS
                 game_data.units.forEach((unit) => {
@@ -461,7 +536,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 //SAVE ANY EFFECTS PASSING THROUGH POSITIONS WILL CAUSE
                 game_data = utils.checkStatusEffects({game_data: game_data})
     
-                databaseHandler.updateData(options.game_data)
+                databaseHandler.updateData(game_data)
 
 
                 //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
