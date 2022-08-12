@@ -269,8 +269,14 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     game_data.mode = 'shoot';
                     break;
                 case "shoot":
+                    game_data.mode = 'charge';
+                    break;     
+                case "charge":
+                    game_data.mode = 'fight';
+                    break;     
+                case "fight":
                     game_data.mode = 'move';
-                    break;                    
+                    break; 
             }
 
             databaseHandler.updateData(game_data)
@@ -530,6 +536,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             unit.tileX = path_pos.x - unit.sprite_offset
                             unit.tileY = path_pos.y - unit.sprite_offset
                         }
+
+                        unit.moved = true;
                     }
                 })
 
@@ -685,6 +693,17 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 })     
 
                 game_data = game_datas[0]
+
+
+                game_data.units.forEach((unit) => {
+                    //SET UNITS THAT HAVE TARGETS AS HAVING SHOT
+                    if (unit.targets){
+                        if(unit.targets.count > 0){
+                            unit.shot = true;
+                        }
+                    }
+                })
+                databaseHandler.updateData(game_data)
 
                 //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
                 let lengths = _(game_data.units)

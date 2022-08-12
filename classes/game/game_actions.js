@@ -290,7 +290,13 @@ module.exports = class game_actions {
     
                 //IF TARGETS AVAILABLE TO SET
                 gun = gun[0];
-                if(options.saved_unit.targets.length < gun.max_targets){
+
+                let max_targets = gun.max_targets
+                if(options.barrier_effects.includes("firing drills") && options.saved_unit.moved === false){
+                    max_targets = gun.max_targets * 2;
+                }
+
+                if(options.saved_unit.targets.length < max_targets){
     
                     let end = {
                         x: options.player.pointerX + 0.5

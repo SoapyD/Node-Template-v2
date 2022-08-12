@@ -69,19 +69,19 @@ const gameSchema = new mongoose.Schema({
 		,in_combat: Boolean
 		,in_combat_with: [Number]
 		
-		,poison: Boolean
-		,poison_caused_by: Number
-		,poison_timer: Number
+		// ,poison: Boolean
+		// ,poison_caused_by: Number
+		// ,poison_timer: Number
 
-		,moved: Boolean
-		,charged: Boolean
-		,shot: Boolean
-		,fought: Boolean		
-		
+		,moved: {type: Boolean, default: false}
+		,charged: {type: Boolean, default: false}
+		,shot: {type: Boolean, default: false}
+		,fought: {type: Boolean, default: false}		
+		,is_moving: Boolean
+		,cohesion_check: Boolean		
+
 		,selected_gun: Number
 		,selected_melee: Number
-
-		,special_rules: [String]
 
 		,unit_class:
 		{
@@ -104,10 +104,25 @@ const gameSchema = new mongoose.Schema({
 			ref: "Melee"
 		}]		
 
+
+		,special_rules: [String]
+
+		,status_effects: [{
+			name: String
+			,life: Number
+			,caused_by: Number
+		}]
+
 		,path: [{
 			x: Number
 			,y: Number
 		}]
+
+		,fight_targets: [{
+			x: Number
+			,y: Number
+		}]
+
 		,targets: [{
 			x: Number
 			,y: Number
@@ -139,24 +154,10 @@ const gameSchema = new mongoose.Schema({
 			}]			
 		}]	
 
-		,fight_targets: [{
-			x: Number
-			,y: Number
-		}]
-
-		,is_moving: Boolean
-		,cohesion_check: Boolean
-		
 		//MAYBE SOURCE THESE FROM THE LINKED UNIT DATA INSTEAD
 		,movement: Number
 		,size: Number
 		,sprite_offset: Number
-
-		,status_effects: [{
-			name: String
-			,life: Number
-		}]
-
 	}]
 
    ,created_date: {type: Date, default: Date.now}
