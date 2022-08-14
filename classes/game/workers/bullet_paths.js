@@ -140,7 +140,7 @@ runProcess = async(workerData) => {
                 if(target_unit){
                     //CALCULATE WOUNDING AND APPLY DAMAGE
                     let damage_applied = utils.checkWounding({
-                        gamedata: gamedata,
+                        gamedata: game_data,
                         attacker: attacker,
                         defender: target_unit,
                         damage: attacker_gun.damage,
@@ -161,6 +161,12 @@ runProcess = async(workerData) => {
                     shot_data.damage = damage_applied;   
 
                     //CHECK FOR STATUS EFFECTS HERE
+                    if(attacker_gun.barrier){
+                        target_unit = utils.checkStatusEffects.applyEffects({
+                            unit: target_unit,
+                            barrier_class: attacker_gun.barrier
+                        })
+                    }
                 }
     
     
@@ -178,7 +184,7 @@ runProcess = async(workerData) => {
                         if(blast_unit.alive && blast_unit.id != item.target){
                             //CALCULATE WOUNDING AND APPLY DAMAGE
                             let damage_applied = utils.checkWounding({
-                                gamedata: gamedata,
+                                gamedata: game_data,
                                 attacker: attacker,
                                 defender: blast_unit,
                                 damage: attacker_gun.damage,
@@ -188,6 +194,10 @@ runProcess = async(workerData) => {
                             })
 
                             //CHECK FOR STATUS EFFECTS HERE                            
+                            target_unit = utils.checkStatusEffects.applyEffects({
+                                unit: blast_unit,
+                                barrier_class: attacker_gun.barrier
+                            })
 
                             game_data.units[item.origin].targets[item.shot].blast_targets.push({
                                 id: blast_unit.id
