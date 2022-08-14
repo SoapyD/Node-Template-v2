@@ -15,6 +15,7 @@ models.Squad = require("./game/squad");
 models.Upgrade = require("./game/upgrade");
 models.SpecialRule = require("./game/special_rule");
 models.Barrier = require("./game/barrier");
+models.Effect = require("./game/effect");
 
 models.DynamicRoute = require("./game/dynamic_route");
 

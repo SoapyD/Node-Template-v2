@@ -17,7 +17,8 @@ exports.run = async() => {
     await seeds.create_routes.run();
 
     await seeds.create_units.run();
-    await seeds.create_barriers.run();    
+    await seeds.create_effects.run();        
+    await seeds.create_barriers.run();
     await seeds.create_guns.run();
     await seeds.create_melees.run();
     await seeds.create_armour.run();

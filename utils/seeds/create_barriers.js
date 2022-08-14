@@ -9,6 +9,12 @@
 
     exports.run = async() => {
 
+        let effects = await databaseHandler.findData({
+            model: "Effect"
+            ,search_type: "findOne"
+            ,params: {name: 'poison'}
+        })   
+
         list = {
             model: "Barrier"
             ,params: [

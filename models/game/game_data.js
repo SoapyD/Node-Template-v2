@@ -116,6 +116,7 @@ const gameSchema = new mongoose.Schema({
 		,path: [{
 			x: Number
 			,y: Number
+			,effects: [String]
 		}]
 
 		,fight_targets: [{

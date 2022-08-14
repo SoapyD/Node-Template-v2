@@ -40,7 +40,7 @@ exports.movePath = (options) => {
             if(unit.path.length > 0){
 
                 //LOOP THROUGH PATH POSITIONS
-                unit.path.forEach((pos) => {
+                unit.path.forEach((pos, i) => {
 
                     let path_pos = {
                         x: pos.x * game_data.tile_size
@@ -57,34 +57,21 @@ exports.movePath = (options) => {
                     //LOOP THROUGH BARRIERS AND APPLY EFFECTS ON UNIT
                     barriers.forEach((barrier) => {
 
+                        //ADD EFFECTS TO PATH SO IT CAN BE USED DURING MOVEMENT
+                        barrier.barrier_class.effects.forEach((effect) => {
+                            //ONLY ADD EFFECT TO PATH IF IT'S NOT ALREADY ON THE UNIT
+                            if(!JSON.stringify(unit.status_effects).includes(effect)){
+                                if(!JSON.stringify(unit.path[i].effects).includes(effect)){
+                                    unit.path[i].effects.push(effect)
+                                }
+                            }
+                        })
+
                         unit = exports.applyEffects({
                             barrier_class: barrier.barrier_class,
                             unit: unit
                         })
 
-                        // barrier.barrier_class.effects.forEach((effect) => {
-
-                        //     //ONLY APPLY EFFECT IF IT'S A STATUS EFFECT
-                        //     switch(effect){
-                        //         case "regen":
-                        //         case "poison":                                    
-
-                        //             if(!JSON.stringify(unit.status_effects).includes(effect)){
-                        //                 unit.status_effects.push({
-                        //                     name: effect
-                        //                     ,life: 3
-                        //                 })
-                        //             }else{
-                        //                 //IF THE STATUS ALREADY EXISTS, EXTEND IT'S LIFE
-                        //                 unit.status_effects.forEach((status_effect) => {
-                        //                     if(status_effect.name === effect.name){
-                        //                         status_effect.life = 3
-                        //                     }
-                        //                 })
-                        //             }
-                        //         break;
-                        //     }
-                        // })
                     })
 
                 })

@@ -12,6 +12,13 @@ const barrierSchema = new mongoose.Schema({
     // ,modifier: Number
     ,effects: [String]
 	
+	,f_effects: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Effect"
+		}
+    ]
+
 	,created_date: {type: Date, default: Date.now}
 	,updateddate: {type: Date, default: Date.now}	
 	
