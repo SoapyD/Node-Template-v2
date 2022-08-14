@@ -153,6 +153,7 @@ module.exports = class game_actions {
             if(select_options.unit_selected === true){
                 switch(options.game_data.mode){
                     case "move":
+                    case "charge":                        
                         this.getPotentialPaths(select_options)
                     break;      
                 }
@@ -166,6 +167,7 @@ module.exports = class game_actions {
 
                     switch(options.game_data.mode){
                         case "move":
+                        case "charge":    
                             this.getPath(select_options)
                         break;      
                         case "shoot":
@@ -185,6 +187,37 @@ module.exports = class game_actions {
             errorHandler.log(options)
         }   
         
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    // ######  #######  #####  ####### #######  #####  
+    // #     # #       #     # #          #    #     # 
+    // #     # #       #       #          #    #       
+    // ######  #####    #####  #####      #     #####  
+    // #   #   #             # #          #          # 
+    // #    #  #       #     # #          #    #     # 
+    // #     # #######  #####  #######    #     ##### 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+
+    reset = (options) => {
+        if(options.game_data){
+            let game_data = options.game_data;
+
+            //UPDATE POSITIONS OF UNITS
+            game_data.units.forEach((unit) => {
+                unit.path = [];
+                unit.targets = [];
+                unit.fight_targets = [];
+                unit.moved = false;
+                unit.shoot = false;
+                unit.charged = false;
+                unit.fight = false;
+            })
+
+            databaseHandler.updateData(game_data)
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
@@ -292,7 +325,7 @@ module.exports = class game_actions {
                 gun = gun[0];
 
                 let max_targets = gun.max_targets
-                if(options.barrier_effects.includes("firing drills") && options.saved_unit.moved === false){
+                if(options.saved_unit.special_rules.includes("firing drills") && options.saved_unit.moved === false){
                     max_targets = gun.max_targets * 2;
                 }
 

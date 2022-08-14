@@ -537,12 +537,17 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             unit.tileY = path_pos.y - unit.sprite_offset
                         }
 
-                        unit.moved = true;
+                        if(game_data.mode === 'move'){
+                            unit.moved = true;
+                        }
+                        if(game_data.mode === 'charge'){
+                            unit.charged = true;
+                        }                        
                     }
                 })
 
                 //SAVE ANY EFFECTS PASSING THROUGH POSITIONS WILL CAUSE
-                game_data = utils.checkStatusEffects({game_data: game_data})
+                game_data = utils.checkStatusEffects.movePath({game_data: game_data})
     
                 databaseHandler.updateData(game_data)
 

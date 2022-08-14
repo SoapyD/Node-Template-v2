@@ -1,7 +1,6 @@
 
 const { workerData, parentPort } = require('worker_threads')
 const databaseClass = require('../../mongoose_db_handler');
-// const collisionClass = require('../collisions/game_collisions');
 const collisions = require("../collisions")
 let databaseHandler = new databaseClass();
 let collisionHandler = new collisions.game_collisions();
@@ -114,7 +113,7 @@ runProcess = async(workerData) => {
     
             if(bullet_hit){
     
-                let returned_data = collisions.barrier.check({
+                let returned_data = collisions.barrier.check_bullet({
                     game_data: game_data,
                     intersections_array: game_data.units[item.origin].targets[item.shot].intersections,
                     start_pos: attacker_dims.mid_game,
@@ -160,6 +159,8 @@ runProcess = async(workerData) => {
                     shot_data.y = item.pos.y
                     shot_data.target_id = item.target;
                     shot_data.damage = damage_applied;   
+
+                    //CHECK FOR STATUS EFFECTS HERE
                 }
     
     
@@ -185,7 +186,9 @@ runProcess = async(workerData) => {
                                 bonus: attacker.unit_class.shooting_bonus,
                                 barrier_effects: returned_data.effects
                             })
-                            
+
+                            //CHECK FOR STATUS EFFECTS HERE                            
+
                             game_data.units[item.origin].targets[item.shot].blast_targets.push({
                                 id: blast_unit.id
                                 ,damage: damage_applied
