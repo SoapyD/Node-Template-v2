@@ -97,7 +97,12 @@ const mongoose_db_handler = class {
                 populate_list.push({
                     path: "barriers",                 
                     populate: [
-                        {path: 'barrier_class', model:'Barrier'}, 
+                        {
+                            path: 'barrier_class', model:'Barrier'
+                            ,populate: [
+                                {path: "effects", model: "Effect"}
+                            ]
+                        }, 
                     ]
                 })
 

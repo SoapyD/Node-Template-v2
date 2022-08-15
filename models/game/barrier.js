@@ -10,9 +10,9 @@ const barrierSchema = new mongoose.Schema({
     ,blast_sprite: String
     ,life: Number
     // ,modifier: Number
-    ,effects: [String]
+    // ,effects: [String]
 	
-	,f_effects: [
+	,effects: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Effect"

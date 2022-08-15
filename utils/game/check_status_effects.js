@@ -6,27 +6,42 @@ exports.applyEffects = (options) => {
 
     let unit = options.unit;
     options.barrier_class.effects.forEach((effect) => {
+        if(effect.effect_type === 'status'){
+            if(!JSON.stringify(unit.status_effects).includes(effect.name)){
+                unit.status_effects.push({
+                    name: effect.name
+                    ,life: effect.life
+                })
+            }else{
+                //IF THE STATUS ALREADY EXISTS, EXTEND IT'S LIFE
+                unit.status_effects.forEach((status_effect) => {
+                    if(status_effect.name === effect.name){
+                        status_effect.life = effect.life
+                    }
+                })
+            }
+        }
 
         //ONLY APPLY EFFECT IF IT'S A STATUS EFFECT
-        switch(effect){
-            case "regen":
-            case "poison":                                    
+        // switch(effect){
+        //     case "regen":
+        //     case "poison":                                    
 
-                if(!JSON.stringify(unit.status_effects).includes(effect)){
-                    unit.status_effects.push({
-                        name: effect
-                        ,life: 3
-                    })
-                }else{
-                    //IF THE STATUS ALREADY EXISTS, EXTEND IT'S LIFE
-                    unit.status_effects.forEach((status_effect) => {
-                        if(status_effect.name === effect.name){
-                            status_effect.life = 3
-                        }
-                    })
-                }
-            break;
-        }
+        //         if(!JSON.stringify(unit.status_effects).includes(effect)){
+        //             unit.status_effects.push({
+        //                 name: effect
+        //                 ,life: 3
+        //             })
+        //         }else{
+        //             //IF THE STATUS ALREADY EXISTS, EXTEND IT'S LIFE
+        //             unit.status_effects.forEach((status_effect) => {
+        //                 if(status_effect.name === effect.name){
+        //                     status_effect.life = 3
+        //                 }
+        //             })
+        //         }
+        //     break;
+        // }
     })
 
     return unit;
@@ -60,9 +75,11 @@ exports.movePath = (options) => {
                         //ADD EFFECTS TO PATH SO IT CAN BE USED DURING MOVEMENT
                         barrier.barrier_class.effects.forEach((effect) => {
                             //ONLY ADD EFFECT TO PATH IF IT'S NOT ALREADY ON THE UNIT
-                            if(!JSON.stringify(unit.status_effects).includes(effect)){
-                                if(!JSON.stringify(unit.path[i].effects).includes(effect)){
-                                    unit.path[i].effects.push(effect)
+                            if(effect.effect_type === 'status'){
+                                if(!JSON.stringify(unit.status_effects).includes(effect.name)){
+                                    if(!JSON.stringify(unit.path[i].effects).includes(effect.name)){
+                                        unit.path[i].effects.push(effect.name)
+                                    }
                                 }
                             }
                         })

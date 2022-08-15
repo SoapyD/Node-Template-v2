@@ -21,7 +21,8 @@ exports.resetTables = async() => {
     {model: "Squad"} ,
     {model: "Upgrade"},
     {model: "SpecialRule"}, 
-    {model: "Barrier"},      
+    {model: "Barrier"},    
+    {model: "Effect"},          
 
     {model: "Unit"},
     {model: "Gun"},

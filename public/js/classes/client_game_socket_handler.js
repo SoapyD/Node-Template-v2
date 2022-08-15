@@ -453,6 +453,26 @@ clientSocketHandler.moveUnit = (options) => {
 
             //ONLY APPLY AN POSITION MOVE IF THERE'S ONE PASSED FROM THE SERVER
             if(position){
+                // console.log(position)
+                if(position.effects){
+                    let effect_string = ''
+                    position.effects.forEach((effect, i) => {
+                        if(i > 0){
+                            effect_string += ', '
+                        }
+                        effect_string += effect
+                    })
+                    if(effect_string !== ''){
+                        gameCore.drawTextParticle({
+                            text: effect_string,
+                            pos: {
+                                x: position.x * gameCore.data.tile_size,
+                                y: position.y * gameCore.data.tile_size                                
+                            }
+                        })
+                    }
+                }
+
                 let unit = gameCore.assets.units[i]
                 let tween = GameScene.scene.tweens.add(getTweenData(unit, position))
                 

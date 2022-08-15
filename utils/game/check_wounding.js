@@ -22,9 +22,17 @@ module.exports = (options) => {
             min_roll_needed = options.hit_override;
         }
 
-        if(options.barrier_effects.includes("blunt") && options.gamedata.mode === 'shoot'){
-            random_roll -= 4;
+        if(options.barrier_effects){
+            options.barrier_effects.forEach((effect) => {
+
+                if(effect.name === "blunt" && options.gamedata.mode === 'shoot'){
+                    random_roll -= 4;
+                }
+            })
         }
+        // if(options.barrier_effects.includes("blunt") && options.gamedata.mode === 'shoot'){
+        //     random_roll -= 4;
+        // }
         if(options.attacker.special_rules.includes("sniper") && options.gamedata.mode === 'shoot'){
             random_roll += 4;
         }  
