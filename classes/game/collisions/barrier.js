@@ -45,13 +45,13 @@ exports.check_bullet = (options) => {
                                     x: intersection.x
                                     ,y: intersection.y
                                 }
-                                saved_intersection.effects = barrier.barrier_class.effects;
-                                // if(barrier.barrier_class.effects){
-                                //     saved_intersection.effects = [];
-                                //     barrier.barrier_class.effects.forEach((effect) => {
-                                //         saved_intersection.effects.push(effect.name)
-                                //     })
-                                // }
+                                // saved_intersection.effects = barrier.barrier_class.effects;
+                                if(barrier.barrier_class.effects){
+                                    saved_intersection.effects = [];
+                                    barrier.barrier_class.effects.forEach((effect) => {
+                                        saved_intersection.effects.push(effect.name)
+                                    })
+                                }
                                 saved_intersection.distance = dist;
                                 saved_dist = dist;
                             }

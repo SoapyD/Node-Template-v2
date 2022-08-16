@@ -6,8 +6,8 @@ actions
 ----------------------------
 
 STATUS effects
--Pass effects back to movement path if a unit passed through them
--do the same for target and splash targets of bullets
+-DONE -Pass effects back to movement path if a unit passed through them
+-DONE -do the same for target and splash targets of bullets
 
 SHOOTING
 -DONE -Check barriers to see if they affect bullets
@@ -30,7 +30,7 @@ FIGHTING
 -
 
 RESET
--Add reset for moved, shot and fought
+-DONE -Add reset for moved, shot and fought
 
 SPECIAL RULES
 -DONE -whirling dervish - unit adds 4 to their melee armour piercing value the turn they move into combat
@@ -39,7 +39,7 @@ SPECIAL RULES
 
 -regen - 20% chance of the unit regenerating any lost wounds suffered
 -poison
-    -Need to apply poison to units hit by it during shooting
+    -DONE -Need to apply poison to units hit by it during shooting
     -Need to check for status, apply damage and tick down health of effect
 
 -swift - unit can charge even if they've shot their weapon
