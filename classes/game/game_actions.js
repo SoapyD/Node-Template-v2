@@ -4,6 +4,8 @@ const _ = require('lodash');
 const utils = require("../../utils");
 // const unit = require('../../models/game/unit');
 const setupWorkers = require('./workers');
+const collisions = require('./collisions');
+const game_data = require('../../models/game/game_data');
 
 module.exports = class game_actions {
 	constructor(options) {	
@@ -129,22 +131,26 @@ module.exports = class game_actions {
                     // console.log("found unit:",test[0].id)
                     let unit = unit_search[0]
 
-                    select_options.unit_selected = true;
-                    select_options.saved_unit = unit; 
-                    let update = {}
-                    update["players."+options.data.player+".selected_unit"] = unit.id;
+                    // let force = options.game_data.forces[options.data.player];
 
-                    let update_options = 
-                    {
-                        model: "GameData"
-                        ,params: [
-                            {
-                                filter: {_id: options.data.id}, 
-                                value: {$set: update}
-                            }
-                        ]
-                    }                            
-                    databaseHandler.updateOne(update_options)
+                    if(unit.player === options.data.player){
+                        select_options.unit_selected = true;
+                        select_options.saved_unit = unit; 
+                        let update = {}
+                        update["players."+options.data.player+".selected_unit"] = unit.id;
+    
+                        let update_options = 
+                        {
+                            model: "GameData"
+                            ,params: [
+                                {
+                                    filter: {_id: options.data.id}, 
+                                    value: {$set: update}
+                                }
+                            ]
+                        }                            
+                        databaseHandler.updateOne(update_options)
+                    }
 
                 }
             }
@@ -173,6 +179,9 @@ module.exports = class game_actions {
                         case "shoot":
                             this.getBulletPath(select_options)
                         break;
+                        case "fight":
+                            this.getFightPath(select_options)
+                        break;                        
                     } 
                 }
             }
@@ -482,6 +491,8 @@ module.exports = class game_actions {
 
         try{
 
+            let game_data = options.parent.game_data;
+
             //GET WEAPON DETAILS
             let melee = await databaseHandler.findData({
                 model: "Melee"
@@ -502,14 +513,57 @@ module.exports = class game_actions {
                 if(options.saved_unit.fight_targets.length < max_targets){
     
                     let end = {
-                        x: options.player.pointerX + 0.5
-                        ,y: options.player.pointerY + 0.5
+                        x: options.player.pointerX
+                        ,y: options.player.pointerY
                     }
-                    let start = {
-                        x: options.saved_unit.tileX + options.saved_unit.sprite_offset
-                        ,y: options.saved_unit.tileY + options.saved_unit.sprite_offset
-                    }
+                    // let start = {
+                    //     x: options.saved_unit.tileX + options.saved_unit.sprite_offset
+                    //     ,y: options.saved_unit.tileY + options.saved_unit.sprite_offset
+                    // }
             
+                    //break the loop if the position hits another unit
+                    let unit_search = collisionHandler.checkUnitClash(
+                        {
+                            game_data: options.parent.game_data
+                            ,check_pos: end
+                        })
+                    if(unit_search.length > 0){
+                        let unit = unit_search[0]
+                        if(unit.id !== options.saved_unit.id){ // && unit.side !== options.saved_unit.side){
+
+                            let dims = collisionHandler.getUnitTileRange(options.saved_unit, game_data.tile_size);
+                            let circle = new collisions.circle({
+                                x: dims.mid_game.x,
+                                y: dims.mid_game.y,
+                                r: (dims.dim_games.w / 2) + (game_data.tile_size / 2)
+                            })
+                            
+                            let unit_dims = collisionHandler.getUnitTileRange(unit, game_data.tile_size);
+                            let unit_circle = new collisions.circle({
+                                x: unit_dims.mid_game.x,
+                                y: unit_dims.mid_game.y,
+                                r: (unit_dims.dim_games.w / 2) + (game_data.tile_size / 2)
+                            })
+
+                            let clash = circle.circleCircle(unit_circle)
+                            console.log("HIT:",clash)
+
+                            // skip = true;
+                            // if(!JSON.stringify(potential_targets).includes('"id":'+unit.id)){
+                            //     potential_targets.push({
+                            //         range: range,
+                            //         id: unit.id,
+                            //         hit_time: hit_time, //range/pixels per second + bullet_pos * 2 seconds
+                            //         pos: {
+                            //             x: e.x,
+                            //             y: e.y                                            
+                            //         }  
+                            //     })
+                            // }
+                        }
+                    }
+
+
                     /*
                     let path = collisionHandler.gridRayTracing(start, end)
             

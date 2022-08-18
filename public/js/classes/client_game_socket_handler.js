@@ -182,7 +182,7 @@ clientSocketHandler.saveGame = () => {
                     
                     unit.core.tileX = unit.core.x / gameCore.data.tile_size,
                     unit.core.tileY = unit.core.y / gameCore.data.tile_size,               
-                    
+                    console.log(unit.core)
                     data.units.push(unit.core)
             })
 

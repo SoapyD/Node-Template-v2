@@ -190,7 +190,16 @@ module.exports = class game_collisions {
         min: min,
         max: max,
         mid: mid,
-        mid_game: mid_game
+        mid_game: mid_game,
+        dim: {
+          w: max.x - min.x,
+          h: max.y - min.y,
+        },          
+        dim_games: {
+          w: (max.x - min.x) * tile_size,
+          h: (max.y - min.y) * tile_size,
+        }          
+
     }
   }
 
