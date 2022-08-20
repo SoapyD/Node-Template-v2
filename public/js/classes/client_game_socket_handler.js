@@ -182,7 +182,7 @@ clientSocketHandler.saveGame = () => {
                     
                     unit.core.tileX = unit.core.x / gameCore.data.tile_size,
                     unit.core.tileY = unit.core.y / gameCore.data.tile_size,               
-                    console.log(unit.core)
+                    // console.log(unit.core)
                     data.units.push(unit.core)
             })
 
@@ -628,6 +628,115 @@ clientSocketHandler.generateBullets = (options) => {
         errorHandler.log(options)
     }  
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+// ####### ###  #####  #     # ####### 
+// #        #  #     # #     #    #    
+// #        #  #       #     #    #    
+// #####    #  #  #### #######    #    
+// #        #  #     # #     #    #    
+// #        #  #     # #     #    #    
+// #       ###  #####  #     #    #    	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  #####  ####### #######       #######    #    ######   #####  ####### ####### 
+// #     # #          #             #      # #   #     # #     # #          #    
+// #       #          #             #     #   #  #     # #       #          #    
+//  #####  #####      #    #####    #    #     # ######  #  #### #####      #    
+//       # #          #             #    ####### #   #   #     # #          #    
+// #     # #          #             #    #     # #    #  #     # #          #    
+//  #####  #######    #             #    #     # #     #  #####  #######    #   
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+clientSocketHandler.setFightTargets = (options) => {
+
+    try{
+        let unit = gameCore.assets.units[options.data.unit];
+
+        unit.core.fight_targets = options.data.targets;
+        unit.drawFightTarget();
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "moveMarker",
+            "e": e
+        }
+        errorHandler.log(options)
+    }        
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+// #     #    #    #    # #######       #     # ####### #       ####### ####### 
+// ##   ##   # #   #   #  #             ##   ## #       #       #       #       
+// # # # #  #   #  #  #   #             # # # # #       #       #       #       
+// #  #  # #     # ###    #####   ##### #  #  # #####   #       #####   #####   
+// #     # ####### #  #   #             #     # #       #       #       #       
+// #     # #     # #   #  #             #     # #       #       #       #       
+// #     # #     # #    # #######       #     # ####### ####### ####### ####### 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+clientSocketHandler.generateMelee = (options) => {
+    try{
+
+        options.data.fight_targets.forEach((target, i) => {
+
+            //ONLY APPLY AN POSITION MOVE IF THERE'S ONE PASSED FROM THE SERVER
+            if(target){
+                let unit = gameCore.assets.units[i]
+                let game_pos = {
+                    x: target.x * gameCore.data.tile_size,
+                    y: target.y * gameCore.data.tile_size,                    
+                }
+                let angle = Phaser.Math.Angle.BetweenPoints(unit.sprite, game_pos);
+                unit.sprite.angle = angle;
+
+				let target_unit = gameCore.assets.units[this.target_id];
+                let damage =  target_unit.melee_class[target_unit.core.selected_gun].damage;
+
+				// unit.wound({damage:this.damage})
+
+				// let bullet_options = {
+				// 	scene: GameScene.scene,
+				// 	spritesheet: "bullet",
+				// 	angle: angle,
+				// 	unit: unit,
+				// 	target: {x: game_pos.x, y: game_pos.y},
+                //     server_options: target
+				// }
+
+			    // gameCore.assets.bullets.push(new bullet(bullet_options))
+
+                //make unit shot=true
+
+                // target.intersections.forEach((intersection) => {
+                //     gameCore.current_scene.physics.add.image(
+                //         intersection.x,
+                //         intersection.y,"marker").setDepth(0)           
+                // })
+
+            }
+        })
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "generateBullets",
+            "e": e
+        }
+        errorHandler.log(options)
+    }  
+}
+
 
 
 clientSocketHandler.defineCoreFunctions();
