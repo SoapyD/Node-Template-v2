@@ -108,3 +108,12 @@ exports.findBulletPathsWorker = async(options) => {
         game_data_id: result.process.game_data_id
     })
 }
+
+exports.findMeleePathsWorker = async(options) => {
+    const result = await runWorker(options)
+
+    socketHandler.generateMelees({
+        id: options.id,
+        game_data_id: result.process.game_data_id
+    })
+}

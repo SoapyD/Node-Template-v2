@@ -26,7 +26,7 @@ const bullet = class {
 		}
 		
 		this.speed = 200;
-		this.damage =  options.unit.gun_class[options.unit.core.selected_gun].damage;
+		// this.damage =  options.unit.gun_class[options.unit.core.selected_gun].damage;
 		this.blast_spritesheet = options.unit.gun_class[options.unit.core.selected_gun].blast_spritesheet;
 		this.blast_radius = options.unit.gun_class[options.unit.core.selected_gun].blast_radius;	
 		

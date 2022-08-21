@@ -123,6 +123,7 @@ const gameSchema = new mongoose.Schema({
 			x: Number
 			,y: Number
 			,target_id: {type: Number, default: -1}
+			,damage: {type: Number, default: 0}
 		}]
 
 		,targets: [{
