@@ -27,7 +27,7 @@ MOVEMENT
 -check to see if a unit is leaving combat and check and apply damage once it's finished moving
 
 FIGHTING
--
+-Need to get the drawing of damage properly working
 
 RESET
 -DONE -Add reset for moved, shot and fought
