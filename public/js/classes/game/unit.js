@@ -430,6 +430,8 @@ wound = (options) => {
 
 	this.drawTextParticle(print_text)
 
+	this.updateElements(this.sprite_ghost)
+
 	if(this.core.health === 0){
 		this.kill();
 	}

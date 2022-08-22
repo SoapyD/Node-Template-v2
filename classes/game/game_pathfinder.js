@@ -1,4 +1,8 @@
 
+const _ = require('lodash');
+const collisions = require("./collisions")
+let collisionHandler = new collisions.game_collisions();
+
 const pathProcess = class {
     constructor(options) {
 
@@ -40,7 +44,7 @@ const pathProcess = class {
 
 		
 		this.current_checks = 0;
-		this.max_checks = 100;
+		this.max_checks = 10000;
     }
 }
 
@@ -55,7 +59,9 @@ module.exports = class game_pathfinder {
 		
 		
 		this.current_checks = 0;
-		this.max_checks = 100;       
+		this.total_checks = 0;
+
+		this.max_checks = 10000;       
 		
 		this.process_list = [];
 		// this.bound_unit = -1;
@@ -66,6 +72,7 @@ module.exports = class game_pathfinder {
 	setup(options) {
 		
 		//this.bound_unit = this.id;
+		this.game_data = options.game_data;
         let process = new pathProcess(options)
 
 		//add start pos to open list, first needs converting into a node
@@ -107,6 +114,7 @@ module.exports = class game_pathfinder {
 			}
 		}
 
+		this.total_checks += this.current_checks;
 		this.current_checks = 0;
 
 		return this.process_list;
@@ -225,8 +233,9 @@ module.exports = class game_pathfinder {
 
 			process.running = false;
             if(process.callback){
-                process.callback(this,process)
+				process.callback(this,process)
 			}
+			// console.log("pathfinder total checks:",this.total_checks,'current checks:', this.current_checks)
 			
 			
         }
@@ -369,8 +378,26 @@ module.exports = class game_pathfinder {
 					}
 				}				
 			}
+		}
+
+		//CHECK TO SEE IF NODE INTERSECTS ANOTHER UNIT, IF SO, SKIP IT
+		if(skip === false){
+			// let unit = this.game_data.units[this.process_list[0].id];
+			
+			// unit.tileX = node.pos.x;
+			// unit.tileY = node.pos.y;
+			// let clashes = collisionHandler.checkUnitUnitClash({
+			// 	unit: unit,
+			// 	game_data: this.game_data
+			// })
+
 			
 
+			// if(clashes.length > 0){
+			// 	skip = true;
+			// }
+
+			// console.log(skip)
 		}
 
 		return skip

@@ -112,6 +112,19 @@ module.exports = class game_collisions {
     return false;
   }  
 
+  // RECTANGLE/RECTANGLE
+  rectRect(r1x, r1y, r1w, r1h, r2x, r2y, r2w, r2h) {
+    // are the sides of one rectangle touching the other?
+
+    if (r1x + r1w > r2x &&    // r1 right edge past r2 left
+        r1x < r2x + r2w &&    // r1 left edge past r2 right
+        r1y + r1h > r2y &&    // r1 top edge past r2 bottom
+        r1y < r2y + r2h) {    // r1 bottom edge past r2 top
+          return true;
+    }
+    return false;
+  }
+
   dist(x1, y1, x2, y2) {
     let distX = x1 - x2;
     let distY = y1 - y2;
@@ -214,6 +227,26 @@ module.exports = class game_collisions {
       )
     })    
   }
+
+  checkUnitUnitClash = (options) => {
+    //USE LODASH TO SEARCH FOR UNIT
+    return _.filter(options.game_data.units, (unit) => {
+      let unit_dims = this.getUnitTileRange(options.unit)
+      let check_dims = this.getUnitTileRange(unit)
+      let clash = this.rectRect(
+        unit_dims.min.x, unit_dims.min.y, 1, 1 //unit_dims.dim.w, unit_dims.dim.h
+        ,check_dims.min.x, check_dims.min.y, 1, 1 //, check_dims.dim.w, check_dims.dim.h        
+        )
+      
+      return (
+          // range.min.x <= options.check_pos.x && range.min.y <= options.check_pos.y
+          // && range.max.x >= options.check_pos.x && range.max.y >= options.check_pos.y
+          unit.id !== options.unit.id
+          && clash === true
+      )
+    })    
+  }
+
 
   checkBlastClash = (options) => {
       

@@ -180,14 +180,16 @@ module.exports = class game_actions {
     getPotentialPaths = (options) => {
 
         try{
-            setupWorkers.findPotentialPathsWorker({
+            setupWorkers.findPotentialPathsWorker(
+                {
+                game_data_id: options.parent.game_data.id,
                 worker_path: 'potential_paths.js',
                 message: 'Potential Path Test',
                 id: options.parent.socket.id,
                 grid: options.matrix,
                 acceptable_tiles: options.acceptable_tiles,
                 setup_data: {
-                    id: options.player.selected_unit
+                    id: options.saved_unit.id //options.player.selected_unit
                     ,sprite_offset: options.saved_unit.sprite_offset
                     ,movement: options.saved_unit.movement
                     ,obj_size: options.saved_unit.size
@@ -212,13 +214,14 @@ module.exports = class game_actions {
             setupWorkers.setupPathFinderWorker(
                 options.parent.game_data,
                 {
+                game_data_id: options.parent.game_data.id,
                 worker_path: 'pathfinder.js',
                 message: 'Pathfinding Test',
                 id: options.parent.id,
                 grid: options.matrix,
                 acceptable_tiles: options.acceptable_tiles,
                 setup_data: {
-                    id: options.player.selected_unit
+                    id: options.player.selected_unit // options.saved_unit.id 
                     ,sprite_offset: options.saved_unit.sprite_offset
                     ,movement: options.saved_unit.movement
                     ,obj_size: options.saved_unit.size
