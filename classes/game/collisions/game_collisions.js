@@ -159,6 +159,20 @@ module.exports = class game_collisions {
   //GET THE RANGE OF TILES A UNIT OCCUPIES
   getUnitTileRange = (unit, tile_size=0) => {
 
+    //IF A UNIT HAS A PATH, USE THAT AS IT'S CHECKING POINT
+    let pos = {
+      x: unit.tileX,
+      y: unit.tileY      
+    }
+    //SET CHECK POS TO PATH END IF A UNIT HAS MOVEMENT PLANNED
+    if(unit.path.length > 0){
+      let path_pos = unit.path[unit.path.length - 1];
+      pos = path_pos
+      pos.x = pos.x - unit.sprite_offset
+      pos.y = pos.y - unit.sprite_offset      
+    }
+
+
     let min = {
         x: -1,
         y: -1,
@@ -177,20 +191,20 @@ module.exports = class game_collisions {
     }                
 
     if(unit.sprite_offset === 0){
-        min.x = unit.tileX - unit.size;
-        min.y = unit.tileY - unit.size;            
-        max.x = unit.tileX
-        max.y = unit.tileY         
+        min.x = pos.x - unit.size;
+        min.y = pos.y - unit.size;            
+        max.x = pos.x
+        max.y = pos.y        
 
         mid.x = ((max.x - min.x) / 2) + min.x;
         mid.y = ((max.y - min.y) / 2) + min.y;        
     }
 
     if(unit.sprite_offset === 0.5){
-        min.x = unit.tileX - unit.size;
-        min.y = unit.tileY - unit.size;            
-        max.x = unit.tileX + unit.size;
-        max.y = unit.tileY + unit.size;       
+        min.x = pos.x - unit.size;
+        min.y = pos.y - unit.size;            
+        max.x = pos.x + unit.size;
+        max.y = pos.y + unit.size;       
         
         mid.x = ((max.x - min.x) / 2) + min.x + unit.sprite_offset;
         mid.y = ((max.y - min.y) / 2) + min.y + unit.sprite_offset;        
@@ -218,8 +232,11 @@ module.exports = class game_collisions {
 
   checkUnitClash = (options) => {
     //USE LODASH TO SEARCH FOR UNIT
+    // console.log(options.check_pos)
     return _.filter(options.game_data.units, (unit) => {
       let range = this.getUnitTileRange(unit)
+      // console.log(unit.sprite_offset)
+      // console.log(range)
       
       return (
           range.min.x <= options.check_pos.x && range.min.y <= options.check_pos.y

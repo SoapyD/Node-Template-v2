@@ -215,6 +215,7 @@ module.exports = class game_actions {
                 options.parent.game_data,
                 {
                 game_data_id: options.parent.game_data.id,
+                // game_data_id: options.parent.game_data,
                 worker_path: 'pathfinder.js',
                 message: 'Pathfinding Test',
                 id: options.parent.id,
@@ -556,12 +557,61 @@ module.exports = class game_actions {
             let unit = options.game_data.units[player.selected_unit];
             let update = {}
             let new_targets = []
+            let reset_move_ids = []
 
             switch(options.game_data.mode){
                 case "move":
                 case "charge":
                     //REMOVE PATH FROM SELECTED UNIT
-                    update["units."+unit.id+".path"] = []; 
+                    // update["units."+unit.id+".path"] = []; 
+                    //CHECK TO SEE IF UNIT RESET CAUSES ANY OTHER UNITS TO RESET
+                    let unitCheck = (unit) => {
+                        let check_array = []
+                        let update = {};
+                        unit.path = []; //RESET PATH SO UNIT tileX POS IS USED
+                        check_array.push(unit)
+                        for(let i=0;i<1000;i++){
+                            let new_check_array = [];
+                            check_array.forEach((check_unit) => {
+
+                                let check_pos = {
+                                    x: check_unit.tileX,
+                                    y: check_unit.tileY,                                
+                                }
+                                update["units."+check_unit.id+".path"] = [];
+                                reset_move_ids.push(check_unit.id)
+
+                                let clashed_units = _.filter(options.game_data.units, (unit) => {
+                                    let range = collisionHandler.getUnitTileRange(unit)
+                                    return (
+                                        range.min.x <= check_pos.x && range.min.y <= check_pos.y
+                                        && range.max.x >= check_pos.x && range.max.y >= check_pos.y
+                                        && unit.id !== check_unit.id
+                                        && unit.path.length > 0
+                                    )
+                                  })  
+
+                                if(clashed_units.length > 0){
+                                    // new_check_array.concat(clashed_units)
+                                    clashed_units.forEach((clash)=>{
+                                        new_check_array.push(clash)
+                                    })
+                                }
+                            })
+
+                            if(new_check_array.length > 0){
+                                //ADD NEW CHECK
+                                check_array = new_check_array
+                            }else{
+                                return update
+                            }
+
+                        }
+                    }
+
+                    update = unitCheck(unit)
+                    // console.log(update)
+
                 break; 
                 case "shoot":
                     //REMOVE LAST TARGET FROM UNIT
@@ -603,7 +653,7 @@ module.exports = class game_actions {
                     socketHandler.returnPath({
                         id: options.id,
                         process: {
-                            id: unit.id,
+                            ids: reset_move_ids,
                             path: []
                         }
                     })

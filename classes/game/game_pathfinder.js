@@ -72,7 +72,7 @@ module.exports = class game_pathfinder {
 	setup(options) {
 		
 		//this.bound_unit = this.id;
-		this.game_data = options.game_data;
+		// this.game_data = options.game_data;
         let process = new pathProcess(options)
 
 		//add start pos to open list, first needs converting into a node
@@ -381,6 +381,7 @@ module.exports = class game_pathfinder {
 		}
 
 		//CHECK TO SEE IF NODE INTERSECTS ANOTHER UNIT, IF SO, SKIP IT
+		//HAD TO TURN THIS OFF AS IT MASSIVELY SLOWS THINGS DOWN
 		if(skip === false){
 			// let unit = this.game_data.units[this.process_list[0].id];
 			

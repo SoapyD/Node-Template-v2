@@ -346,30 +346,38 @@ clientSocketHandler.setPath = (options) => {
     // console.log(options.data)
 
     try{
-        let unit = gameCore.assets.units[options.data.id]
-        unit.core.path = options.data.path
 
-        let colours = {
-            line_colour: 0x00cccc,
-            fill_colour: 0x2ECC40,
-            line_alpha: 0.75,
-            circle_alpha: 0.15,
-            fill_alpha: 0.15,
-            width: 5
+        let drawPath = (id, options) => {
+            let unit = gameCore.assets.units[id]
+            unit.core.path = options.data.path
+    
+            let colours = {
+                line_colour: 0x00cccc,
+                fill_colour: 0x2ECC40,
+                line_alpha: 0.75,
+                circle_alpha: 0.15,
+                fill_alpha: 0.15,
+                width: 5
+            }
+    
+            unit.drawPath(colours)
+    
+            // console.log(options.data.squad_cohesion_info)
+    
+            if(options.data.squad_cohesion_info){
+    
+                options.data.squad_cohesion_info.forEach((c_unit) => {
+                    let unit = gameCore.assets.units[c_unit.id];
+                    gameCore.assets.units[c_unit.id].core.cohesion_check = c_unit.cohesion_check;
+                    unit.drawCohesion({sprite: unit.sprite_ghost})    
+                })
+            }
         }
 
-        unit.drawPath(colours)
+        options.data.ids.forEach((id) => {
+            drawPath(id, options)
+        })
 
-        // console.log(options.data.squad_cohesion_info)
-
-        if(options.data.squad_cohesion_info){
-
-            options.data.squad_cohesion_info.forEach((c_unit) => {
-                let unit = gameCore.assets.units[c_unit.id];
-                gameCore.assets.units[c_unit.id].core.cohesion_check = c_unit.cohesion_check;
-                unit.drawCohesion({sprite: unit.sprite_ghost})    
-            })
-        }
 
     }catch(e){
 

@@ -40,13 +40,13 @@ const game_squad_setup = class {
 					}
 				})  
 
-				for(let i=0;i<squad_data.size; i++){
-				// for(let i=0;i<3; i++){					
+				// for(let i=0;i<squad_data.size; i++){
+				for(let i=0;i<2; i++){					
 
 					let core = {
 						id: gameCore.assets.units.length,
 						side: force.side, //this can be used if each side has multiple players
-						player: i, //player, //this is the specific owner of the unit
+						player: player, //i, //this is the specific owner of the unit
 						squad: squad_id, //this can be used for squad checks like unit cohesion
 						
 						angle: 0,

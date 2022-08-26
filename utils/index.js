@@ -6,3 +6,4 @@ exports.timer = require("./timer");
 exports.checkWounding = require("./game/check_wounding");
 exports.cohesionCheck = require("./game/cohesion_check");
 exports.checkStatusEffects = require("./game/check_status_effects");
+exports.runQuery = require("./game/run_query");

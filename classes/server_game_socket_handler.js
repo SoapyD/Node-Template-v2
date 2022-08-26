@@ -481,11 +481,12 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 function: "setPath",
                 data: {
                     // message: "Left Click",
-                    id: options.process.id,
+                    ids: options.process.ids,
                     path: options.process.path,
                     squad_cohesion_info: options.squad_cohesion_info
                 }
             }
+
             this.sendMessage(return_options)        
         }
         catch(e){
