@@ -5,14 +5,7 @@ const utils = require("../../utils");
 // const unit = require('../../models/game/unit');
 const setupWorkers = require('./workers');
 const collisions = require('./collisions');
-// const game_data = require('../../models/game/game_data');
-
-const workerpool = require('workerpool');
-// create a worker pool using an external worker script
-const pool_potentialpath = workerpool.pool(__dirname + '/workerpool/potential_paths.js');
-const pool_pathfinder = workerpool.pool(__dirname + '/workerpool/pathfinder.js');
-
-
+const game_data = require('../../models/game/game_data');
 
 module.exports = class game_actions {
 	constructor(options) {	
@@ -187,7 +180,8 @@ module.exports = class game_actions {
     getPotentialPaths = (options) => {
 
         try{
-            let worker_options = {
+            setupWorkers.findPotentialPathsWorker(
+                {
                 game_data_id: options.parent.game_data.id,
                 worker_path: 'potential_paths.js',
                 message: 'Potential Path Test',
@@ -202,21 +196,7 @@ module.exports = class game_actions {
                     ,x_start: (options.saved_unit.tileX)
                     ,y_start: (options.saved_unit.tileY)                             
                 }
-            }
-
-            // run registered functions on the worker via exec
-            pool_potentialpath.exec('runProcess', [worker_options])
-                .then(function (result) {
-                    // console.log('Result: ' + result); // outputs 55
-                    socketHandler.returnPotentialPaths(result)
-                })
-                .catch(function (err) {
-                console.error(err);
-                })
-                .then(function () {
-                pool.terminate(); // terminate all workers when done
-                });
-
+            })  
         }catch(e){
 
             let options = {
@@ -231,8 +211,11 @@ module.exports = class game_actions {
     getPath = (options) => {
 
         try{
-            let worker_options = {
+            setupWorkers.setupPathFinderWorker(
+                options.parent.game_data,
+                {
                 game_data_id: options.parent.game_data.id,
+                // game_data_id: options.parent.game_data,
                 worker_path: 'pathfinder.js',
                 message: 'Pathfinding Test',
                 id: options.parent.id,
@@ -248,74 +231,7 @@ module.exports = class game_actions {
                     ,x_end: (options.player.pointerX)
                     ,y_end: (options.player.pointerY)                              
                 }
-            }
-
-            // run registered functions on the worker via exec
-            pool_pathfinder.exec('runProcess', [worker_options])
-            .then(async function (result) {
-
-                //GET THE POPULATE GAMES DATA
-                let game_datas = await databaseHandler.findData({
-                    model: "GameData"
-                    ,search_type: "findOne"
-                    ,params: {_id: result.game_data_id}
-                }, true)
-
-                let game_data = game_datas[0]
-                //UPDATE UNIT PATH IN TEST GAME_DATA
-                let unit = game_data.units[result.process.ids[0]];
-                unit.path = result.process.path;
-                let path_pos = unit.path[unit.path.length - 1]
-                unit.x = path_pos.x * game_data.tile_size
-                unit.y = path_pos.y * game_data.tile_size
-                unit.tileX = path_pos.x - unit.sprite_offset
-                unit.tileY = path_pos.y - unit.sprite_offset
-
-                //CHECK COHERANCY FOR THE UNIT
-                let squad = utils.cohesionCheck({
-                    game_data: game_data,
-                    unit: unit
-                });
-
-
-                //SAVE THE PATH TO THE UNIT
-                let update = {}
-                update["units."+result.process.ids[0]+".path"] = result.process.path;
-
-                //ADD COHESION CHECK
-                let squad_cohesion_info = []
-                squad.forEach((unit) => {
-                    update["units."+unit.id+".cohesion_check"] = unit.cohesion_check;
-                    squad_cohesion_info.push({
-                        id: unit.id
-                        ,cohesion_check: unit.cohesion_check
-                    })        
-                })
-
-                let update_options = 
-                {
-                    model: "GameData"
-                    ,params: [
-                        {
-                            filter: {_id: game_data.id}, 
-                            value: {$set: update}
-                        }
-                    ]
-                }   
-
-                await databaseHandler.updateOne(update_options)
-                
-                options = result
-                options.squad_cohesion_info = squad_cohesion_info
-
-                socketHandler.returnPath(options)
             })
-            .catch(function (err) {
-            console.error(err);
-            })
-            .then(function () {
-            pool.terminate(); // terminate all workers when done
-            });
         }catch(e){
 
             let options = {
@@ -485,6 +401,7 @@ module.exports = class game_actions {
                     socketHandler.returnShootingTarget({
                         id: options.parent.id,
                         unit: options.saved_unit.id,
+                        // path: saved_path,
                         targets: return_targets
                     })
     

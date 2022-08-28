@@ -1,5 +1,9 @@
 const setupWorkers = require('./workers')
 
+const workerpool = require('workerpool');
+const pool_bulletpaths = workerpool.pool(__dirname + '/workerpool/bullet_paths.js');
+const pool_meleepaths = workerpool.pool(__dirname + '/workerpool/melee_paths.js');
+
 module.exports = class game_state {
 	constructor(options) {	
     }
@@ -96,24 +100,70 @@ module.exports = class game_state {
 
     checkState = (options) => {
         console.log("all ready")
+        let worker_options;
 
         switch(options.game_data.mode){
             case "move":
                 socketHandler.followPath(options)
                 break;
             case "shoot":
-                setupWorkers.findBulletPathsWorker({
+                // setupWorkers.findBulletPathsWorker({
+                //     id: options.id,
+                //     worker_path: 'bullet_paths.js',
+                //     game_data_id: options.game_data.id
+                // })
+
+                worker_options = {
                     id: options.id,
                     worker_path: 'bullet_paths.js',
                     game_data_id: options.game_data.id
-                })
+                }
+
+                // run registered functions on the worker via exec
+                pool_bulletpaths.exec('runProcess', [worker_options])
+                    .then(function (result) {
+                        socketHandler.generateBullets({
+                            id: result.process.id,
+                            game_data_id: result.process.game_data_id
+                        })
+                    })
+                    .catch(function (err) {
+                    console.error(err);
+                    })
+                    .then(function () {
+                    pool.terminate(); // terminate all workers when done
+                    });
+
+                
                 break;  
             case "fight":
-                setupWorkers.findMeleePathsWorker({
+                // setupWorkers.findMeleePathsWorker({
+                //     id: options.id,
+                //     worker_path: 'melee_paths.js',
+                //     game_data_id: options.game_data.id
+                // })
+
+                worker_options = {
                     id: options.id,
                     worker_path: 'melee_paths.js',
                     game_data_id: options.game_data.id
-                })
+                }
+
+                // run registered functions on the worker via exec
+                pool_meleepaths.exec('runProcess', [worker_options])
+                    .then(function (result) {
+                        socketHandler.generateMelees({
+                            id: result.process.id,
+                            game_data_id: result.process.game_data_id
+                        })
+                    })
+                    .catch(function (err) {
+                    console.error(err);
+                    })
+                    .then(function () {
+                    pool.terminate(); // terminate all workers when done
+                    });
+
                 break;                                
         }
 
