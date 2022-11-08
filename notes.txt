@@ -1,33 +1,25 @@
 
 -remove NULL moving and shooting elements so they don't tax the socket emit
 
+-implement a full set of moving states for actions
+-add in multiple players on the same game screen which can be used for testing or single screen gaming
+-
+
 
 actions
 ----------------------------
 
-STATUS effects
--DONE -Pass effects back to movement path if a unit passed through them
--DONE -do the same for target and splash targets of bullets
-
-SHOOTING
--DONE -Check barriers to see if they affect bullets
--DONE -apply effects for sniping units / effects when figuring out wounding
--DONE -apply damage reduction when shield barrier is crossed
-
-
 MOVEMENT
--DONE -Cohesion checks
--DONE -Update positions of units
-
 -Finalise movemement once it's completed
 -Make the selected unit stand out in terms of cohesion brightness
 -make the path line dissappear one the object is reached
--if a unit has a saved path on the server, use the end path for the selection position instead
--if a path is reset for a unit, waterfall any unit path resets that it affects.
 -check to see if a unit is leaving combat and check and apply damage once it's finished moving
 
 FIGHTING
 -Need to get the drawing of damage properly working
+-apply unit "in combat" check
+-apply opportunity attack is combat is left
+
 
 RESET
 -DONE -Add reset for moved, shot and fought
@@ -67,6 +59,22 @@ SPECIAL RULES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+STATUS effects
+-DONE -Pass effects back to movement path if a unit passed through them
+-DONE -do the same for target and splash targets of bullets
+
+SHOOTING
+-DONE -Check barriers to see if they affect bullets
+-DONE -apply effects for sniping units / effects when figuring out wounding
+-DONE -apply damage reduction when shield barrier is crossed
+
+
+-DONE -Cohesion checks
+-DONE -Update positions of units
+-DONE -if a unit has a saved path on the server, use the end path for the selection position instead
+-DONE -if a path is reset for a unit, waterfall any unit path resets that it affects.
+
 
 -DONE -Limit the range to the maximum range of a gun
 -DONE -Keep a list of potential unit shooting targets that can be referred back to later

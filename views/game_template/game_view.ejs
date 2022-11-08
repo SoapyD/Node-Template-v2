@@ -11,34 +11,39 @@
         let user_data = <%- JSON.stringify(data.user) %>
         let room_data = <%- JSON.stringify(data.room) %>
     
-        gameCore.assets.forces.forEach((force, i) => {
-            force.army = army_data[i]
-        })
+        // gameCore.assets.forces.forEach((force, i) => {
+        //     force.army = army_data[i]
+        // })
     
         let action = 'create'
         options = {
-                functionGroup: "core",  
-                function: "checkRoom",
-                message: action+" room",
-                data: {
-                    action: action
-                    ,room_name: room_data.name
-                    ,password: room_data.password
-                    ,users: [user_data._id]
-                    ,admins: [user_data._id]
-                    ,use_waiting_room: false
-                }     
-            }       
+            functionGroup: "core",  
+            function: "checkRoom",
+            message: action+" room",
+            data: {
+                action: action
+                ,room_name: room_data.name
+                ,password: room_data.password
+                ,users: [user_data._id]
+                ,admins: [user_data._id]
+                ,use_waiting_room: false
+            }     
+        }    
 
-            let max_users = room_data.max_players
-            if(max_users !== ""){
-                options.data.max_users = Number(max_users)
-            }
-            // if(use_waiting_room !== "false"){
-            //     options.data.use_waiting_room = true
-            // }            
+        let max_users = room_data.max_players
+        if(max_users !== ""){
+            options.data.max_users = Number(max_users)
+        }
 
-            clientSocketHandler.messageServer(options)     
+        if(instance_type === 'DEV'){
+            // options.data.users = []
+            // for(let i=0;i<max_users;i++){
+            //     options.data.users.push(user_data._id)
+            // }
+        }
+
+
+        clientSocketHandler.messageServer(options)     
 
     <% } %>
 </script>

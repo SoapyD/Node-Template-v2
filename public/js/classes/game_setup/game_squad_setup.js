@@ -40,8 +40,8 @@ const game_squad_setup = class {
 					}
 				})  
 
-				// for(let i=0;i<squad_data.size; i++){
-				for(let i=0;i<2; i++){					
+				for(let i=0;i<squad_data.size; i++){
+				// for(let i=0;i<2; i++){					
 
 					let core = {
 						id: gameCore.assets.units.length,
@@ -50,8 +50,8 @@ const game_squad_setup = class {
 						squad: squad_id, //this can be used for squad checks like unit cohesion
 						
 						angle: 0,
-						x: (7+(i*1)) * this.tile_size,
-						y: (3+ force.side) * this.tile_size,
+						x: (7+(i*2)) * this.tile_size,
+						y: (3 + (force.side * 2)) * this.tile_size,
 						tileX: (5+(i*2)),
 						tileY: (3+ force.side),												
 						
