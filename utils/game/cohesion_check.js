@@ -34,12 +34,16 @@ const cohesionCheckSquad = (options) => {
 				let add_closed = false;
 				closed.forEach((closed_unit) => {
 
-					let open_dims = collisionHandler.getUnitTileRange(open_unit, options.game_data.tile_size)
-					let closed_dims = collisionHandler.getUnitTileRange(closed_unit, options.game_data.tile_size)					
-
-					let distance = functions.distanceBetweenPoints(open_dims.mid_game, closed_dims.mid_game);
-					if(distance <= open_unit.unit_class.cohesion){
-						add_closed = true;
+					if (add_closed === false){
+						let open_dims = collisionHandler.getUnitTileRange(open_unit, options.game_data.tile_size)
+						let closed_dims = collisionHandler.getUnitTileRange(closed_unit, options.game_data.tile_size)					
+	
+						let distance = functions.distanceBetweenPoints(open_dims.mid_game, closed_dims.mid_game);
+						if(distance <= open_unit.unit_class.cohesion){
+							add_closed = true;
+						}
+					}else{
+						test = true
 					}
 
 					// console.log(
@@ -74,7 +78,7 @@ const cohesionCheckSquad = (options) => {
 				return true;
 			}			
 			
-			closed = closed_add
+			closed = closed.concat(closed_add)
 			open = new_open
 				
 			

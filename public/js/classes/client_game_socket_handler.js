@@ -343,7 +343,7 @@ clientSocketHandler.readyUp = (options) => {
 
 clientSocketHandler.setPath = (options) => {
 
-    // console.log(options.data)
+    console.log(options.data)
 
     try{
 

@@ -167,7 +167,8 @@ module.exports = class game_collisions {
     //SET CHECK POS TO PATH END IF A UNIT HAS MOVEMENT PLANNED
     if(unit.path.length > 0){
       let path_pos = unit.path[unit.path.length - 1];
-      pos = path_pos
+      pos.x = path_pos.x
+      pos.y = path_pos.y
       pos.x = pos.x - unit.sprite_offset
       pos.y = pos.y - unit.sprite_offset      
     }
