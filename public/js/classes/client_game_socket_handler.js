@@ -275,6 +275,51 @@ clientSocketHandler.moveMarker = (options) => {
     }        
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+// ######  #######  #####  ####### #######  #####  
+// #     # #       #     # #          #    #     # 
+// #     # #       #       #          #    #       
+// ######  #####    #####  #####      #     #####  
+// #   #   #             # #          #          # 
+// #    #  #       #     # #          #    #     # 
+// #     # #######  #####  #######    #     ##### 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+clientSocketHandler.resetAll = (options) => {
+
+
+    try{
+        console.log("RESET ALL")
+        gameCore.assets.units.forEach((unit) => {
+            if (unit.core.alive){
+                drawPath(
+                    unit.core.id
+                    ,{ data:
+                        {
+                            path: []
+                        }
+                    }
+                )
+
+                unit.core.targets = [];
+                unit.drawTarget();
+                unit.core.fight_targets = [];
+                unit.drawFightTarget();
+            }
+        })
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "resetAll",
+            "e": e
+        }
+        errorHandler.log(options)
+    }        
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,43 +386,38 @@ clientSocketHandler.readyUp = (options) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
+const drawPath = (id, options) => {
+    let unit = gameCore.assets.units[id]
+    unit.core.path = options.data.path
+
+    let colours = {
+        line_colour: 0x00cccc,
+        fill_colour: 0x2ECC40,
+        line_alpha: 0.75,
+        circle_alpha: 0.15,
+        fill_alpha: 0.15,
+        width: 5
+    }
+
+    unit.drawPath(colours)
+
+    if(options.data.squad_cohesion_info){
+
+        options.data.squad_cohesion_info.forEach((c_unit) => {
+            let unit = gameCore.assets.units[c_unit.id];
+            gameCore.assets.units[c_unit.id].core.cohesion_check = c_unit.cohesion_check;
+            unit.drawCohesion({sprite: unit.sprite_ghost})    
+        })
+    }
+}
+
 clientSocketHandler.setPath = (options) => {
 
-    console.log(options.data)
-
     try{
-
-        let drawPath = (id, options) => {
-            let unit = gameCore.assets.units[id]
-            unit.core.path = options.data.path
-    
-            let colours = {
-                line_colour: 0x00cccc,
-                fill_colour: 0x2ECC40,
-                line_alpha: 0.75,
-                circle_alpha: 0.15,
-                fill_alpha: 0.15,
-                width: 5
-            }
-    
-            unit.drawPath(colours)
-    
-            // console.log(options.data.squad_cohesion_info)
-    
-            if(options.data.squad_cohesion_info){
-    
-                options.data.squad_cohesion_info.forEach((c_unit) => {
-                    let unit = gameCore.assets.units[c_unit.id];
-                    gameCore.assets.units[c_unit.id].core.cohesion_check = c_unit.cohesion_check;
-                    unit.drawCohesion({sprite: unit.sprite_ghost})    
-                })
-            }
-        }
 
         options.data.ids.forEach((id) => {
             drawPath(id, options)
         })
-
 
     }catch(e){
 

@@ -154,22 +154,37 @@ module.exports = class game_actions {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
 
     reset = (options) => {
-        if(options.game_data){
-            let game_data = options.game_data;
 
-            //UPDATE POSITIONS OF UNITS
-            game_data.units.forEach((unit) => {
-                unit.path = [];
-                unit.targets = [];
-                unit.fight_targets = [];
-                unit.moved = false;
-                unit.shoot = false;
-                unit.charged = false;
-                unit.fight = false;
-            })
+        try{
+            if(options.game_data){
+                let game_data = options.game_data;
 
-            databaseHandler.updateData(game_data)
+                //UPDATE POSITIONS OF UNITS
+                game_data.units.forEach((unit) => {
+                    unit.path = [];
+                    unit.targets = [];
+                    unit.fight_targets = [];
+                    unit.moved = false;
+                    unit.shoot = false;
+                    unit.charged = false;
+                    unit.fight = false;
+                })
+
+                databaseHandler.updateData(game_data)
+
+                //SEND RESET TO PLAYERS
+                socketHandler.returnResetAll(options)
+            }
         }
+        catch(e){
+            let options = {
+                "class": "game_actions",
+                "function": "reset",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      

@@ -1,25 +1,18 @@
 
--DONE -BUG -Collision check works only sometimes
-    -This issue was down to the path adjustment in game_collisions, it was actually making multiple adjustments to the last place 
-    in a path causing it to move off to the top left hand side of any room with each check made.
-
-
 -remove NULL moving and shooting elements so they don't tax the socket emit
 
 -implement a full set of moving states for actions
 -add in multiple players on the same game screen which can be used for testing or single screen gaming
--
 
 -BUG -Right click in movement isn't resetting cohesion
+
 
 
 actions
 ----------------------------
 
 MOVEMENT
--Finalise movemement once it's completed
 -Make the selected unit stand out in terms of cohesion brightness
--make the path line dissappear one the object is reached
 -check to see if a unit is leaving combat and check and apply damage once it's finished moving
 
 FIGHTING
@@ -27,15 +20,11 @@ FIGHTING
 -apply unit "in combat" check
 -apply opportunity attack is combat is left
 
+SHOOTING
+-targets set e.g. 1/2 graphic, only generates after the targets are cleared
 
-RESET
--DONE -Add reset for moved, shot and fought
 
 SPECIAL RULES
--DONE -whirling dervish - unit adds 4 to their melee armour piercing value the turn they move into combat
--DONE -sniper - unit adds 4 to their armour piercing value if they don't move before taking the shot
--DONE -firing drills - unit that doesn't move can double the number of shots from their ranged weapon
-
 -regen - 20% chance of the unit regenerating any lost wounds suffered
 -poison
     -DONE -Need to apply poison to units hit by it during shooting
@@ -66,6 +55,30 @@ SPECIAL RULES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -BUG -Collision check works only sometimes
+    -This issue was down to the path adjustment in game_collisions, it was actually making multiple adjustments to the last place 
+    in a path causing it to move off to the top left hand side of any room with each check made.
+
+MOVEMENT
+-DONE -Finalise movemement once it's completed
+-DONE -make the path line dissappear one the object is reached
+
+FIGHTING
+-DONE -Finalise fighting once it's completed
+
+SHOOTING
+-DONE -Finalise shooting once it's completed
+
+RESET
+-DONE -Add reset for moved, shot and fought
+
+SPECIAL RULES
+-DONE -whirling dervish - unit adds 4 to their melee armour piercing value the turn they move into combat
+-DONE -sniper - unit adds 4 to their armour piercing value if they don't move before taking the shot
+-DONE -firing drills - unit that doesn't move can double the number of shots from their ranged weapon
+
+
 
 STATUS effects
 -DONE -Pass effects back to movement path if a unit passed through them

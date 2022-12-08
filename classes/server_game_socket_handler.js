@@ -421,6 +421,41 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         }	        
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    // ######  #######  #####  ####### #######  #####  
+    // #     # #       #     # #          #    #     # 
+    // #     # #       #       #          #    #       
+    // ######  #####    #####  #####      #     #####  
+    // #   #   #             # #          #          # 
+    // #    #  #       #     # #          #    #     # 
+    // #     # #######  #####  #######    #     ##### 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+
+    returnResetAll = (options) => {
+        try{
+            let return_options =  {
+                type: "room",
+                id: options.id,                
+                functionGroup: "core",
+                function: "resetAll",
+                data: {
+                }
+            }
+
+            this.sendMessage(return_options)        
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "returnResetAll",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
@@ -602,6 +637,12 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     options.pos = advancePos(options.pos)                
                     if(options.pos === options.max_pos){
                         clearInterval(myInterval);
+
+                        //WAIT FOR 3 SECONDS BEFORE CLEARING DOWN AND ADVANCING MODE
+                        setTimeout(function(){
+                            actionHandler.reset(options)
+                        },3000);
+
                     }
 
                 },250, options)
@@ -759,6 +800,11 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     options.pos = advancePos(options.pos)                
                     if(options.pos === options.max_pos){
                         clearInterval(myInterval);
+
+                        //WAIT FOR 3 SECONDS BEFORE CLEARING DOWN AND ADVANCING MODE
+                        setTimeout(function(){
+                            actionHandler.reset(options)
+                        },3000);                        
                     }
 
                 },2000, options)
@@ -915,6 +961,11 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     options.pos = advancePos(options.pos)                
                     if(options.pos === options.max_pos){
                         clearInterval(myInterval);
+
+                        //WAIT FOR 3 SECONDS BEFORE CLEARING DOWN AND ADVANCING MODE
+                        setTimeout(function(){
+                            actionHandler.reset(options)
+                        },3000);                        
                     }
 
                 },2000, options)
