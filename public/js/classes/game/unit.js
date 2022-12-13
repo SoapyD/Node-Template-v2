@@ -9,7 +9,6 @@ const unit = class {
 
 		//UNIT CLASS	
 		this.unit_class = options.unit_class	
-
 				
 		//GUN CLASS
 		this.gun_class = []
@@ -22,16 +21,12 @@ const unit = class {
 		//ARMOUR CLASS
 		this.armour_class = options.armour_class
 		
-
 		//ALL OTHER ELEMENTS
 		this.scene = options.scene;
 		this.type = 'unit'
 
-		// this.core.path = [];
-		// this.is_moving = false;
-		// this.core.cohesion_check = true;
-		// this.core.targets = [];						
-		// this.core.fight_targets = [];
+
+		// this.unit_selected = false // TO BE USED SPECIFICALLY FOR DRAWING CALLS THAT ALLOW FOR HIGHLIGHTING SELECTED UNITS
 
 		this.depth_sprite_flash = 6;		
 		this.depth_sprite = 4;
@@ -449,43 +444,17 @@ drawCohesion(options){
 
 	this.resetCohesionGraphic();
 
-	let colours = {
-		line_colour: 0x00cccc,
-		fill_colour: 0x2ECC40,
-		line_alpha: 0.75,
-		circle_alpha: 0.75,
-		fill_alpha: 0.75,
-		width: 5,
-		line_width: 5
-	}
+	let colours = options.colour_pass;
 
 	if(this.core.cohesion_check === false){
-		colours.line_colour = 0x00cccc;
-		colours.fill_colour = 0xFF0000; //0x6666ff	
-		colours.line_width = 1.0;
-		colours.fill_alpha = 0.5;
+		colours = options.colour_fail;
 	}
-
-	// if(unit.core.id !== this.core.id || GameScene.selected_unit.length === 0){
-	// 	colours.circle_alpha = 0.4,
-	// 	colours.fill_alpha = 0.35,
-	// 	colours.line_colour = 0x808080; //grey
-	// 	colours.line_alpha = 0.35;
-	// }
-	
-	// if(GameScene.selected_unit.length === 0){
-	// 	colours.fill_alpha = 0.15;
-	// 	colours.line_alpha = 0.15;
-	// }	
-
 
 	this.cohesion_graphic.lineStyle(colours.line_width, colours.line_colour, colours.circle_alpha);
 	this.cohesion_graphic.fillStyle(colours.fill_colour, colours.fill_alpha);
-	// let circle = new Phaser.Geom.Circle(last_pos.x * gameCore.data.tile_size, last_pos.y * gameCore.data.tile_size, this.unit_class.cohesion / 2);
 	let circle = new Phaser.Geom.Circle(options.sprite.x, options.sprite.y, this.unit_class.cohesion / 2);	
 	this.cohesion_graphic.fillCircleShape(circle);
 	this.cohesion_graphic.strokePath();	
-
 }
 
 
@@ -601,7 +570,11 @@ updateElements(sprite){
 		this.drawHealth(sprite);
 		this.drawFightRadius();
 
-		this.drawCohesion({sprite: sprite})
+		this.drawCohesion({
+			sprite: sprite
+			,colour_pass: gameCore.presets.deselectCohesionPass
+			,colour_fail: gameCore.presets.deselectCohesionFail  			
+		})
 	}catch(e){
 
 		let options = {
@@ -819,7 +792,7 @@ drawPath(colours) {
 		
 		//RESET THE DRAW GRAPHICS
 		this.path_graphic.clear();
-		this.cohesion_graphic.clear();
+		// this.cohesion_graphic.clear();
 		
 		if (this.core.path && this.core.path.length > 1){
 			
@@ -886,7 +859,7 @@ drawTarget() {
 			
 			this.resetShoot();
 
-			this.path_graphic.lineStyle(8, 0x00cccc, 0.5);	
+			this.path_graphic.lineStyle(8, gameCore.presets.line, 0.5);	
 			this.path_graphic.beginPath();
 			
 			this.core.targets.forEach((target, i) => {
@@ -927,8 +900,8 @@ drawFightRadius(){
 	try{	
 		this.fight_graphic.clear();
 		let radius_graphic = this.fight_graphic;
-		radius_graphic.lineStyle(2, this.colour, 0.5);
-		radius_graphic.fillStyle(this.colour, 0.05);
+		radius_graphic.lineStyle(2, gameCore.presets.line, 0.5);
+		radius_graphic.fillStyle(gameCore.presets.line, 0.05);
 		let circle = new Phaser.Geom.Circle(this.sprite_ghost.x, this.sprite_ghost.y, (this.melee_class[this.core.selected_melee].range));
 		radius_graphic.fillCircleShape(circle).setDepth(this.depth_fight_radius);
 
@@ -1003,7 +976,7 @@ drawFightTarget() {
 			
 			this.resetShoot();
 
-			this.path_graphic.lineStyle(8, 0x00cccc, 0.5);	
+			this.path_graphic.lineStyle(8, gameCore.presets.line, 0.5);	
 			this.path_graphic.beginPath();
 			
 			this.core.fight_targets.forEach((target, i) => {

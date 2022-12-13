@@ -287,11 +287,55 @@ clientSocketHandler.moveMarker = (options) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 
+clientSocketHandler.resetSelection = (options) => {
+
+
+    try{
+
+        switch(gameCore.data.mode){
+            case "move":
+            case "charge":                        
+                //RESET PATHS
+                gameCore.assets.units.forEach((unit) => {
+                    if(unit.core.player == gameCore.data.player){
+                        if(unit.core.id == options.data.selected_unit_id){
+                            unit.drawPath(gameCore.presets.selectMove)
+
+                            unit.drawCohesion({
+                                sprite: unit.sprite_ghost
+                                ,colour_pass: gameCore.presets.selectCohesionPass
+                                ,colour_fail: gameCore.presets.selectCohesionFail                
+                            })                              
+                        }else{
+                            unit.drawPath(gameCore.presets.deselectMove)      
+                            
+                            unit.drawCohesion({
+                                sprite: unit.sprite_ghost
+                                ,colour_pass: gameCore.presets.deselectCohesionPass
+                                ,colour_fail: gameCore.presets.deselectCohesionFail                
+                            })                              
+                        }
+                    }
+                })                
+            break;      
+        }        
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "resetSelection",
+            "e": e
+        }
+        errorHandler.log(options)
+    }        
+}
+
 clientSocketHandler.resetAll = (options) => {
 
 
     try{
-        console.log("RESET ALL")
+        // console.log("RESET ALL")
         gameCore.assets.units.forEach((unit) => {
             if (unit.core.alive){
                 drawPath(
@@ -390,23 +434,27 @@ const drawPath = (id, options) => {
     let unit = gameCore.assets.units[id]
     unit.core.path = options.data.path
 
-    let colours = {
-        line_colour: 0x00cccc,
-        fill_colour: 0x2ECC40,
-        line_alpha: 0.75,
-        circle_alpha: 0.15,
-        fill_alpha: 0.15,
-        width: 5
-    }
-
-    unit.drawPath(colours)
+    unit.drawPath(options.colours)
 
     if(options.data.squad_cohesion_info){
 
         options.data.squad_cohesion_info.forEach((c_unit) => {
             let unit = gameCore.assets.units[c_unit.id];
             gameCore.assets.units[c_unit.id].core.cohesion_check = c_unit.cohesion_check;
-            unit.drawCohesion({sprite: unit.sprite_ghost})    
+
+            if(id == c_unit.id){
+                unit.drawCohesion({
+                    sprite: unit.sprite_ghost
+                    ,colour_pass: gameCore.presets.selectCohesionPass
+                    ,colour_fail: gameCore.presets.selectCohesionFail                
+                })    
+            }else{
+                unit.drawCohesion({
+                    sprite: unit.sprite_ghost
+                    ,colour_pass: gameCore.presets.deselectCohesionPass
+                    ,colour_fail: gameCore.presets.deselectCohesionFail                
+                })                  
+            }
         })
     }
 }
@@ -415,6 +463,7 @@ clientSocketHandler.setPath = (options) => {
 
     try{
 
+        options.colours = gameCore.presets.selectMove;        
         options.data.ids.forEach((id) => {
             drawPath(id, options)
         })

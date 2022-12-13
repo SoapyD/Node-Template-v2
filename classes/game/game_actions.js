@@ -106,6 +106,14 @@ module.exports = class game_actions {
                         this.getPotentialPaths(select_options)
                     break;      
                 }
+
+                //ADD IN A RESET FOR UNIT SELECTED
+                socketHandler.returnResetSelection({
+                    id: select_options.parent.socket.id
+                    ,data: {
+                        selected_unit_id: select_options.saved_unit.id
+                    }
+                })
             }
 
             //WHEN THERE'S A SELECTED UNIT AND ANOTHER CLICK IS REGISTERED

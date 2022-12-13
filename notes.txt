@@ -2,6 +2,7 @@
 -remove NULL moving and shooting elements so they don't tax the socket emit
 
 -implement a full set of moving states for actions
+
 -add in multiple players on the same game screen which can be used for testing or single screen gaming
 
 -BUG -Right click in movement isn't resetting cohesion
@@ -12,7 +13,6 @@ actions
 ----------------------------
 
 MOVEMENT
--Make the selected unit stand out in terms of cohesion brightness
 -check to see if a unit is leaving combat and check and apply damage once it's finished moving
 
 FIGHTING
@@ -55,6 +55,12 @@ SPECIAL RULES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+MOVEMENT
+    -DONE -Make a selected unit's path stand out once it's been updated
+    -DONE -Highlight movement path when a unit is selected
+    -DONE -Make the selected unit stand out in terms of cohesion brightness
+
 
 -DONE -BUG -Collision check works only sometimes
     -This issue was down to the path adjustment in game_collisions, it was actually making multiple adjustments to the last place 

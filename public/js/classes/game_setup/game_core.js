@@ -3,6 +3,8 @@ const game_core = class {
 
         this.config = {}
 
+        this.presets = {}
+
         this.assets = {
             btn_sprite: [],
             units: [],
@@ -32,6 +34,7 @@ const game_core = class {
 
         this.setConfig();
         this.setScenes();
+        this.setPresets();
 
         this.live_tiles = [];
         this.temp_sprites = [];
@@ -71,7 +74,70 @@ const game_core = class {
         }       
     }
 
+    setPresets = () => {
+
+        this.presets.line = 0x00cccc
+
+        this.presets.deselectMove = {
+            line_colour: this.presets.line,
+            fill_colour: 0x2ECC40,
+            line_alpha: 0.5,
+            circle_alpha: 0.15,
+            fill_alpha: 0.15,
+            width: 3
+        }
+        
+        this.presets.selectMove = {
+            line_colour: this.presets.line,
+            fill_colour: 0x2ECC40,
+            line_alpha: 0.75,
+            circle_alpha: 0.15,
+            fill_alpha: 0.15,
+            width: 5
+        }        
+
+        this.presets.selectCohesionPass = {
+            line_colour: 0x2ECC40,
+            fill_colour: 0x2ECC40,
+            line_alpha: 0.75,
+            circle_alpha: 0.75,
+            fill_alpha: 0.75,
+            width: 5,
+            line_width: 5            
+        }
+
+        this.presets.selectCohesionFail = {
+            line_colour: 0xFF0000,
+            fill_colour: 0xFF0000,
+            line_alpha: 0.75,
+            circle_alpha: 0.75,
+            fill_alpha: 0.5,
+            width: 5,
+            line_width: 5
+        }        
+
+        this.presets.deselectCohesionPass = {
+            line_colour: 0x2ECC40,
+            fill_colour: 0x2ECC40,
+            line_alpha: 0.75,
+            circle_alpha: 0.75,
+            fill_alpha: 0.15,
+            width: 5,
+            line_width: 1            
+        }
+
+        this.presets.deselectCohesionFail = {
+            line_colour: 0xFF0000,
+            fill_colour: 0xFF0000,
+            line_alpha: 0.75,
+            circle_alpha: 0.75,
+            fill_alpha: 0.15,
+            width: 5,
+            line_width: 1
+        }                
+    }
     
+
     getSideColour = (side) => {
         let colour = {};
         colour.colour = 0xFFFFFF;

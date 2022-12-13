@@ -433,6 +433,27 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
+    returnResetSelection = (options) => {
+        try{
+            let return_options =  {
+                type: "source",
+                id: options.id,                
+                functionGroup: "core",
+                function: "resetSelection",
+                data: options.data
+            }
+
+            this.sendMessage(return_options)        
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "returnResetAll",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	
+    }
     returnResetAll = (options) => {
         try{
             let return_options =  {
