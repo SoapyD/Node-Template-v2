@@ -85,10 +85,10 @@ clientSocketHandler.startGameRoom = () => {
     
             clientRoomHandler.core.users.forEach((user) => {
     
-                options.data.selected_forces.push({
-                    user: user
-                    ,army: "Test"
-                })
+                options.data.selected_forces.push(
+                    {user: user, army: "Test"}
+                    // ,{user: user, army: "Test"}
+                )
             })
     
     
