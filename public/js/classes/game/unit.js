@@ -609,20 +609,24 @@ drawInfo(sprite)
 		let string = ""
 		switch(gameCore.data.mode){
 			case "shoot":
-				string = this.core.targets.length + "/" + this.gun_class[this.core.selected_gun].max_targets
+				if(this.core.targets.length > 0){
+					string = this.core.targets.length + "/" + this.gun_class[this.core.selected_gun].max_targets
+				}
 				break;
 			case "fight":
-				string = this.core.fight_targets.length + "/" + this.melee_class[this.core.selected_melee].max_targets
+				if(this.core.targets.fight_targets > 0){
+					string = this.core.fight_targets.length + "/" + this.melee_class[this.core.selected_melee].max_targets
+				}
 				break;				
 		}
 
-		if(string !== ""){
+		this.text.setText(string);
+		this.text_graphic.clear();
 
-			this.text.setText(string);
+		if(string !== ""){
 			this.text.x = sprite.x - this.text.width + (this.sprite.displayWidth / 2)
 			this.text.y = sprite.y - this.text.height + (this.sprite.displayHeight / 2)
 
-			this.text_graphic.clear();
 			this.text_graphic.fillStyle(0xFFFFFF).setDepth(this.depth_text_box);
 			this.text_graphic.fillRect(this.text.x, this.text.y, this.text.width, this.text.height);
 		}
@@ -882,6 +886,7 @@ drawTarget() {
 			})
 
 			this.path_graphic.strokePath();		
+			this.updateElements(this.sprite_ghost)
 		}
 	}catch(e){
 

@@ -13,27 +13,24 @@ actions
 ----------------------------
 
 MOVEMENT
--check to see if a unit is leaving combat and check and apply damage once it's finished moving
+    -check to see if a unit is leaving combat and check and apply damage once it's finished moving
 
 FIGHTING
--Need to get the drawing of damage properly working
--apply unit "in combat" check
--apply opportunity attack is combat is left
-
-SHOOTING
--targets set e.g. 1/2 graphic, only generates after the targets are cleared
+    -Need to get the drawing of damage properly working
+    -apply unit "in combat" check
+    -apply opportunity attack is combat is left
 
 
 SPECIAL RULES
--regen - 20% chance of the unit regenerating any lost wounds suffered
--poison
-    -DONE -Need to apply poison to units hit by it during shooting
-    -Need to check for status, apply damage and tick down health of effect
+    -regen - 20% chance of the unit regenerating any lost wounds suffered
+    -poison
+        -DONE -Need to apply poison to units hit by it during shooting
+        -Need to check for status, apply damage and tick down health of effect
 
--swift - unit can charge even if they've shot their weapon
--sword dance - unit can leave combat without suffering opportunity attacks from enemies
--barrage - you may fire a shot with a weapon indirectly
--berserker - unit can double the number of targets from their melee weapon the turn they move into combat
+    -swift - unit can charge even if they've shot their weapon
+    -sword dance - unit can leave combat without suffering opportunity attacks from enemies
+    -barrage - you may fire a shot with a weapon indirectly
+    -berserker - unit can double the number of targets from their melee weapon the turn they move into combat
 
 
 
@@ -55,6 +52,9 @@ SPECIAL RULES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+SHOOTING
+    -DONE -targets set e.g. 1/2 graphic, only generates after the targets are cleared
 
 MOVEMENT
     -DONE -Make a selected unit's path stand out once it's been updated
