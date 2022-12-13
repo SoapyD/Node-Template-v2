@@ -6,7 +6,7 @@
 -add in multiple players on the same game screen which can be used for testing or single screen gaming
 
 -BUG -Right click in movement isn't resetting cohesion
-
+-BUG -Both players (not on the same side I think), have to ready up before a turn will play
 
 
 actions
