@@ -204,6 +204,7 @@ clientSocketHandler.saveGame = () => {
 
 clientSocketHandler.setMode = (options) => {
     try{
+        gameCore.resetAll();
         gameCore.data.mode = options.data.mode;
 
         if(GameUIScene.mode_button){
@@ -336,23 +337,26 @@ clientSocketHandler.resetAll = (options) => {
 
     try{
         // console.log("RESET ALL")
-        gameCore.assets.units.forEach((unit) => {
-            if (unit.core.alive){
-                drawPath(
-                    unit.core.id
-                    ,{ data:
-                        {
-                            path: []
-                        }
-                    }
-                )
+        // gameCore.assets.units.forEach((unit) => {
+        //     if (unit.core.alive){
+        //         drawPath(
+        //             unit.core.id
+        //             ,{ data:
+        //                 {
+        //                     path: []
+        //                 }
+        //             }
+        //         )
 
-                unit.core.targets = [];
-                unit.drawTarget();
-                unit.core.fight_targets = [];
-                unit.drawFightTarget();
-            }
-        })
+        //         unit.core.targets = [];
+        //         unit.drawTarget();
+        //         unit.core.fight_targets = [];
+        //         unit.drawFightTarget();
+        //     }
+        // })
+
+        // gameCore.resetTempSprites();
+        gameCore.resetAll()
 
     }catch(e){
 

@@ -206,6 +206,29 @@ const game_core = class {
     }
 
 
+    resetAll = () => {
+        this.assets.units.forEach((unit) => {
+            if (unit.core.alive){
+                drawPath(
+                    unit.core.id
+                    ,{ data:
+                        {
+                            path: []
+                        }
+                    }
+                )
+
+                unit.core.targets = [];
+                unit.drawTarget();
+                unit.core.fight_targets = [];
+                unit.drawFightTarget();
+            }
+        })
+
+        this.resetTempSprites();        
+    }
+
+
     // ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████ 
     // ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██      
     // █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████ 

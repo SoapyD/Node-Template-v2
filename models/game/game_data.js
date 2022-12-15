@@ -9,6 +9,7 @@ const gameSchema = new mongoose.Schema({
 
 	,mode: String
 	,game_state: {type: Number, default: 0}
+	,current_side: {type: Number, default: 0}	
 
 	,forces: [{
 		side: {type: Number, default: -1}
@@ -105,7 +106,14 @@ const gameSchema = new mongoose.Schema({
 		}]		
 
 
-		,special_rules: [String]
+		//SAVED AS A STRING SO THEY CAN BE EASILY SEARCHED INSTEAD OF CONVERTING AN OBJECT TO JSON STRING
+		// ,special_rules: [String]
+		,special_rules:
+		[{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "SpecialRule"
+		}]	
+
 
 		,status_effects: [{
 			name: String

@@ -116,9 +116,16 @@ const mongoose_db_handler = class {
                         },
                         {path: 'melee_class', model:'Melee'},
                         {path: 'armour_class', model:'Armour'},
+                        {path: 'special_rules',model: "SpecialRule"},      
+                        // {
+                        //     path: "special_rules",                 
+                        //     populate: 
+                        //     [
+                        //         {model: 'SpecialRule'},
+                        //     ]
+                        // }                                      
                     ]                     
                 })
-                
                 break;
 
             case 'Faction':

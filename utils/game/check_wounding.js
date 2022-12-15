@@ -1,3 +1,7 @@
+
+
+const functions = require("../functions");
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
 //  #####  #     # #######  #####  #    #       #     # ####### #     # #     # ######  ### #     #  #####  
@@ -32,10 +36,11 @@ module.exports = (options) => {
         // if(options.barrier_effects.includes("blunt") && options.gamedata.mode === 'shoot'){
         //     random_roll -= 4;
         // }
-        if(options.attacker.special_rules.includes("sniper") && options.gamedata.mode === 'shoot'){
+
+        if(functions.checkArray(options.attacker.special_rules,'name','sniper') && options.gamedata.mode === 'shoot'){
             random_roll += 4;
         }  
-        if(options.attacker.special_rules.includes("whirling dervish") && options.gamedata.mode === 'fight'){
+        if(functions.checkArray(options.attacker.special_rules,'name','whirling dervish') && options.gamedata.mode === 'fight'){
             random_roll += 4;
         }                    
 
@@ -89,7 +94,7 @@ module.exports = (options) => {
         
         if(target){
             if(target.alive === true){
-
+                // console.log('target_id:',target.id)
                 target.health -= options.damage;
                 if(target.health <= 0){
                     target.alive = false;

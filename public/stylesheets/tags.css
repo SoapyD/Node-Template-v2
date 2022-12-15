@@ -28,9 +28,12 @@ th,
 td {
     border: 1px solid #333;
 	padding: 5px;
+	color: white;
 }
 
-
+p {
+	color: white;
+}
 
 input[type="number"],
 input[type="text"]{

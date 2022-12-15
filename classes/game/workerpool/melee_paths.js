@@ -112,7 +112,7 @@ runProcess = async(workerData) => {
     
     return { 
         process: {
-            id: options.id,
+            id: workerData.id,
             game_data_id: game_data.id
         }    
     }

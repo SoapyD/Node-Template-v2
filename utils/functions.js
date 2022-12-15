@@ -42,3 +42,15 @@ exports.distanceBetweenPoints = (startPos, endPos) => {
     let distY = startPos.y-endPos.y;
     return Math.sqrt( (distX*distX) + (distY*distY) );    
 }
+
+exports.checkArray = (array, key, search_term) => {
+
+    let check = false
+    array.forEach((element) => {
+        if(element[key] == search_term){
+            check = true;
+        }
+    })
+    return check;
+}
+

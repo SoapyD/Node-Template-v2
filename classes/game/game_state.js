@@ -76,7 +76,7 @@ module.exports = class game_state {
                 //     game_data = game_data[0];
                     let all_ready = true
                     options.game_data.players.forEach((player) => {
-                        if(player.ready === false){
+                        if(player.ready === false && player.side == options.game_data.current_side){
                             all_ready = false;
                         }
                     })

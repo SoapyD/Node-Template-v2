@@ -381,7 +381,8 @@ module.exports = class game_actions {
                 gun = gun[0];
 
                 let max_targets = gun.max_targets
-                if(options.saved_unit.special_rules.includes("firing drills") && options.saved_unit.moved === false){
+
+                if(utils.functions.checkArray(options.saved_unit.special_rules,'name','firing drills') && options.saved_unit.moved === false){
                     max_targets = gun.max_targets * 2;
                 }
 
@@ -413,7 +414,8 @@ module.exports = class game_actions {
                         }
             
                         //break the loop if this isn't an acceptable tile
-                        if(!options.acceptable_tiles.includes(cell)){
+                        //and if the weapon isn't a barrage weapon
+                        if(!options.acceptable_tiles.includes(cell) && !utils.functions.checkArray(options.saved_unit.special_rules,'name','barrage')){
                             skip = true;
                         }
     
@@ -444,7 +446,7 @@ module.exports = class game_actions {
                             })
                         if(unit_search.length > 0){
                             let unit = unit_search[0]
-                            if(unit.id !== options.saved_unit.id){ // && unit.side !== options.saved_unit.side){
+                            if(unit.id !== options.saved_unit.id && unit.side !== options.saved_unit.side){
                                 // skip = true;
                                 if(!JSON.stringify(potential_targets).includes('"id":'+unit.id)){
                                     potential_targets.push({
@@ -552,7 +554,8 @@ module.exports = class game_actions {
                 melee = melee[0];
 
                 let max_targets = melee.max_targets
-                if(options.saved_unit.special_rules.includes("berserker") && options.saved_unit.is_moving === true){
+                
+                if(utils.functions.checkArray(options.saved_unit.special_rules,'name','berserker') && options.saved_unit.is_moving === true){
                     max_targets = melee.max_targets * 2;
                 }
 

@@ -1,13 +1,14 @@
 
+
 -remove NULL moving and shooting elements so they don't tax the socket emit
-
 -implement a full set of moving states for actions
+-modernize the login and register input fields
+-put special rules on weapons as well as units
+-add in function to advance side so the turn can be passed on
 
--add in multiple players on the same game screen which can be used for testing or single screen gaming
-
+-BUG -Couldn't remove a special ability from the squad list, only replace it
 -BUG -Right click in movement isn't resetting cohesion
--BUG -Both players (not on the same side I think), have to ready up before a turn will play
-
+-BUG -There may be a bug that appropriates damage to the wrong
 
 actions
 ----------------------------
@@ -16,25 +17,23 @@ MOVEMENT
     -check to see if a unit is leaving combat and check and apply damage once it's finished moving
 
 FIGHTING
-    -Need to get the drawing of damage properly working
     -apply unit "in combat" check
     -apply opportunity attack is combat is left
 
-
 SPECIAL RULES
+    -DONE -barrage - you may fire a shot with a weapon indirectly
+    
     -regen - 20% chance of the unit regenerating any lost wounds suffered
     -poison
         -DONE -Need to apply poison to units hit by it during shooting
         -Need to check for status, apply damage and tick down health of effect
+        -BUG -status effect isn't being applied to a unit within the area of a status effect. Needs to run unit.checkStatusEffects
 
     -swift - unit can charge even if they've shot their weapon
     -sword dance - unit can leave combat without suffering opportunity attacks from enemies
-    -barrage - you may fire a shot with a weapon indirectly
     -berserker - unit can double the number of targets from their melee weapon the turn they move into combat
 
 
-
--modernize the login and register input fields
 
 
 
@@ -52,6 +51,18 @@ SPECIAL RULES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -Both players (not on the same side I think), have to ready up before a turn will play
+
+RESET
+    -DONE -Clear live tiles on reset actions
+    -DONE -Make reset all a function in gameCore so it can be run by other functions
+
+-DONE -add in multiple players on the same game screen which can be used for testing or single screen gaming
+-DONE -Fix shooting bug that causes bullet to hit our side
+
+FIGHTING
+    -DONE -Need to get the drawing of damage properly working
 
 SHOOTING
     -DONE -targets set e.g. 1/2 graphic, only generates after the targets are cleared
