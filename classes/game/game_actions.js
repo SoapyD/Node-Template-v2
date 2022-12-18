@@ -18,6 +18,51 @@ module.exports = class game_actions {
 	constructor(options) {	
     }
 
+    changeMode = async(options) => {
+
+        try{        
+            let game_datas = await databaseHandler.findData({
+                model: "GameData"
+                ,search_type: "findOne"
+                ,params: {_id: options.data.id}
+            }, false)
+
+            let game_data = game_datas[0]
+            switch(game_data.mode){
+                case "move":
+                    game_data.mode = 'shoot';
+                    break;
+                case "shoot":
+                    game_data.mode = 'effects';
+                    break;     
+                case "effects":
+                    game_data.mode = 'charge';
+                    break;                         
+                case "charge":
+                    game_data.mode = 'fight';
+                    break;     
+                case "fight":
+                    game_data.mode = 'move';
+                    break; 
+            }
+
+            databaseHandler.updateData(game_data)
+
+            socketHandler.setMode({
+                id: options.id,
+                game_data: game_data
+            })    
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "setMode",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	               
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    

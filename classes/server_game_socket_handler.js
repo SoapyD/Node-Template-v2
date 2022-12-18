@@ -257,34 +257,37 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     changeMode = async(socket, options) => {
 
         try{        
-            let game_datas = await databaseHandler.findData({
-                model: "GameData"
-                ,search_type: "findOne"
-                ,params: {_id: options.data.id}
-            }, false)
 
-            let game_data = game_datas[0]
-            switch(game_data.mode){
-                case "move":
-                    game_data.mode = 'shoot';
-                    break;
-                case "shoot":
-                    game_data.mode = 'charge';
-                    break;     
-                case "charge":
-                    game_data.mode = 'fight';
-                    break;     
-                case "fight":
-                    game_data.mode = 'move';
-                    break; 
-            }
+            actionHandler.changeMode(options)
 
-            databaseHandler.updateData(game_data)
+            // let game_datas = await databaseHandler.findData({
+            //     model: "GameData"
+            //     ,search_type: "findOne"
+            //     ,params: {_id: options.data.id}
+            // }, false)
 
-            this.setMode({
-                id: options.id,
-                game_data: game_data
-            })    
+            // let game_data = game_datas[0]
+            // switch(game_data.mode){
+            //     case "move":
+            //         game_data.mode = 'shoot';
+            //         break;
+            //     case "shoot":
+            //         game_data.mode = 'charge';
+            //         break;     
+            //     case "charge":
+            //         game_data.mode = 'fight';
+            //         break;     
+            //     case "fight":
+            //         game_data.mode = 'move';
+            //         break; 
+            // }
+
+            // databaseHandler.updateData(game_data)
+
+            // this.setMode({
+            //     id: options.id,
+            //     game_data: game_data
+            // })    
         }
         catch(e){
             let options = {
@@ -583,8 +586,10 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             if(options.game_data){
                 let game_data = game_datas[0];
 
+                // let update = {}
+
                 //UPDATE POSITIONS OF UNITS
-                game_data.units.forEach((unit) => {
+                game_data.units.forEach((unit, i) => {
                     if(unit.path){
                         if(unit.path.length > 0){
                             let path_pos = unit.path[unit.path.length - 1]
@@ -592,21 +597,46 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             unit.y = (path_pos.y - unit.sprite_offset) * game_data.tile_size
                             unit.tileX = path_pos.x - unit.sprite_offset
                             unit.tileY = path_pos.y - unit.sprite_offset
+
+                            if(game_data.mode === 'move'){
+                                unit.moved = true;
+                            }
+                            if(game_data.mode === 'charge'){
+                                unit.charged = true;
+                            }
+    
+                            // unit.moved = true;
+                            // game_data["units"].set(i, unit)
+                            // update["units."+i+".moved"] = true;
+                            // let path = unit.path;
+                            // update["units."+i+".path"] = path;
+                            // let save_unit = unit
+                            // update["units."+i] = save_unit; 
+                            
+                            // unit = save_unit
                         }
 
-                        if(game_data.mode === 'move'){
-                            unit.moved = true;
-                        }
-                        if(game_data.mode === 'charge'){
-                            unit.charged = true;
-                        }                        
-                    }
+                    }               
                 })
+
+                // let update_options = 
+                // {
+                //     model: "GameData"
+                //     ,params: [
+                //         {
+                //             filter: {_id: game_data.id}, 
+                //             value: {$set: update}
+                //         }
+                //     ]
+                // }                         
+                // databaseHandler.updateOne(update_options)
+
 
                 //SAVE ANY EFFECTS PASSING THROUGH POSITIONS WILL CAUSE
                 game_data = utils.checkStatusEffects.movePath({game_data: game_data})
     
-                databaseHandler.updateData(game_data)
+                databaseHandler.saveUnits({game_data: game_data})                     
+                // databaseHandler.updateData(game_data)
 
 
                 //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS

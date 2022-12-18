@@ -10,6 +10,12 @@
 -BUG -Right click in movement isn't resetting cohesion
 -BUG -There may be a bug that appropriates damage to the wrong
 
+-BUG -when units data is trying to be saved, it looks like because it's a nested array, they don't save. 
+Figured out a method to loop through units and save their data but need to
+    -check through action process saves and test they working
+    -update those methods if the data doesn't save
+    -figure out an easy way to easily update only units that need updating
+
 actions
 ----------------------------
 
@@ -27,7 +33,7 @@ SPECIAL RULES
     -poison
         -DONE -Need to apply poison to units hit by it during shooting
         -Need to check for status, apply damage and tick down health of effect
-        -BUG -status effect isn't being applied to a unit within the area of a status effect. Needs to run unit.checkStatusEffects
+        -BUG -status effect isn't being applied to a unit within the area of a status effect. Needs to run utils.checkStatusEffects
 
     -swift - unit can charge even if they've shot their weapon
     -sword dance - unit can leave combat without suffering opportunity attacks from enemies

@@ -289,8 +289,45 @@ module.exports = class game_collisions {
           dist <= max_dist
       )
     })     
-
   }
+
+  checkAttackingUnits = (options) => {
+      
+    let start = {
+      x: options.start.x * options.game_data.tile_size ,
+      y: options.start.y * options.game_data.tile_size            
+    }
+    // console.log(start)
+
+    //USE LODASH TO SEARCH FOR ALL UNITS THAT CENTER POSITION IS WITHIN THE BLAST RADIUS
+    return _.filter(options.game_data.units, (unit) => {
+     
+      // return unit.id <= 5;
+      
+      if(options.unit.id != unit.id && options.unit.side != unit.side){
+        
+        let range = this.getUnitTileRange(unit)
+        let unit_mid = range.mid;
+        unit_mid.x *= options.game_data.tile_size;
+        unit_mid.y *= options.game_data.tile_size;      
+  
+        let dist = Math.round(Math.sqrt(Math.pow(start.x - unit_mid.x, 2) + Math.pow(start.y - unit_mid.y, 2)),0)
+        let max_dist = 0 
+        
+        //GET WEAPON DETAILS
+        let melee = unit.melee_class[unit.selected_melee]     
+
+        if(melee){
+            //IF TARGETS AVAILABLE TO SET
+            max_dist = melee.range;
+        }        
+        
+        return dist <= max_dist
+      }
+      
+    })     
+  }
+
 
   gridRayTracing = (start, end) => {
 
