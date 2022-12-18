@@ -248,29 +248,6 @@ const mongoose_db_handler = class {
         })    
     }
 
-    saveUnits = (options) => {
-
-        let update = {}
-
-        options.game_data.units.forEach((unit, i) => {
-            let save_unit = unit
-            update["units."+i] = save_unit; 
-        })
-      
-        let update_options = 
-        {
-            model: "GameData"
-            ,params: [
-                {
-                    filter: {_id: options.game_data.id}, 
-                    value: {$set: update}
-                }
-            ]
-        }                         
-        this.updateOne(update_options)
-
-    }
-
 
     //  #####  ######  #######    #    ####### #######       ######  #######  #####  ####### ######  ######  
     // #     # #     # #         # #      #    #             #     # #       #     # #     # #     # #     # 

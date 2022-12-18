@@ -217,10 +217,10 @@ module.exports = class game_actions {
                     unit.path = [];
                     unit.targets = [];
                     unit.fight_targets = [];
-                    unit.moved = false;
-                    unit.shoot = false;
-                    unit.charged = false;
-                    unit.fight = false;
+                    // unit.moved = false;
+                    // unit.shoot = false;
+                    // unit.charged = false;
+                    // unit.fight = false;
                 })
 
                 databaseHandler.updateData(game_data)

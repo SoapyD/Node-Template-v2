@@ -586,7 +586,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             if(options.game_data){
                 let game_data = game_datas[0];
 
-                // let update = {}
+                // let updated_units = []
+                // let updated_keys = []
 
                 //UPDATE POSITIONS OF UNITS
                 game_data.units.forEach((unit, i) => {
@@ -604,40 +605,16 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             if(game_data.mode === 'charge'){
                                 unit.charged = true;
                             }
-    
-                            // unit.moved = true;
-                            // game_data["units"].set(i, unit)
-                            // update["units."+i+".moved"] = true;
-                            // let path = unit.path;
-                            // update["units."+i+".path"] = path;
-                            // let save_unit = unit
-                            // update["units."+i] = save_unit; 
-                            
-                            // unit = save_unit
                         }
 
                     }               
                 })
 
-                // let update_options = 
-                // {
-                //     model: "GameData"
-                //     ,params: [
-                //         {
-                //             filter: {_id: game_data.id}, 
-                //             value: {$set: update}
-                //         }
-                //     ]
-                // }                         
-                // databaseHandler.updateOne(update_options)
-
 
                 //SAVE ANY EFFECTS PASSING THROUGH POSITIONS WILL CAUSE
                 game_data = utils.checkStatusEffects.movePath({game_data: game_data})
-    
-                databaseHandler.saveUnits({game_data: game_data})                     
-                // databaseHandler.updateData(game_data)
 
+                databaseHandler.updateData(game_data)                               
 
                 //FIND MAXIMUM PATH SIZE, WHICH REPRESENTS THE MAXIMUM OF POS
                 let lengths = _(game_data.units)
@@ -666,8 +643,6 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     let positions = _(options.game_data.units)
                     .map(row => row.path[options.pos])
                     .value()
-                
-                    // console.log(positions)
 
                     let return_options =  {
                         type: "room",
@@ -796,7 +771,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 game_data.units.forEach((unit) => {
                     //SET UNITS THAT HAVE TARGETS AS HAVING SHOT
                     if (unit.targets){
-                        if(unit.targets.count > 0){
+                        if(unit.targets.length > 0){
                             unit.shot = true;
                         }
                     }
@@ -957,7 +932,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 game_data.units.forEach((unit) => {
                     //SET UNITS THAT HAVE TARGETS AS HAVING SHOT
                     if (unit.fight_targets){
-                        if(unit.fight_targets.count > 0){
+                        if(unit.fight_targets.length > 0){
                             unit.fought = true;
                         }
                     }

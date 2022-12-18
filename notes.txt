@@ -10,11 +10,6 @@
 -BUG -Right click in movement isn't resetting cohesion
 -BUG -There may be a bug that appropriates damage to the wrong
 
--BUG -when units data is trying to be saved, it looks like because it's a nested array, they don't save. 
-Figured out a method to loop through units and save their data but need to
-    -check through action process saves and test they working
-    -update those methods if the data doesn't save
-    -figure out an easy way to easily update only units that need updating
 
 actions
 ----------------------------
@@ -57,6 +52,15 @@ SPECIAL RULES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-FIXED -when units data is trying to be saved, it looks like because it's a nested array, they don't save. 
+Figured out a method to loop through units and save their data but need to#
+THIS WASN'T A BUG AFTER ALL. The value weren't seen in the database as they were being reset at the end of the playing action
+    -NOTE -Doesn't happen when setting actions (but before they're appled). The reason for this is that i'm 
+    using the updateone method
+    -check through action process saves and test they working
+    -update those methods if the data doesn't save
+    -figure out an easy way to easily update only units that need updating
 
 -DONE -Both players (not on the same side I think), have to ready up before a turn will play
 
