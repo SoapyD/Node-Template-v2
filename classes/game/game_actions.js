@@ -214,9 +214,9 @@ module.exports = class game_actions {
 
                 //UPDATE POSITIONS OF UNITS
                 game_data.units.forEach((unit) => {
-                    unit.path = [];
-                    unit.targets = [];
-                    unit.fight_targets = [];
+                    // unit.path = [];
+                    // unit.targets = [];
+                    // unit.fight_targets = [];
                     // unit.moved = false;
                     // unit.shoot = false;
                     // unit.charged = false;
@@ -333,6 +333,9 @@ module.exports = class game_actions {
                 //UPDATE UNIT PATH IN TEST GAME_DATA
                 let unit = game_data.units[result.process.ids[0]];
                 unit.path = result.process.path;
+
+                unit.path = utils.checkStatusEffects.checkPath({game_data: game_data, unit: unit})
+
                 let path_pos = unit.path[unit.path.length - 1]
                 unit.x = path_pos.x * game_data.tile_size
                 unit.y = path_pos.y * game_data.tile_size
@@ -348,7 +351,7 @@ module.exports = class game_actions {
 
                 //SAVE THE PATH TO THE UNIT
                 let update = {}
-                update["units."+result.process.ids[0]+".path"] = result.process.path;
+                update["units."+result.process.ids[0]+".path"] = unit.path; // result.process.path;
 
                 //ADD COHESION CHECK
                 let squad_cohesion_info = []

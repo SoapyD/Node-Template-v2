@@ -586,9 +586,6 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             if(options.game_data){
                 let game_data = game_datas[0];
 
-                // let updated_units = []
-                // let updated_keys = []
-
                 //UPDATE POSITIONS OF UNITS
                 game_data.units.forEach((unit, i) => {
                     if(unit.path){
@@ -609,10 +606,6 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
                     }               
                 })
-
-
-                //SAVE ANY EFFECTS PASSING THROUGH POSITIONS WILL CAUSE
-                game_data = utils.checkStatusEffects.movePath({game_data: game_data})
 
                 databaseHandler.updateData(game_data)                               
 

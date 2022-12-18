@@ -86,7 +86,7 @@ exports.checkCombat = (options) => {
         ,unit: unit
     })
 
-    // console.log('path:',i,', units:',blast_units.length)
+    // console.log('path:',i,', units:',clashing_units.length)
     if(clashing_units.length > 0){
         clashing_units.forEach((clash) => {
             unit.path[i].clashing_units.push(clash.id)
@@ -94,6 +94,29 @@ exports.checkCombat = (options) => {
     }
 }
 
+
+exports.checkPath = (options) => {
+
+    //LOOP THROUGH PATH POSITIONS
+    options.unit.path.forEach((pos, i) => {
+
+        let check_options = {
+            game_data: options.game_data
+            ,unit: options.unit
+            ,i: i
+            ,pos: pos
+        }
+
+        exports.checkPosition(check_options)
+        exports.checkCombat(check_options)                    
+
+    })
+
+    return options.unit.path
+}
+
+
+/*
 exports.movePath = (options) => {
     let game_data = options.game_data
     game_data.units.forEach((unit) => {
@@ -120,3 +143,4 @@ exports.movePath = (options) => {
 
     return game_data
 }
+*/
