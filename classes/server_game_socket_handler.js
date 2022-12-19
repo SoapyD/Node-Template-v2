@@ -590,11 +590,11 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 game_data.units.forEach((unit, i) => {
                     if(unit.path){
                         if(unit.path.length > 0){
-                            let path_pos = unit.path[unit.path.length - 1]
-                            unit.x = (path_pos.x - unit.sprite_offset) * game_data.tile_size
-                            unit.y = (path_pos.y - unit.sprite_offset) * game_data.tile_size
-                            unit.tileX = path_pos.x - unit.sprite_offset
-                            unit.tileY = path_pos.y - unit.sprite_offset
+                            let last_path_pos = unit.path[unit.path.length - 1]
+                            unit.x = (last_path_pos.x - unit.sprite_offset) * game_data.tile_size
+                            unit.y = (last_path_pos.y - unit.sprite_offset) * game_data.tile_size
+                            unit.tileX = last_path_pos.x - unit.sprite_offset
+                            unit.tileY = last_path_pos.y - unit.sprite_offset
 
                             if(game_data.mode === 'move'){
                                 unit.moved = true;
@@ -602,8 +602,45 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             if(game_data.mode === 'charge'){
                                 unit.charged = true;
                             }
-                        }
 
+                            //CHECK THROUGH PATH AND FIGURE OPPORTUNITY ATTACKS / IN COMBAT WITH
+                            if(unit.in_combat_with.length > 0){
+                                unit.path.forEach((pos) => {
+                                    let new_in_combat = []
+                                    unit.in_combat_with.forEach((unit_id) => {
+                                        //CHECK TO SEE IF THAT UNIT IS STILL CLASHING,
+                                        //IF NOT, RUN A WOUNDING ATTACK,
+                                        //THEN REMOVE THAT UNIT FROM THE COMBAT CHECK
+                                        if(!pos.clashing_units.includes(unit_id)){
+                                            let check_unit = game_data.units[unit_id];
+                                            //RUN WOUNDING
+                                        }else{
+                                            new_in_combat.push(unit_id)
+                                        }
+                                    })
+
+                                    unit.in_combat_with = new_in_combat
+                                })
+                            }
+
+                            //RESET IN_COMBAT_WITH
+                            unit.in_combat_with.length = [];
+
+                            //CHECK IF LAST STEP HAD CLASHING UNITS, IF SO, SET IN_COMBAT_WITH
+                            if(last_path_pos.clashing_units.length > 0){
+                                unit.in_combat_with = last_path_pos.clashing_units;
+                                unit.in_combat = true
+
+                                //SET IN_COMBAT FOR THE CLASHING UNITS
+                                unit.in_combat_with.forEach((unit_id) => {
+                                    let check_unit = game_data.units[unit_id];
+                                    if(!check_unit.in_combat_with.includes(unit.id)){
+                                        check_unit.in_combat_with.push(unit.id)
+                                        check_unit.in_combat = true
+                                    }
+                                })
+                            }
+                        }
                     }               
                 })
 
