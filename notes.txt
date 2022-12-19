@@ -1,14 +1,18 @@
 
 
 -remove NULL moving and shooting elements so they don't tax the socket emit
--implement a full set of moving states for actions
+
+-implement a full set of moving states for actions, by which I mean, a switch that'll advance 
+the current mode once all players have readied up
+
 -modernize the login and register input fields
+
 -put special rules on weapons as well as units
+
 -add in function to advance side so the turn can be passed on
 
 -BUG -Couldn't remove a special ability from the squad list, only replace it
--BUG -Right click in movement isn't resetting cohesion
--BUG -There may be a bug that appropriates damage to the wrong
+-BUG -There may be a bug that appropriates damage to the wrong unit
 
 
 actions
@@ -19,7 +23,7 @@ MOVEMENT
 
 FIGHTING
     -apply unit "in combat" check
-    -apply opportunity attack is combat is left
+    -apply opportunity attack if combat is left
 
 SPECIAL RULES
     -DONE -barrage - you may fire a shot with a weapon indirectly
@@ -52,6 +56,8 @@ SPECIAL RULES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -Right click in movement isn't resetting cohesion
 
 -FIXED -when units data is trying to be saved, it looks like because it's a nested array, they don't save. 
 Figured out a method to loop through units and save their data but need to#

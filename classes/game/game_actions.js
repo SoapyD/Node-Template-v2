@@ -715,6 +715,7 @@ module.exports = class game_actions {
             let update = {}
             let new_targets = []
             let reset_move_ids = []
+            let squad_cohesion_info = []            
 
             switch(options.game_data.mode){
                 case "move":
@@ -722,7 +723,7 @@ module.exports = class game_actions {
                     //REMOVE PATH FROM SELECTED UNIT
                     // update["units."+unit.id+".path"] = []; 
                     //CHECK TO SEE IF UNIT RESET CAUSES ANY OTHER UNITS TO RESET
-                    let unitCheck = (unit) => {
+                    let unitCheck = (unit, game_data) => {
                         let check_array = []
                         let update = {};
                         unit.path = []; //RESET PATH SO UNIT tileX POS IS USED
@@ -736,6 +737,23 @@ module.exports = class game_actions {
                                     y: check_unit.tileY,                                
                                 }
                                 update["units."+check_unit.id+".path"] = [];
+
+                                //CHECK COHERANCY FOR THE UNIT
+                                let squad = utils.cohesionCheck({
+                                    game_data: game_data,
+                                    unit: check_unit
+                                });
+
+                                //ADD COHESION CHECK
+                                // let squad_cohesion_info = []
+                                squad.forEach((squad_unit) => {
+                                    update["units."+squad_unit.id+".cohesion_check"] = squad_unit.cohesion_check;
+                                    squad_cohesion_info.push({
+                                        id: squad_unit.id
+                                        ,cohesion_check: squad_unit.cohesion_check
+                                    })        
+                                })
+
                                 reset_move_ids.push(check_unit.id)
 
                                 let clashed_units = _.filter(options.game_data.units, (unit) => {
@@ -766,7 +784,7 @@ module.exports = class game_actions {
                         }
                     }
 
-                    update = unitCheck(unit)
+                    update = unitCheck(unit, options.game_data)
                     // console.log(update)
 
                 break; 
@@ -813,6 +831,7 @@ module.exports = class game_actions {
                             ids: reset_move_ids,
                             path: []
                         }
+                        ,squad_cohesion_info: squad_cohesion_info
                     })
                 break; 
                 case "shoot":
