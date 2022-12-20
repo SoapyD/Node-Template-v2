@@ -472,6 +472,10 @@ clientSocketHandler.setPath = (options) => {
             drawPath(id, options)
         })
 
+        if(options.data.alert_message){
+            GameScene.showMessage(options.data.alert_message)
+        }
+
     }catch(e){
 
         let options = {
@@ -493,6 +497,10 @@ clientSocketHandler.setPotentialPaths = (options) => {
         // let unit = gameCore.assets.units[options.data.id]
         gameCore.live_tiles = options.data.live_tiles
         gameCore.drawLiveTiles()
+
+        if(options.data.alert_message){
+            GameScene.showMessage(options.data.alert_message)
+        }
 
     }catch(e){
 

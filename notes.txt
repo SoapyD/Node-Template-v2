@@ -18,18 +18,20 @@ the current mode once all players have readied up
 actions
 ----------------------------
 
+FIGHTING
+-Right click on fighting is deletion all melee actions lined up, instead of just the last one
+
+
 SPECIAL RULES
-    -DONE -barrage - you may fire a shot with a weapon indirectly
-    
+
     -regen - 20% chance of the unit regenerating any lost wounds suffered
     -poison
         -DONE -Need to apply poison to units hit by it during shooting
         -Need to check for status, apply damage and tick down health of effect
         -BUG -status effect isn't being applied to a unit within the area of a status effect. Needs to run utils.checkStatusEffects
 
-    -swift - unit can charge even if they've shot their weapon
-    -sword dance - unit can leave combat without suffering opportunity attacks from enemies
-    -berserker - unit can double the number of targets from their melee weapon the turn they move into combat
+
+
 
 
 
@@ -49,6 +51,12 @@ SPECIAL RULES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+SPECIAL RULES
+    -DONE -barrage - you may fire a shot with a weapon indirectly
+    -DONE -sword dance - unit can leave combat without suffering opportunity attacks from enemies
+    -DONE -swift - unit can charge even if they've shot their weapon
+    -DONE -berserker - unit can double the number of targets from their melee weapon the turn they move into combat
 
 MOVEMENT
     -DONE -check to see if a unit is leaving combat and check and apply damage once it's finished moving

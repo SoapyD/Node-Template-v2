@@ -272,18 +272,31 @@ module.exports = class game_actions {
                 }
             }
 
-            // run registered functions on the worker via exec
-            pool_potentialpath.exec('runProcess', [worker_options])
-                .then(function (result) {
-                    // console.log('Result: ' + result); // outputs 55
-                    socketHandler.returnPotentialPaths(result)
+            if(options.saved_unit.shot == false || utils.functions.checkArray(options.saved_unit.special_rules,'name','swift')){            
+                // run registered functions on the worker via exec
+                pool_potentialpath.exec('runProcess', [worker_options])
+                    .then(function (result) {
+    
+                        // console.log('Result: ' + result); // outputs 55
+                        socketHandler.returnPotentialPaths(result)
+                    })
+                    .catch(function (err) {
+                    console.error(err);
+                    })
+                    .then(function () {
+                    pool.terminate(); // terminate all workers when done
+                    });
+            }else{
+                socketHandler.returnPotentialPaths({
+                    id: options.parent.socket.id
+                    ,process: {
+                        id: options.saved_unit.id
+                        ,paths: []
+                    }
+                    ,alert_message: "Unit can't charge after shooting"
                 })
-                .catch(function (err) {
-                console.error(err);
-                })
-                .then(function () {
-                pool.terminate(); // terminate all workers when done
-                });
+            }
+
 
         }catch(e){
 
@@ -332,15 +345,23 @@ module.exports = class game_actions {
                 let game_data = game_datas[0]
                 //UPDATE UNIT PATH IN TEST GAME_DATA
                 let unit = game_data.units[result.process.ids[0]];
-                unit.path = result.process.path;
 
+                let alert_message = ''
+                if(unit.shot == true && !utils.functions.checkArray(options.saved_unit.special_rules,'name','swift')){
+                    result.process.path = [];
+                    alert_message = "Unit can't charge after shooting";
+                }
+
+                unit.path = result.process.path;
                 unit.path = utils.checkStatusEffects.checkPath({game_data: game_data, unit: unit})
 
-                let path_pos = unit.path[unit.path.length - 1]
-                unit.x = path_pos.x * game_data.tile_size
-                unit.y = path_pos.y * game_data.tile_size
-                unit.tileX = path_pos.x - unit.sprite_offset
-                unit.tileY = path_pos.y - unit.sprite_offset
+                if(unit.path.length > 0){
+                    let path_pos = unit.path[unit.path.length - 1]
+                    unit.x = path_pos.x * game_data.tile_size
+                    unit.y = path_pos.y * game_data.tile_size
+                    unit.tileX = path_pos.x - unit.sprite_offset
+                    unit.tileY = path_pos.y - unit.sprite_offset
+                }
 
                 //CHECK COHERANCY FOR THE UNIT
                 let squad = utils.cohesionCheck({
@@ -378,6 +399,9 @@ module.exports = class game_actions {
                 
                 options = result
                 options.squad_cohesion_info = squad_cohesion_info
+                if(alert_message != ''){
+                    options.alert_message = alert_message;
+                }
 
                 socketHandler.returnPath(options)
             })
@@ -603,7 +627,7 @@ module.exports = class game_actions {
 
                 let max_targets = melee.max_targets
                 
-                if(utils.functions.checkArray(options.saved_unit.special_rules,'name','berserker') && options.saved_unit.is_moving === true){
+                if(utils.functions.checkArray(options.saved_unit.special_rules,'name','berserker') && options.saved_unit.moved === true){
                     max_targets = melee.max_targets * 2;
                 }
 

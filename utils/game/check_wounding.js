@@ -18,7 +18,7 @@ module.exports = (options) => {
     try{
         let random_roll = Math.floor(Math.random() * 20)+1
         let natural_role = random_roll
-        random_roll = 20
+        // random_roll = 20
 
         let min_roll_needed = options.defender.armour_class.value - (options.ap + options.bonus);
         if(options.hit_override !== undefined){

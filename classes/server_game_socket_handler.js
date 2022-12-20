@@ -519,6 +519,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     live_tiles: options.process.paths,
                 }
             }
+            if (options.alert_message){
+                return_options.data.alert_message = options.alert_message;
+            }
             this.sendMessage(return_options)     
         }
         catch(e){
@@ -544,6 +547,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     path: options.process.path,
                     squad_cohesion_info: options.squad_cohesion_info
                 }
+            }
+            if (options.alert_message){
+                return_options.data.alert_message = options.alert_message;
             }
 
             this.sendMessage(return_options)        
@@ -603,6 +609,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                 unit.charged = true;
                             }
 
+                            unit.is_moving = true;
+
                             //CHECK THROUGH PATH AND FIGURE OPPORTUNITY ATTACKS / IN COMBAT WITH
                             if(unit.in_combat_with.length > 0){
                                 unit.path.forEach((pos) => {
@@ -615,16 +623,18 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                             let attacker = game_data.units[unit_id];
                                             let attacker_melee = attacker.melee_class[attacker.selected_melee];
                                             //RUN WOUNDING
-
-                                            let damage_applied = utils.checkWounding({
-                                                gamedata: game_data,
-                                                attacker: attacker,
-                                                defender: unit,
-                                                damage: attacker_melee.damage,
-                                                ap: attacker_melee.ap,
-                                                bonus: attacker.unit_class.fighting_bonus
-                                            })
-                                            pos.damage += damage_applied;
+                                            
+                                            if(!utils.functions.checkArray(unit.special_rules,'name','sword dance')){
+                                                let damage_applied = utils.checkWounding({
+                                                    gamedata: game_data,
+                                                    attacker: attacker,
+                                                    defender: unit,
+                                                    damage: attacker_melee.damage,
+                                                    ap: attacker_melee.ap,
+                                                    bonus: attacker.unit_class.fighting_bonus
+                                                })
+                                                pos.damage += damage_applied;
+                                            }
 
                                         }else{
                                             new_in_combat.push(unit_id)
