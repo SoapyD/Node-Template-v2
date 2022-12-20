@@ -612,8 +612,20 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                         //IF NOT, RUN A WOUNDING ATTACK,
                                         //THEN REMOVE THAT UNIT FROM THE COMBAT CHECK
                                         if(!pos.clashing_units.includes(unit_id)){
-                                            let check_unit = game_data.units[unit_id];
+                                            let attacker = game_data.units[unit_id];
+                                            let attacker_melee = attacker.melee_class[attacker.selected_melee];
                                             //RUN WOUNDING
+
+                                            let damage_applied = utils.checkWounding({
+                                                gamedata: game_data,
+                                                attacker: attacker,
+                                                defender: unit,
+                                                damage: attacker_melee.damage,
+                                                ap: attacker_melee.ap,
+                                                bonus: attacker.unit_class.fighting_bonus
+                                            })
+                                            pos.damage += damage_applied;
+
                                         }else{
                                             new_in_combat.push(unit_id)
                                         }

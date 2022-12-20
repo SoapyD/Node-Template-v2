@@ -577,6 +577,10 @@ clientSocketHandler.moveUnit = (options) => {
                 let unit = gameCore.assets.units[i]
                 let tween = GameScene.scene.tweens.add(getTweenData(unit, position))
                 
+                if(position.damage > 0){
+                    unit.wound({damage:position.damage})                    
+                }
+
                 //UPDATE PLAYER ELEMENTS AS IT MOVES
                 tween.on('update',(target) => {
                     let unit = target.targets[0].parent

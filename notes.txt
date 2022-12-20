@@ -18,13 +18,6 @@ the current mode once all players have readied up
 actions
 ----------------------------
 
-MOVEMENT
-    -check to see if a unit is leaving combat and check and apply damage once it's finished moving
-
-FIGHTING
-    -apply unit "in combat" check
-    -apply opportunity attack if combat is left
-
 SPECIAL RULES
     -DONE -barrage - you may fire a shot with a weapon indirectly
     
@@ -56,6 +49,13 @@ SPECIAL RULES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+MOVEMENT
+    -DONE -check to see if a unit is leaving combat and check and apply damage once it's finished moving
+
+FIGHTING
+    -DONE -apply unit "in combat" check
+    -DONE -apply opportunity attack if combat is left
 
 -DONE -Right click in movement isn't resetting cohesion
 
