@@ -61,9 +61,9 @@ const game_squad_setup = class {
 						in_combat: false,
 						in_combat_with: [],
 						
-						poison: false,
-						poison_caused_by: -1,
-						poison_timer: 0,
+						// poison: false,
+						// poison_caused_by: -1,
+						// poison_timer: 0,
 		
 						moved: false,
 						charged: false,		

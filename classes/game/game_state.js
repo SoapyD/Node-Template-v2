@@ -1,4 +1,4 @@
-const setupWorkers = require('./workers')
+// const setupWorkers = require('./workers')
 
 const workerpool = require('workerpool');
 const pool_bulletpaths = workerpool.pool(__dirname + '/workerpool/bullet_paths.js');

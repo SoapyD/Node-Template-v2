@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const utils = require("../../utils");
 // const unit = require('../../models/game/unit');
-const setupWorkers = require('./workers');
+// const setupWorkers = require('./workers');
 const collisions = require('./collisions');
 // const game_data = require('../../models/game/game_data');
 
@@ -226,7 +226,7 @@ module.exports = class game_actions {
                 databaseHandler.updateData(game_data)
 
                 //SEND RESET TO PLAYERS
-                socketHandler.returnResetAll(options)
+                // socketHandler.returnResetAll(options)
             }
         }
         catch(e){

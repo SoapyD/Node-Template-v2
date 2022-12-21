@@ -94,6 +94,13 @@ const unitSchema = new mongoose.Schema({
 		,hit_time: Number
 		,target_id: {type: Number, default: -1}
 		,damage: {type: Number, default: 0}
+		,effects: [String]
+		//POTENTIAL TARGETS NEEDED TO CALCULATE ACTUAL TARGET
+		//THESE ARE ADDED TO AN ARRAY, WHICH IS SORTED THEN CHECKED THROUGH IN TERMS OF 'IMPACT TIME'
+		//IF A PARENT-BULLET TO POTENTIAL TARGET ENTRY HASN'T HIT A TARGET AND THE POTENTIAL TARGET ISN'T DEAD, ITS SET AS THE TARGET
+		//WOUNDING IS THEN FIGURED OUT FOR THAT TARGET AND ANY UNITS IN SPLASH DAMAGE RANGE
+		//THIS THEN ALLOWS US TO SEE IF A UNIT IS DEAD, POST-IMPACT, SO FUTURE POTENTIAL TARGET CHEECKS
+		//WILL PASS THROUGH THAT UNIT AND CARRY ONTO TARGETS THAT ARE STILL ALIVE
 		,potential_targets: [{
 			range: Number
 			,id: Number
@@ -106,6 +113,7 @@ const unitSchema = new mongoose.Schema({
 		,blast_targets: [{
 			id: Number
 			,damage: {type: Number, default: 0}
+			,effects: [String]
 		}]
 
 

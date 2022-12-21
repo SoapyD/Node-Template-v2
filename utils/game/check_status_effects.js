@@ -5,6 +5,7 @@ const functions = require("../functions");
 exports.applyEffects = (options) => {
 
     //TAKE UNIT AND LOOP THROUGH BARRIER DATA, IF IT CONTAINS A STATUS EFFECT
+    let effects_applied = []
     let unit = options.unit;
     options.barrier_class.effects.forEach((effect) => {
         if(effect.effect_type === 'status'){
@@ -23,10 +24,12 @@ exports.applyEffects = (options) => {
                     }
                 })
             }
+            effects_applied.push(effect.name)            
         }
     })
 
-    return unit;
+    // return unit;
+    return effects_applied;
 }
 
 exports.checkPosition = (options) => {
@@ -65,7 +68,8 @@ exports.checkPosition = (options) => {
         })
 
         //APPLY BARRIER EFFECT TO UNIT
-        unit = exports.applyEffects({
+        //unit = 
+        exports.applyEffects({
             barrier_class: barrier.barrier_class,
             unit: unit
         })

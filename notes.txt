@@ -19,16 +19,19 @@ actions
 ----------------------------
 
 FIGHTING
--Right click on fighting is deletion all melee actions lined up, instead of just the last one
+-BUG -Right click on fighting is deletion all melee actions lined up, instead of just the last one
 
 
-SPECIAL RULES
-
+EFFECTS
     -regen - 20% chance of the unit regenerating any lost wounds suffered
     -poison
         -DONE -Need to apply poison to units hit by it during shooting
+        -DONE -status effect isn't being applied to a unit within the area of a status effect when shooting. 
+        Needs to run utils.checkStatusEffects
+
+        -need to draw particle listing effects that're passed to bullets via targets and blast_targets vars
         -Need to check for status, apply damage and tick down health of effect
-        -BUG -status effect isn't being applied to a unit within the area of a status effect. Needs to run utils.checkStatusEffects
+
 
 
 

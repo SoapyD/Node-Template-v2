@@ -162,10 +162,12 @@ runProcess = async(workerData) => {
 
                     //CHECK FOR STATUS EFFECTS HERE
                     if(attacker_gun.barrier){
-                        target_unit = utils.checkStatusEffects.applyEffects({
+                        //target_unit = 
+                        effects = utils.checkStatusEffects.applyEffects({
                             unit: target_unit,
                             barrier_class: attacker_gun.barrier
                         })
+                        shot_data.effects = effects;
                     }
                 }
     
@@ -194,7 +196,8 @@ runProcess = async(workerData) => {
                             })
 
                             //CHECK FOR STATUS EFFECTS HERE                            
-                            target_unit = utils.checkStatusEffects.applyEffects({
+                            //target_unit = 
+                            effects = utils.checkStatusEffects.applyEffects({
                                 unit: blast_unit,
                                 barrier_class: attacker_gun.barrier
                             })
@@ -202,6 +205,7 @@ runProcess = async(workerData) => {
                             game_data.units[item.origin].targets[item.shot].blast_targets.push({
                                 id: blast_unit.id
                                 ,damage: damage_applied
+                                ,effects: effects
                             })
                         }
                     })
