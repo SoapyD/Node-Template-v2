@@ -1,26 +1,15 @@
 
--DONE -Make COHERANCY work with lone units; it's green all the time. This'll allow for the new selection process to work with them.
+-DONE -fight needs to say when a unit can or can't be a target
 
 
--remove NULL moving and shooting elements so they don't tax the socket emit
+states
+----------------------------
+
+-add in function to advance side so the turn can be passed on
 
 -implement a full set of moving states for actions, by which I mean, a switch that'll advance 
 the current mode once all players have readied up
 
--modernize the login and register input fields
-
--put special rules on weapons as well as units
-
--add in function to advance side so the turn can be passed on
-
--BUG -Couldn't remove a special ability from the squad list, only replace it
--BUG -There may be a bug that appropriates damage to the wrong unit
-
--on editor, add the ability to add/remove squads to factions
-
--fight needs to say when a unit can or can't be a target
-
--
 
 
 actions
@@ -30,11 +19,29 @@ FIGHTING
 -BUG -Right click on fighting is deletion all melee actions lined up, instead of just the last one
     -Also check shooting for this bug
 
+-Need to pass the "in combat with" fight info to draw symbols on client when movement ends
+
+
 EFFECTS
     -regen - 20% chance of the unit regenerating any lost wounds suffered
     -Need to check for POISON status, apply damage and tick down health of effect        
 
 
+bugs
+----------------------------
+-BUG -Couldn't remove a special ability from the squad list, only replace it
+-BUG -There may be a bug that appropriates damage to the wrong unit
+
+
+
+would likes
+----------------------------
+
+-modernize the login and register input fields
+
+-put special rules on weapons as well as units
+
+-remove NULL moving and shooting elements so they don't tax the socket emit
 
 
 
@@ -56,6 +63,8 @@ EFFECTS
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -Make COHERANCY work with lone units; it's green all the time. This'll allow for the new selection process to work with them.
 
 -DONE -Highlight a unit when it's selected to shoot and fight
 

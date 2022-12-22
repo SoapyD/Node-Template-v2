@@ -67,7 +67,7 @@ const unit = class {
 		//action sprite
 		this.sprite_action = options.scene.add.image(this.core.x,this.core.y,"symbols").setScale(0.08 * (this.unit_class.size + 1))		
 		this.sprite_action.setFrame(0).setDepth(this.depth_sprite_action);
-		this.sprite_action.alpha = 0.4
+		this.sprite_action.alpha = 0.6
 		this.sprite_action.visible = false
 		
 
@@ -364,6 +364,15 @@ checkAngle(start_pos, end_pos) {
 	}		
 }	
 
+
+checkSpecialRule(name) {
+	let has_rule = false;
+	if (this.core.special_rules.find((rule) => rule === name)){
+		has_rule = true;
+	}	
+
+	return has_rule
+}
 
 
 // ██     ██  ██████  ██    ██ ███    ██ ██████  ██ ███    ██  ██████  

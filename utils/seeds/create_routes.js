@@ -620,6 +620,7 @@
                     },                                                  
                 ]         
             },    
+
             ]
         }
         return Promise.all([databaseHandler.createData(list)]);

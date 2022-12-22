@@ -736,6 +736,8 @@ clientSocketHandler.generateBullets = (options) => {
                 //         intersection.y,"marker").setDepth(0)           
                 // })
 
+                unit.core.shot = true
+                unit.drawSymbol()
             }
         })
 
@@ -823,8 +825,31 @@ clientSocketHandler.generateMelee = (options) => {
                 // console.log(target)
 				let target_unit = gameCore.assets.units[target.target_id];
                 target_unit.wound({damage:target.damage})
+
+                // unit.core.in_combat = true
+                // unit.drawSymbol()
+                
+                // target_unit.core.in_combat = true
+                // target_unit.drawSymbol()                
             }
         })
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "generateMelee",
+            "e": e
+        }
+        errorHandler.log(options)
+    }  
+}
+
+
+clientSocketHandler.drawPopup = (options) => {
+    try{
+
+        GameScene.showMessage(options.data.popup_message)
 
     }catch(e){
 

@@ -698,6 +698,11 @@ module.exports = class game_actions {
                                     unit: options.saved_unit.id,
                                     targets: return_targets
                                 })                                
+                            }else{
+                                socketHandler.returnPopup({
+                                    id: options.parent.socket.id,
+                                    message: 'Target Out Of Range'
+                                })                                    
                             }
                             
                         }

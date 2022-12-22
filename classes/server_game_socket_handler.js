@@ -480,6 +480,31 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         }	
     }
 
+    returnPopup = (options) => {
+
+        try{        
+            let return_options =  {
+                type: "source",
+                id: options.id,                
+                functionGroup: "core",
+                function: "drawPopup",
+                data: {
+                    message: "Draw Popup",
+                    popup_message: options.message
+                }
+            }
+            this.sendMessage(return_options)     
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "returnPopup",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	               
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
