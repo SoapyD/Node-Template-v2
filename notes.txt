@@ -1,4 +1,6 @@
 
+-DONE -Make COHERANCY work with lone units; it's green all the time. This'll allow for the new selection process to work with them.
+
 
 -remove NULL moving and shooting elements so they don't tax the socket emit
 
@@ -14,23 +16,23 @@ the current mode once all players have readied up
 -BUG -Couldn't remove a special ability from the squad list, only replace it
 -BUG -There may be a bug that appropriates damage to the wrong unit
 
+-on editor, add the ability to add/remove squads to factions
+
+-fight needs to say when a unit can or can't be a target
+
+-
+
 
 actions
 ----------------------------
 
 FIGHTING
 -BUG -Right click on fighting is deletion all melee actions lined up, instead of just the last one
-
+    -Also check shooting for this bug
 
 EFFECTS
     -regen - 20% chance of the unit regenerating any lost wounds suffered
-    -poison
-        -DONE -Need to apply poison to units hit by it during shooting
-        -DONE -status effect isn't being applied to a unit within the area of a status effect when shooting. 
-        Needs to run utils.checkStatusEffects
-
-        -need to draw particle listing effects that're passed to bullets via targets and blast_targets vars
-        -Need to check for status, apply damage and tick down health of effect
+    -Need to check for POISON status, apply damage and tick down health of effect        
 
 
 
@@ -55,11 +57,18 @@ EFFECTS
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
+-DONE -Highlight a unit when it's selected to shoot and fight
+
 SPECIAL RULES
     -DONE -barrage - you may fire a shot with a weapon indirectly
     -DONE -sword dance - unit can leave combat without suffering opportunity attacks from enemies
     -DONE -swift - unit can charge even if they've shot their weapon
     -DONE -berserker - unit can double the number of targets from their melee weapon the turn they move into combat
+    -poison
+        -DONE -Need to apply poison to units hit by it during shooting
+        -DONE -status effect isn't being applied to a unit within the area of a status effect when shooting. 
+        Needs to run utils.checkStatusEffects
+        -DONE -need to draw particle listing effects that're passed to bullets via targets and blast_targets vars
 
 MOVEMENT
     -DONE -check to see if a unit is leaving combat and check and apply damage once it's finished moving

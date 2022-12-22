@@ -451,7 +451,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         catch(e){
             let options = {
                 "class": "game_socket_handler",
-                "function": "returnResetAll",
+                "function": "resetSelection",
                 "e": e
             }
             errorHandler.log(options)

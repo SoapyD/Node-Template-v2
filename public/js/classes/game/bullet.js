@@ -39,7 +39,8 @@ const bullet = class {
 		
 		if(options.server_options.target_id){
 			this.target_id = options.server_options.target_id;
-			this.damage = options.server_options.damage;		
+			this.damage = options.server_options.damage;
+			this.effects = options.server_options.effects;		
 		}
 
 		if(options.server_options.blast_targets){
@@ -105,13 +106,27 @@ const bullet = class {
 			if(this.target_id > -1){
 				let unit = gameCore.assets.units[this.target_id];
 				unit.wound({damage:this.damage})
+
+				if(this.effects){
+					this.effects.forEach((effect) => {
+						unit.drawTextParticle(effect)
+					})
+				}
 			}
 		}
 
 		if(this.blast_targets){
 			this.blast_targets.forEach((blast_target) => {
 				let unit = gameCore.assets.units[blast_target.id];
-				unit.wound({damage:blast_target.damage})				
+				unit.wound({damage:blast_target.damage})	
+				
+				if(blast_target.effects){
+					if(blast_target.effects){
+						blast_target.effects.forEach((effect) => {
+							unit.drawTextParticle(effect)
+						})
+					}					
+				}
 			})
 		}
 

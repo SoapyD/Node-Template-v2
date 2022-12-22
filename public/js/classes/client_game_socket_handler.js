@@ -293,33 +293,41 @@ clientSocketHandler.resetSelection = (options) => {
 
     try{
 
-        switch(gameCore.data.mode){
-            case "move":
-            case "charge":                        
+        const runSelection = (unit) => {
+            unit.drawPath(gameCore.presets.selectMove)
+
+            unit.drawCohesion({
+                sprite: unit.sprite_ghost
+                ,colour_pass: gameCore.presets.selectCohesionPass
+                ,colour_fail: gameCore.presets.selectCohesionFail 
+            })
+        }
+        const runDeSelection = (unit) => {
+            unit.drawPath(gameCore.presets.deselectMove)      
+                            
+            unit.drawCohesion({
+                sprite: unit.sprite_ghost
+                ,colour_pass: gameCore.presets.deselectCohesionPass
+                ,colour_fail: gameCore.presets.deselectCohesionFail                
+            })      
+        }        
+
+        // switch(gameCore.data.mode){
+        //     case "move":
+        //     case "charge":        
+        //     case "shoot":                                    
                 //RESET PATHS
                 gameCore.assets.units.forEach((unit) => {
                     if(unit.core.player == gameCore.data.player){
-                        if(unit.core.id == options.data.selected_unit_id){
-                            unit.drawPath(gameCore.presets.selectMove)
-
-                            unit.drawCohesion({
-                                sprite: unit.sprite_ghost
-                                ,colour_pass: gameCore.presets.selectCohesionPass
-                                ,colour_fail: gameCore.presets.selectCohesionFail                
-                            })                              
+                        if(unit.core.id == options.data.selected_unit_id){                        
+                            runSelection(unit)                
                         }else{
-                            unit.drawPath(gameCore.presets.deselectMove)      
-                            
-                            unit.drawCohesion({
-                                sprite: unit.sprite_ghost
-                                ,colour_pass: gameCore.presets.deselectCohesionPass
-                                ,colour_fail: gameCore.presets.deselectCohesionFail                
-                            })                              
+                            runDeSelection(unit)               
                         }
                     }
                 })                
-            break;      
-        }        
+            // break;      
+        // }        
 
     }catch(e){
 

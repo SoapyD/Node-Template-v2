@@ -13,6 +13,20 @@
 
             exports.createSquad(
                 {
+                    type: "general",
+                    unit: "general",
+                    gun: "blaster",
+                    armour: "mid-tier",
+                    melee: "sword",
+                    upgrades: [],
+                    special_rules: [],                
+                    min_size: 1,
+                    max_size: 1,
+                }
+            ),
+
+            exports.createSquad(
+                {
                     type: "tactical squad",
                     unit: "trooper",
                     gun: "blaster",
@@ -106,25 +120,7 @@
                     min_size: 5,
                     max_size: 10,
                 }
-            ),            
-
-
-            
-            exports.createSquad(
-                {
-                    type: "general",
-                    unit: "general",
-                    gun: "pistol",
-                    armour: "basic",
-                    melee: "sword",
-                    upgrades: [],
-                    special_rules: [],                
-                    min_size: 1,
-                    max_size: 1,
-                }
-            ),
-
-            
+            ),                        
 
 
             exports.createSquad(

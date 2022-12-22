@@ -410,7 +410,7 @@ kill(){
 }
 
 wound = (options) => {
-	console.log(options)
+	// console.log(options)
 
 	let print_text = options.damage+' dmg'
 	if(options.damage > 0) {

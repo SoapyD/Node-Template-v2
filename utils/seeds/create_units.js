@@ -28,11 +28,11 @@
                     fighting_bonus: 4,
                     health: 4,
                     movement: 8,
-                    cohesion: 0,
+                    cohesion: 50,
     
                     size: 0,
                     sprite_offset: 0.5,
-                    spritesheet: 'general',
+                    spritesheet: 'trooper_leader',
                     death_sfx: "death_man", 
                     symbol_id: 5,
                 },
