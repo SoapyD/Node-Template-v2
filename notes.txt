@@ -1,5 +1,5 @@
 
--DONE -fight needs to say when a unit can or can't be a target
+
 
 
 states
@@ -19,13 +19,13 @@ FIGHTING
 -BUG -Right click on fighting is deletion all melee actions lined up, instead of just the last one
     -Also check shooting for this bug
 
--Need to pass the "in combat with" fight info to draw symbols on client when movement ends
-
+-include a fighting bonus for units fighting the same target unit. +1 per additional fighter
 
 EFFECTS
+    -DONE - Need to check for POISON status, apply damage and tick down health of effect        
+    
     -regen - 20% chance of the unit regenerating any lost wounds suffered
-    -Need to check for POISON status, apply damage and tick down health of effect        
-
+    
 
 bugs
 ----------------------------
@@ -36,6 +36,7 @@ bugs
 
 would likes
 ----------------------------
+-BARRAGE - have a random location close to selected area as the eventual target
 
 -modernize the login and register input fields
 
@@ -83,6 +84,8 @@ MOVEMENT
     -DONE -check to see if a unit is leaving combat and check and apply damage once it's finished moving
 
 FIGHTING
+    -DONE -Need to pass the "in combat with" fight info to draw symbols on client when movement ends
+    -DONE -fight needs to say when a unit can or can't be a target
     -DONE -apply unit "in combat" check
     -DONE -apply opportunity attack if combat is left
 

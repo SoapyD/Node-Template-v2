@@ -35,17 +35,18 @@ module.exports = (options) => {
         }
         // if(options.barrier_effects.includes("blunt") && options.gamedata.mode === 'shoot'){
         //     random_roll -= 4;
-        // }
-
-        if(functions.checkArray(options.attacker.special_rules,'name','sniper') && options.gamedata.mode === 'shoot'){
-            random_roll += 4;
-        }  
-        if(functions.checkArray(options.attacker.special_rules,'name','whirling dervish') && options.gamedata.mode === 'fight'){
-            random_roll += 4;
-        }                    
+        // }               
 
         // HALF THE RANDOM ROLL IF THE PLAYER IS OUT OF COHESION
         if(options.attacker){
+
+            if(functions.checkArray(options.attacker.special_rules,'name','sniper') && options.gamedata.mode === 'shoot'){
+                random_roll += 4;
+            }  
+            if(functions.checkArray(options.attacker.special_rules,'name','whirling dervish') && options.gamedata.mode === 'fight'){
+                random_roll += 4;
+            }     
+
         	if(options.attacker.cohesion_check === false){
         		random_roll = Math.round(random_roll / 2,0);
         	}

@@ -79,6 +79,7 @@ const unitSchema = new mongoose.Schema({
 		,effects: [String]
 		,clashing_units: [Number]
 		,damage: {type: Number, default: 0}
+		,last_pos: {type: Boolean, default: false}		
 	}]
 
 	,fight_targets: [{

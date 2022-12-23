@@ -596,6 +596,19 @@ clientSocketHandler.moveUnit = (options) => {
                 if(position.damage > 0){
                     unit.wound({damage:position.damage})                    
                 }
+                if(position.last_pos == true){
+                    unit.core.in_combat = true
+                    unit.drawSymbol()
+                    
+                    if(position.clashing_units){
+                        position.clashing_units.forEach((clashing_unit_id) => {
+                            let clashing_unit = gameCore.assets.units[clashing_unit_id]
+                            clashing_unit.core.in_combat = true
+                            clashing_unit.drawSymbol() 
+                        })
+                    }
+  
+                }
 
                 //UPDATE PLAYER ELEMENTS AS IT MOVES
                 tween.on('update',(target) => {
@@ -824,13 +837,7 @@ clientSocketHandler.generateMelee = (options) => {
 
                 // console.log(target)
 				let target_unit = gameCore.assets.units[target.target_id];
-                target_unit.wound({damage:target.damage})
-
-                // unit.core.in_combat = true
-                // unit.drawSymbol()
-                
-                // target_unit.core.in_combat = true
-                // target_unit.drawSymbol()                
+                target_unit.wound({damage:target.damage})             
             }
         })
 
@@ -861,6 +868,45 @@ clientSocketHandler.drawPopup = (options) => {
         errorHandler.log(options)
     }  
 }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+    // ####### ####### ####### #######  #####  #######  #####  
+    // #       #       #       #       #     #    #    #     # 
+    // #       #       #       #       #          #    #       
+    // #####   #####   #####   #####   #          #     #####  
+    // #       #       #       #       #          #          # 
+    // #       #       #       #       #     #    #    #     # 
+    // ####### #       #       #######  #####     #     ##### 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+    clientSocketHandler.generateEffects = (options) => {
+        try{
+            if(options.data.units_status_affected){
+                options.data.units_status_affected.forEach((unit_affected) => {
+                    let unit = gameCore.assets.units[unit_affected.id]
+
+                    if(unit_affected.effects){
+                        unit_affected.effects.forEach((effect) => {
+                            unit.drawTextParticle(effect.message)
+                            unit.wound(effect)
+                        })
+                    }
+                })
+            }
+
+    
+        }catch(e){
+    
+            let options = {
+                "class": "clientGameSocketHandler",
+                "function": "generateEffects",
+                "e": e
+            }
+            errorHandler.log(options)
+        }  
+    }
 
 
 

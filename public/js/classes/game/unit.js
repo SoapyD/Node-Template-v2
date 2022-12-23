@@ -65,9 +65,9 @@ const unit = class {
 		
 
 		//action sprite
-		this.sprite_action = options.scene.add.image(this.core.x,this.core.y,"symbols").setScale(0.08 * (this.unit_class.size + 1))		
+		this.sprite_action = options.scene.add.image(this.core.x,this.core.y,"symbols").setScale(0.08 * (this.unit_class.size + 1.5))		
 		this.sprite_action.setFrame(0).setDepth(this.depth_sprite_action);
-		this.sprite_action.alpha = 0.6
+		this.sprite_action.alpha = 0.35
 		this.sprite_action.visible = false
 		
 

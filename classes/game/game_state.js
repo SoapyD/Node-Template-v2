@@ -137,8 +137,12 @@ module.exports = class game_state {
                 
                 break;  
             case "effects":
-                console.log("APPLY EFFECTS")
+                // console.log("APPLY EFFECTS")
                 //LOOP THROUGH ALL UNITS AND SEE IF THEY'RE POSITION IS IN  AN EFFECT AREA
+                socketHandler.generateEffects({
+                    id: options.id,
+                    game_data_id: options.game_data.id
+                });
                 break;
             case "fight":
                 // setupWorkers.findMeleePathsWorker({

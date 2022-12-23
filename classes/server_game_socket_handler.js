@@ -622,6 +622,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     if(unit.path){
                         if(unit.path.length > 0){
                             let last_path_pos = unit.path[unit.path.length - 1]
+                            last_path_pos.last_pos = true;
                             unit.x = (last_path_pos.x - unit.sprite_offset) * game_data.tile_size
                             unit.y = (last_path_pos.y - unit.sprite_offset) * game_data.tile_size
                             unit.tileX = last_path_pos.x - unit.sprite_offset
@@ -1080,6 +1081,107 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             let options = {
                 "class": "game_socket_handler",
                 "function": "generateMelee",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	               
+    }    
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+    // ####### ####### ####### #######  #####  #######  #####  
+    // #       #       #       #       #     #    #    #     # 
+    // #       #       #       #       #          #    #       
+    // #####   #####   #####   #####   #          #     #####  
+    // #       #       #       #       #          #          # 
+    // #       #       #       #       #     #    #    #     # 
+    // ####### #       #       #######  #####     #     ##### 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+
+    generateEffects = async(options) => {
+
+        try{
+
+            if(options.game_data_id){
+
+                // let game_data = options.game_data;
+                //GET FULL GAME DATA
+                let game_datas = await databaseHandler.findData({
+                    model: "GameData"
+                    ,search_type: "findOne"
+                    ,params: {_id: options.game_data_id}
+                })     
+
+                let game_data = game_datas[0]
+
+                let units_affected = []
+
+                //LOOP THROUGH STATUS EFFECTS
+                game_data.units.forEach((unit) => {
+                    //SET UNITS THAT HAVE TARGETS AS HAVING SHOT
+                    if (unit.status_effects){
+                        if(unit.status_effects.length > 0 && unit.alive){
+                            let unit_affected = {
+                                id: unit.id
+                                ,effects: []
+                            }
+                            let new_status_effects = []
+                            unit.status_effects.forEach((effect) => {
+                                effect.life -= 1;
+                                
+                                if(effect.life > 0){
+                                    if(effect.name == 'poison'){
+                                        let damage_applied = utils.checkWounding({
+                                            gamedata: game_data,
+                                            // attacker: attacker,
+                                            hit_override: 10,
+                                            defender: unit,
+                                            damage: 1,
+                                            ap: 0,
+                                            bonus: 0
+                                        })
+
+                                        unit_affected.effects.push({
+                                            message: effect.name,
+                                            damage: damage_applied
+                                        })
+                                    }
+                                }
+                                new_status_effects.push(effect)
+                            })
+                            units_affected.push(unit_affected)
+                            unit.status_effects = new_status_effects;
+                        }
+                    }
+                })
+
+                //LOOP THROUGH SPECIAL EFFECTS, LIKE REGEN
+
+                databaseHandler.updateData(game_data)
+
+                let return_options =  {
+                    type: "room",
+                    id: options.id,                
+                    functionGroup: "core",
+                    function: "generateEffects",
+                    data: {
+                        units_status_affected: units_affected
+                    }
+                }
+
+                this.sendMessage(return_options) 
+
+                setTimeout(function(){
+                    actionHandler.reset(options)
+                },3000);                        
+
+            }
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "generateEffects",
                 "e": e
             }
             errorHandler.log(options)
