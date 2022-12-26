@@ -33,9 +33,6 @@ module.exports = (options) => {
                 }
             })
         }
-        // if(options.barrier_effects.includes("blunt") && options.gamedata.mode === 'shoot'){
-        //     random_roll -= 4;
-        // }               
 
         // HALF THE RANDOM ROLL IF THE PLAYER IS OUT OF COHESION
         if(options.attacker){

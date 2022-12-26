@@ -896,6 +896,22 @@ clientSocketHandler.drawPopup = (options) => {
                 })
             }
 
+            if(options.data.units_specials_affected){
+                options.data.units_specials_affected.forEach((unit_affected) => {
+                    let unit = gameCore.assets.units[unit_affected.id]
+
+                    if(unit_affected.rules){
+                        unit_affected.rules.forEach((rule) => {
+                            unit.drawTextParticle(rule.message)
+                            if(rule.message == 'regen'){
+                                unit.core.health += rule.value;
+                                unit.updateElements(unit.sprite_ghost)
+                            }
+                        })
+                    }
+                })
+            }
+
     
         }catch(e){
     

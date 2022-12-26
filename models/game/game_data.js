@@ -68,7 +68,11 @@ const unitSchema = new mongoose.Schema({
 
 
 	,status_effects: [{
-		name: String
+		// name: String
+		class: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Effect"
+		}		
 		,life: Number
 		,caused_by: Number
 	}]

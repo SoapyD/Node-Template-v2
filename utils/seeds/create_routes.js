@@ -621,6 +621,71 @@
                 ]         
             },    
 
+            {
+                model: 'Effect',
+                description: 'return a list of all current effects',
+                editable: 1,        
+                index:[
+                    {
+                        column_width: 10,
+                        column_name: 'Name',
+                        value: ['name'],
+                        header: 'Name',
+                        startrow: 1,
+                        endrow: 1,
+                    },
+                    {
+                        column_width: 20,
+                        column_name: 'Descripion',
+                        value: ['description'],
+                        startrow: 1,
+                        endrow: 1,
+                        element_type: 'textarea'                
+                    },    
+                    
+
+
+                    {
+                        column_width: 10,
+                        column_name: 'Effect Type',
+                        value: ['effect_type'],
+                        header: 'Category',
+                        startrow: 1,
+                    },
+                    {
+                        column_width: 10,
+                        column_name: 'Sub Type',
+                        value: ['sub_type'],
+                        endrow: 1,
+                    },                    
+
+                    {
+                        column_width: 10,
+                        column_name: 'Life',
+                        edit_field_width: 2,
+                        value: ['life'],
+
+                        header: 'Values',
+                        startrow: 1,                        
+                    },                    
+                    {
+                        column_width: 10,
+                        column_name: 'Value',
+                        edit_field_width: 2,
+                        value: ['value'],                 
+                    },    
+                    {
+                        column_width: 10,
+                        column_name: 'Hit Chance',
+                        edit_field_width: 2,
+                        value: ['chance'],
+
+                        endrow: 1,                        
+                    },                        
+
+                ]         
+            },   
+
             ]
         }
         return Promise.all([databaseHandler.createData(list)]);

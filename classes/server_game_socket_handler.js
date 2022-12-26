@@ -1116,6 +1116,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 let game_data = game_datas[0]
 
                 let units_affected = []
+                let units_specials = []                
 
                 //LOOP THROUGH STATUS EFFECTS
                 game_data.units.forEach((unit) => {
@@ -1131,13 +1132,13 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                                 effect.life -= 1;
                                 
                                 if(effect.life > 0){
-                                    if(effect.name == 'poison'){
+                                    if(effect.class.sub_type == 'damage'){
                                         let damage_applied = utils.checkWounding({
                                             gamedata: game_data,
                                             // attacker: attacker,
-                                            hit_override: 10,
+                                            hit_override: effect.class.chance,
                                             defender: unit,
-                                            damage: 1,
+                                            damage: effect.class.value,
                                             ap: 0,
                                             bonus: 0
                                         })
@@ -1154,6 +1155,38 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                             unit.status_effects = new_status_effects;
                         }
                     }
+
+                    //CHECK FOR SPECIAL RULES
+                    if (unit.special_rules){
+                        if(unit.special_rules.length > 0 && unit.alive){
+                            let unit_affected = {
+                                id: unit.id
+                                ,rules: []
+                            }
+
+                            unit.special_rules.forEach((rule) => {
+                                if(rule.name == 'regen' && unit.health < unit.unit_class.health){
+
+                                    let life_returned = 0;
+                                    let random_roll = Math.floor(Math.random() * 20)+1
+                                    if(random_roll > rule.chance){
+                                        unit.life += rule.value;  
+                                        life_returned += rule.value;          
+                                    }
+
+                                    if(life_returned > 0){
+
+                                        unit_affected.rules.push({
+                                            message: rule.name,
+                                            value: life_returned
+                                        })
+    
+                                        units_specials.push(unit_affected)                                
+                                    }
+                                }
+                            })
+                        }
+                    }
                 })
 
                 //LOOP THROUGH SPECIAL EFFECTS, LIKE REGEN
@@ -1166,7 +1199,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     functionGroup: "core",
                     function: "generateEffects",
                     data: {
-                        units_status_affected: units_affected
+                        units_status_affected: units_affected,
+                        units_specials_affected: units_specials                        
                     }
                 }
 

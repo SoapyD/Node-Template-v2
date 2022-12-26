@@ -20,11 +20,6 @@ FIGHTING
     -Also check shooting for this bug
 
 -include a fighting bonus for units fighting the same target unit. +1 per additional fighter
-
-EFFECTS
-    -DONE - Need to check for POISON status, apply damage and tick down health of effect        
-    
-    -regen - 20% chance of the unit regenerating any lost wounds suffered
     
 
 bugs
@@ -64,6 +59,10 @@ would likes
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+EFFECTS
+    -DONE - Need to check for POISON status, apply damage and tick down health of effect        
+    -DONE -regen - 20% chance of the unit regenerating any lost wounds suffered
 
 -DONE -Make COHERANCY work with lone units; it's green all the time. This'll allow for the new selection process to work with them.
 

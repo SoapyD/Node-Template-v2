@@ -13,7 +13,8 @@ exports.applyEffects = (options) => {
             //IF THE STATUS EFFECT ISN'T ON THE UNIT, ADD IT
             if(!JSON.stringify(unit.status_effects).includes(effect.name)){
                 unit.status_effects.push({
-                    name: effect.name
+                    // name: effect.name
+                    class: effect.id
                     ,life: effect.life
                 })
             }else{
@@ -24,7 +25,8 @@ exports.applyEffects = (options) => {
                     }
                 })
             }
-            effects_applied.push(effect.name)            
+            effects_applied.push(effect.name) 
+            // effects_applied.push(effect._id)            
         }
     })
 

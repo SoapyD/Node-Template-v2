@@ -1,4 +1,5 @@
 
+    let base_roll_value = 20;
 
     exports.run = async() => {
         list = {
@@ -8,9 +9,10 @@
                     name: "poison",
                     description: "apply poison to a unit that'll take it's toll over 3 turns",
                     effect_type: 'status',
+                    sub_type: 'damage',
                     life: 3,
-                    value: 2,
-                    chance: 0.25,
+                    value: 1,
+                    chance: 1 - (base_roll_value * 0.5),
                 },                
                 {
                     name: "blunt",
@@ -18,7 +20,7 @@
                     effect_type: 'mod',
                     life: 3,
                     value: 4,
-                    chance: 1,
+                    chance: 1 - (base_roll_value * 1),
                 },
             ]
         }
