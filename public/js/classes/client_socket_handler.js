@@ -37,15 +37,17 @@ const client_socket_handler = class {
             //THIS IS A GENERIC RESPONSE HANDER THAT RUNS WHATEVER FUNCTION, IN WHATEVER GROUP, IS PASSED TO IT
             this.socket.on('message_client', (options) => {
         
-                if(options.message){
-                    switch(instance_type){
-                        case "DEV":
-                        case "DEV-ONLINE":			
-                            if(options){
-                                console.log(options.message)
-                                console.log(options)
-                            }
-                            break;
+                if(options.data){
+                    if(options.data.message){
+                        switch(instance_type){
+                            case "DEV":
+                            case "DEV-ONLINE":			
+                                if(options){
+                                    console.log(options.data.message)
+                                    console.log(options)
+                                }
+                                break;
+                        }
                     }
                 }
                 
@@ -116,7 +118,25 @@ const client_socket_handler = class {
                 {
                     message: "Re-Connected to Server"
                     ,success: true
-                })          
+                })         
+                
+                
+                let action = 'join'
+                options = {
+                    functionGroup: "core",  
+                    function: "checkRoom",
+                    message: action+" room",
+                    data: {
+                        action: action
+                        ,room_name: clientRoomHandler.core.room_name
+                        ,password: clientRoomHandler.core.password
+                        ,users: [user_data._id]
+                        ,game_id: gameCore.data.id
+                    }     
+                }    
+
+                clientSocketHandler.messageServer(options)     
+
         }catch(e){
 
             let options = {
@@ -236,6 +256,13 @@ const client_socket_handler = class {
             if(el){
                 el.value = ""        
             }
+
+            if(options.data.rejoined){
+                console.log("GET REJOIN INFORMATION!!!")
+            }
+
+            //IF THIS IS A RECONNECTION, MAKE SURE WE'RE IN THE GAME,
+            //THEN SEND A QUERY TO THE SERVER
         }catch(e){
 
             let options = {

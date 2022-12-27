@@ -102,7 +102,23 @@ const game_squad_setup = class {
 	}
 
 	reloadSquads = () => {
+		
+		//	RESET ANY EXISTING UNITS AND BULLETS IF THERE ARE ANY
+		if(gameCore.assets.bullets){
+			gameCore.assets.bullets.forEach((bullet) => {
+				bullet.kill();
+			})
+		}
+		gameCore.assets.bullets = []
 
+		if(gameCore.assets.units){
+			gameCore.assets.units.forEach((unit) => {
+				unit.kill();
+			})
+		}
+		gameCore.assets.units = []		
+
+		//RELOAD UNITS
 		gameCore.assets.units_preload.forEach((core) => {
 
 			let force = gameCore.assets.forces[core.player];

@@ -339,6 +339,10 @@ const server_socket_handler = class {
                                 return_options.data.message = "You're already in this room";
                             }else{
                                 return_options.data.message = "Rejoined room.";	
+                                return_options.data.rejoined = true;
+                                // console.log('rejoined room')
+                                // console.log(options.data)
+
                                 return_options.data.success = true;
                                                 
                                 socket.join(options.data.room_name) 

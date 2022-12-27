@@ -1,5 +1,7 @@
 
+-actually reconnect a player when they disconnect
 
+-run a complete reload of units and data when a room is rejoined.
 
 
 states
