@@ -1,8 +1,21 @@
 
--actually reconnect a player when they disconnect
+REJOIN GAME
+----------------------------
 
--run a complete reload of units and data when a room is rejoined.
+-DONE -actually reconnect a player when they disconnect
+-DONE -run a complete reload of units and data when a room is rejoined.
 
+-Allow for a complete reload from a page refresh, allowing a user who get kicked out a game to very quickly get back in without 
+any issues.
+    -DONE -reload from refresh of page doesn't work for socket room because gamecore.data.id is blank,
+    the id for game_data would need to be saved to the room or vis versa in order to link them properly.
+    -DONE -Stop the socket room from reloading into a waiting room if a game is being rejoined
+    -DONE -Using the squad setup this.units array is spotty, just refault the insert of units into gameCore.assets
+    -DONE -Figure out why the mode button text isn't displaying properly.
+
+    -Redraw and targets, fight targets etc a unit has
+    -check and status effects still apply once a game is reloaded
+    -make sure any barriers still in the game are reloaded
 
 states
 ----------------------------

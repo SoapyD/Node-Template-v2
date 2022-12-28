@@ -18,6 +18,11 @@ const roomSchema = new mongoose.Schema({
         ref: 'User' 
     }]
 
+    ,game_data: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'GameData' 
+    }
+
     ,max_users: {type: Number, default: -1}
     ,use_waiting_room: {type: Boolean, default: false}
 

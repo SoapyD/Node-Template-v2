@@ -296,7 +296,7 @@ const server_socket_handler = class {
                         ,data: {
                             message: "Room Created"
                             ,success: true
-                            // ,room_name: options.data.room_name
+                            ,room_name: options.data.room_name
                             // ,room_id: room._id
                         }
                     }
@@ -321,6 +321,7 @@ const server_socket_handler = class {
             // ##################################################################################
             // ##################################################################################
 
+            let rejoined = false;
             if(options.data.action === 'join'){
                 if (rooms[0] !== null){
                     //TRY AND JOIN THE ROOM
@@ -340,11 +341,14 @@ const server_socket_handler = class {
                             }else{
                                 return_options.data.message = "Rejoined room.";	
                                 return_options.data.rejoined = true;
+                                rejoined = true;
+                                return_options.data.game_data = room.game_data;
                                 // console.log('rejoined room')
                                 // console.log(options.data)
 
                                 return_options.data.success = true;
-                                                
+                                return_options.data.room_name = options.data.room_name;
+                                
                                 socket.join(options.data.room_name) 
                                 room.sockets.push({
                                     socket: socket.id
@@ -367,6 +371,7 @@ const server_socket_handler = class {
 
                             return_options.data.message = "Room Joined"
                             return_options.data.success = true;
+                            return_options.data.room_name = options.data.room_name;                          
                             socket.join(options.data.room_name)                             
                             room_joined = true;
                         }
@@ -382,7 +387,7 @@ const server_socket_handler = class {
 
 
             if(room_joined === true){
-                if(room.use_waiting_room === true){
+                if(room.use_waiting_room === true && rejoined == false){
                     this.sendToWaitingRoom(socket, room)                
                 }else{
                     await this.sendRoomData(room)

@@ -142,6 +142,65 @@ clientSocketHandler.setupGameData = (options) => {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ######  ####### #       #######    #    ######         #####     #    #     # ####### ######     #    #######    #    
+// #     # #       #       #     #   # #   #     #       #     #   # #   ##   ## #       #     #   # #      #      # #   
+// #     # #       #       #     #  #   #  #     #       #        #   #  # # # # #       #     #  #   #     #     #   #  
+// ######  #####   #       #     # #     # #     # ##### #  #### #     # #  #  # #####   #     # #     #    #    #     # 
+// #   #   #       #       #     # ####### #     #       #     # ####### #     # #       #     # #######    #    ####### 
+// #    #  #       #       #     # #     # #     #       #     # #     # #     # #       #     # #     #    #    #     # 
+// #     # ####### ####### ####### #     # ######         #####  #     # #     # ####### ######  #     #    #    #     # 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+clientSocketHandler.reloadGameData = (options) => {
+
+
+    try{
+        // console.log(options.data.game_data)
+        // gameCore.assets.forces = options.data.forces
+
+        clientSocketHandler.setupGameData(options)
+
+        gameCore.assets.units_preload = options.data.units
+        
+        //IF GAMECORE CURRENT SCENE IS GAME_SCENE, RELOAD UNITS
+        if(gameCore.current_scene.scene.key == 'GameScene'){
+            // GameScene.game_squad_setup.unit_list = [];            
+            GameScene.game_squad_setup.runPlacement();
+            // gameCore.assets.units = GameScene.game_squad_setup.unit_list;     
+            //SET MODE
+            clientSocketHandler.setMode(options);                   
+        }else{
+            //ELSE TRANSITION TO GAME_SCENE WHICH SHOULD RELOAD UNITS AS STANDARD
+            // gameCore.data.id = options.data.game_data_id;
+            // console.log("CAN'T RELOAD, NOT THE RIGHT SCENE")(
+
+            // gameCore.data.game_state = 2
+
+            clientSocketHandler.transitionScene({
+                scene: 'GameScene'
+                ,uiscene: 'StartUIScene'
+            })
+
+            // function: "transitionScene",
+            // scene: 'GameScene',
+            // uiscene: 'StartUIScene'   
+
+        }
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "reloadGameData",
+            "e": e
+        }
+        errorHandler.log(options)
+    }        
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  #####     #    #     # #######        #####     #    #     # ####### 
 // #     #   # #   #     # #             #     #   # #   ##   ## #       
 // #        #   #  #     # #             #        #   #  # # # # #       
@@ -376,6 +435,7 @@ clientSocketHandler.resetAll = (options) => {
         errorHandler.log(options)
     }        
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

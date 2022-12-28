@@ -122,7 +122,7 @@ const game_squad_setup = class {
 		gameCore.assets.units_preload.forEach((core) => {
 
 			let force = gameCore.assets.forces[core.player];
-			let squad_data = force.army[0].squads[core.squad];
+			let squad_data = force.army.squads[core.squad];
 			let squad = squad_data.squad;
 
 			//CHECK TO SEE IF ANY OF THE UPPGRADES NEED TO GET APPLIED TO ALL UNITS IN THE SQUAD
@@ -253,7 +253,8 @@ const game_squad_setup = class {
 		}
 
 
-		this.unit_list.push(new unit(unit_data));
+		// this.unit_list.push(new unit(unit_data));
+		gameCore.assets.units.push(new unit(unit_data));
 	}
 
 

@@ -140,7 +140,17 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 model: "GameData"
                 ,search_type: "findOne"
                 ,params: {_id: game_data[0]._id}
-            })            
+            }) 
+
+            let rooms = await databaseHandler.findData({
+                model: "Room"
+                ,search_type: "findOne"
+                ,params: {
+                    room_name: options.id
+                }
+            })       
+            rooms[0].game_data = game_datas[0]._id
+            rooms[0].save()
 
             // let data = game_datas[0].forces[0].user
             // let data2 = game_datas[0].forces[0].army.squads
@@ -192,7 +202,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
     // #     # #     #   # #   #             #     # #    ##  #     #          #     # #     #    #    #     # 
     //  #####  #     #    #    #######        #####  #     # ###    #          ######  #     #    #    #     # 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     saveUnitData = async(socket, options) => {
         try{
             let game_data = databaseHandler.updateOne({
@@ -227,6 +238,67 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         }	        
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ######  ####### #       #######    #    ######         #####     #    #     # ####### ######     #    #######    #    
+    // #     # #       #       #     #   # #   #     #       #     #   # #   ##   ## #       #     #   # #      #      # #   
+    // #     # #       #       #     #  #   #  #     #       #        #   #  # # # # #       #     #  #   #     #     #   #  
+    // ######  #####   #       #     # #     # #     # ##### #  #### #     # #  #  # #####   #     # #     #    #    #     # 
+    // #   #   #       #       #     # ####### #     #       #     # ####### #     # #       #     # #######    #    ####### 
+    // #    #  #       #       #     # #     # #     #       #     # #     # #     # #       #     # #     #    #    #     # 
+    // #     # ####### ####### ####### #     # ######         #####  #     # #     # ####### ######  #     #    #    #     # 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+
+    runReloadGameData = async(socket, options) => {
+        try{
+            let game_data = await databaseHandler.findData({
+                model: "GameData"
+                ,search_type: "findOne"
+                ,params: {_id: options.data.id}
+            })         
+
+            game_data = game_data[0];
+
+            //RETURN POSITIONAL DATA TO PLAYERS
+            let return_options = {
+                type: "source",
+                id: options.id,
+                functionGroup: "core",
+                function: "reloadGameData",
+                data: {
+                    mode: game_data.mode,
+                    forces: game_data.forces,
+                    units: game_data.units,
+                    id: options.data.id,
+                    message: 'reloading game data'
+                }
+            }        
+            this.sendMessage(return_options) 
+
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "saveUnitData",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	        
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // #     # ####### ######  #######        #####  ####### #       #######  #####  ####### 
+    // ##   ## #     # #     # #             #     # #       #       #       #     #    #    
+    // # # # # #     # #     # #             #       #       #       #       #          #    
+    // #  #  # #     # #     # #####   #####  #####  #####   #       #####   #          #    
+    // #     # #     # #     # #                   # #       #       #       #          #    
+    // #     # #     # #     # #             #     # #       #       #       #     #    #    
+    // #     # ####### ######  #######        #####  ####### ####### #######  #####     #    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+
 
     setMode = (options) => {
 
@@ -260,34 +332,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
             actionHandler.changeMode(options)
 
-            // let game_datas = await databaseHandler.findData({
-            //     model: "GameData"
-            //     ,search_type: "findOne"
-            //     ,params: {_id: options.data.id}
-            // }, false)
 
-            // let game_data = game_datas[0]
-            // switch(game_data.mode){
-            //     case "move":
-            //         game_data.mode = 'shoot';
-            //         break;
-            //     case "shoot":
-            //         game_data.mode = 'charge';
-            //         break;     
-            //     case "charge":
-            //         game_data.mode = 'fight';
-            //         break;     
-            //     case "fight":
-            //         game_data.mode = 'move';
-            //         break; 
-            // }
-
-            // databaseHandler.updateData(game_data)
-
-            // this.setMode({
-            //     id: options.id,
-            //     game_data: game_data
-            // })    
         }
         catch(e){
             let options = {

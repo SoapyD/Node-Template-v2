@@ -258,7 +258,20 @@ const client_socket_handler = class {
             }
 
             if(options.data.rejoined){
-                console.log("GET REJOIN INFORMATION!!!")
+                // console.log("GET REJOIN INFORMATION!!!")
+
+                let options_message = {
+                    functionGroup: "core",  
+                    function: "runReloadGameData",
+                    // id: clientRoomHandler.core.room_name,
+                    id: options.data.room_name,
+                    data: {
+                        // id: gameCore.data.id,
+                        id: options.data.game_data,
+                    }
+                }				
+                clientSocketHandler.messageServer(options_message)  
+
             }
 
             //IF THIS IS A RECONNECTION, MAKE SURE WE'RE IN THE GAME,
