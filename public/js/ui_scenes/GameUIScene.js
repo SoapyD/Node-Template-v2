@@ -33,7 +33,7 @@ var GameUIScene = new Phaser.Class({
 
     create: function()
     {
-		// GameUIScene.setupHUD();
+		GameUIScene.setupHUD();
 
 		let callbackParams = {};
 		
@@ -167,7 +167,7 @@ GameUIScene.loadSingleButton = (scene) => {
 
 
 
-/*
+
 
 
 
@@ -203,7 +203,7 @@ GameUIScene.setupHUD = () => {
 			},
 			text: [
 				{id: 'Turn',label: 'Turn:', x: 0, y: 0, height: 3},
-				{id: 'c_Turn',label: gameFunctions.params.turn_number, x: 3, y: 0, box: {fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 2, height: 3}},				
+				{id: 'c_Turn',label: gameCore.data.turn_number, x: 3, y: 0, box: {fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 2, height: 3}},				
 			]
 		});
 
@@ -252,7 +252,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_m',label: 'M', x: 7, y: 1, height: 1, width: 3, align: "center", 
 				font: {height: 22}
 				},
-				{id: 'f_m',label: gameFunctions.params.turn_number, x: 7, y: 2, 
+				{id: 'f_m',label: gameCore.data.turn_number, x: 7, y: 2, 
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 3, height: 1, 
@@ -263,7 +263,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_sb',label: 'SB', x: 11, y: 1, height: 1, width: 3, align: "center",
 				font: {height: 22},
 				},
-				{id: 'f_sb',label: gameFunctions.params.turn_number, x: 11, y: 2, 
+				{id: 'f_sb',label: gameCore.data.turn_number, x: 11, y: 2, 
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 3, height: 1, 
@@ -274,7 +274,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_fb',label: 'FB', x: 15, y: 1, height: 1, width: 3, align: "center",
 				font: {height: 22},	
 				},
-				{id: 'f_fb',label: gameFunctions.params.turn_number, x: 15, y: 2,
+				{id: 'f_fb',label: gameCore.data.turn_number, x: 15, y: 2,
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 3, height: 1, 
@@ -285,7 +285,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_a',label: 'A', x: 19, y: 1, height: 1, width: 3, align: "center",
 				font: {height: 22},
 				},
-				{id: 'f_a',label: gameFunctions.params.turn_number, x: 19, y: 2, 
+				{id: 'f_a',label: gameCore.data.turn_number, x: 19, y: 2, 
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 3, height: 1, 
@@ -303,7 +303,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_gun_d',label: 'D', x: 7, y: 3, height: 1, width: 3, align: "center",
 				font: {height: 22},
 				},
-				{id: 'f_gun_d',label: gameFunctions.params.turn_number, x: 7, y: 4,
+				{id: 'f_gun_d',label: gameCore.data.turn_number, x: 7, y: 4,
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 3, height: 1, 
@@ -314,7 +314,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_gun_ap',label: 'AP', x: 11, y: 3, height: 1, width: 3, align: "center",
 				font: {height: 22},
 				},
-				{id: 'f_gun_ap',label: gameFunctions.params.turn_number, x: 11, y: 4, 
+				{id: 'f_gun_ap',label: gameCore.data.turn_number, x: 11, y: 4, 
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 3, height: 1, 
@@ -325,7 +325,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_gun_r',label: 'Range', x: 15, y: 3, height: 1, width: 7, align: "center",
 				font: {height: 22},
 				},
-				{id: 'f_gun_r',label: gameFunctions.params.turn_number, x: 15, y: 4,
+				{id: 'f_gun_r',label: gameCore.data.turn_number, x: 15, y: 4,
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 7, height: 1, 
@@ -342,7 +342,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_mel_d',label: 'D', x: 7, y: 5, height: 1, width: 3, align: "center",
 				font: {height: 22},
 				},
-				{id: 'f_mel_d',label: gameFunctions.params.turn_number, x: 7, y: 6, 
+				{id: 'f_mel_d',label: gameCore.data.turn_number, x: 7, y: 6, 
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 3, height: 1, 
@@ -353,7 +353,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_mel_ap',label: 'AP', x: 11, y: 5, height: 1, width: 3, align: "center",
 				font: {height: 22},
 				},
-				{id: 'f_mel_ap',label: gameFunctions.params.turn_number, x: 11, y: 6,
+				{id: 'f_mel_ap',label: gameCore.data.turn_number, x: 11, y: 6,
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 3, height: 1, 
@@ -364,7 +364,7 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_mel_r',label: 'Range', x: 15, y: 5, height: 1, width: 7, align: "center",
 				font: {height: 22},
 				},
-				{id: 'f_mel_r',label: gameFunctions.params.turn_number, x: 15, y: 6,
+				{id: 'f_mel_r',label: gameCore.data.turn_number, x: 15, y: 6,
 				font: {height: 22},
 				box: {
 					fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 7, height: 1, 
@@ -451,19 +451,21 @@ GameUIScene.setupHUD = () => {
 				{id: 'h_mel_chance',label: 'Melee Chance:', x: 0, y: 0, height: 3,
 				font: {height: 22},
 				},
-				{id: 'f_mel_chance',label: gameFunctions.params.turn_number, x: 4, y: 0, 
+				{id: 'f_mel_chance',label: gameCore.data.turn_number, x: 4, y: 0, 
 				font: {height: 22},
 				box: {fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 1.25, height: 3}},	
 				
 				{id: 'h_gun_chance',label: 'Shoot Chance:', x: 0, y: 4, height: 3,
 				font: {height: 22},
 				},
-				{id: 'f_gun_chance',label: gameFunctions.params.turn_number, x: 4, y: 4, 
+				{id: 'f_gun_chance',label: gameCore.data.turn_number, x: 4, y: 4, 
 				font: {height: 22},
 				box: {fill_colour: 0xffffff, fill_alpha: 1, radius: 5, width: 1.25, height: 3}},					
 
 			]
 		});
+
+		GameUIScene.hideChanceHUD()
 
 
 		// ####### ####### ######   #####  #######       #     # #     # ######  
@@ -475,13 +477,13 @@ GameUIScene.setupHUD = () => {
 		// #       ####### #     #  #####  #######       #     #  #####  ######  
 
 		//SETUP A HUD ITEM FOR EACH FORCE AVAILABLE
-		if(gameFunctions.params.forces){
+		if(gameCore.assets.forces){
 			GameUIScene.forces_hud = {};
-			gameFunctions.params.forces.forEach((force, i) => {
+			gameCore.assets.forces.forEach((force, i) => {
 			// for (let i=0;i<4;i++){
 			// let i = 0
 
-				let colour = GameScene.game_setup.getSideColour(force.side)
+				let colour = gameCore.getSideColour(force.side)
 				let width = 100;
 
 				//THE HEADER CONTAINS THE PLAYER USERNAME
@@ -593,17 +595,17 @@ GameUIScene.setUnitHUD = (unit) => {
 		element.setText("f_m",unit.unit_class.movement)
 		element.setText("f_sb",unit.unit_class.shooting_bonus)
 		element.setText("f_fb",unit.unit_class.fighting_bonus)
-		element.setText("f_a",unit.armour)
+		element.setText("f_a",unit.armour_class.value)
 
-		element.setText("r2_h",unit.gun_class[unit.selected_gun].name)
-		element.setText("f_gun_d",unit.gun_class[unit.selected_gun].damage)
-		element.setText("f_gun_ap",unit.gun_class[unit.selected_gun].ap)
-		element.setText("f_gun_r",unit.gun_class[unit.selected_gun].max_targets+'x'+unit.gun_class[unit.selected_gun].range)
+		element.setText("r2_h",unit.gun_class[unit.core.selected_gun].name)
+		element.setText("f_gun_d",unit.gun_class[unit.core.selected_gun].damage)
+		element.setText("f_gun_ap",unit.gun_class[unit.core.selected_gun].ap)
+		element.setText("f_gun_r",unit.gun_class[unit.core.selected_gun].max_targets+'x'+(unit.gun_class[unit.core.selected_gun].range / gameCore.data.tile_size)+'ti')
 
-		element.setText("r3_h",unit.melee_class[unit.selected_melee].name)
-		element.setText("f_mel_d",unit.melee_class[unit.selected_melee].damage)
-		element.setText("f_mel_ap",unit.melee_class[unit.selected_melee].ap)
-		element.setText("f_mel_r",unit.melee_class[unit.selected_melee].max_targets+'x'+unit.melee_class[unit.selected_melee].range)		
+		element.setText("r3_h",unit.melee_class[unit.core.selected_melee].name)
+		element.setText("f_mel_d",unit.melee_class[unit.core.selected_melee].damage)
+		element.setText("f_mel_ap",unit.melee_class[unit.core.selected_melee].ap)
+		element.setText("f_mel_r",unit.melee_class[unit.core.selected_melee].max_targets+'x'+(unit.melee_class[unit.core.selected_melee].range / gameCore.data.tile_size)+'ti')		
 
 		if(unit.core.alive === true){
 			element = GameUIScene.hud_special
@@ -661,8 +663,8 @@ GameUIScene.setChanceHUD = (selected_unit, target_unit) => {
 		let element = GameUIScene.hud_chance
 		element.setVisible(true);
 
-		let mel_chance = target_unit.armour_class.value - (selected_unit.melee_class[selected_unit.selected_melee].ap + selected_unit.unit_class.fighting_bonus);
-		let gun_chance = target_unit.armour_class.value - (selected_unit.gun_class[selected_unit.selected_gun].ap + selected_unit.unit_class.shooting_bonus);
+		let mel_chance = target_unit.armour_class.value - (selected_unit.melee_class[selected_unit.core.selected_melee].ap + selected_unit.unit_class.fighting_bonus);
+		let gun_chance = target_unit.armour_class.value - (selected_unit.gun_class[selected_unit.core.selected_gun].ap + selected_unit.unit_class.shooting_bonus);
 
 		let max_roll_value = 20
 		if(selected_unit.cohesion_check === false && selected_unit.unit_class.cohesion > 0){
@@ -729,8 +731,8 @@ GameUIScene.setForcesHUD = (i, text, is_visible, is_gray) => {
 
 GameUIScene.setAllWaitingHUD = () => {
 	try{	
-		gameFunctions.params.forces.forEach((force, i) => {
-			if(force.side === gameFunctions.current_side){
+		gameCore.assets.forces.forEach((force, i) => {
+			if(force.side === gameCore.data.current_side){
 				GameUIScene.setForcesHUD(i, "unready", true, true)
 			}else{
 				GameUIScene.setForcesHUD(i, "unready", false, true)
@@ -758,13 +760,13 @@ GameUIScene.setAllWaitingHUD = () => {
 GameUIScene.updatePointsHUD = () => {
 	try{	
 		//FOREACH FORCE
-		gameFunctions.params.forces.forEach((force, i) => {
+		gameCore.assets.forces.forEach((force, i) => {
 			//LOOP THROUGH EACH UNIT AND SAY WHO KILLED THEM
 
 			let points = 0;
-			gameFunctions.units.forEach((unit) => {
+			gameCore.assets.units.forEach((unit) => {
 				if(unit.core.killed_by !== -1){
-					let killing_unit = gameFunctions.units[unit.core.killed_by]
+					let killing_unit = gameCore.assets.units[unit.core.killed_by]
 					if(killing_unit.core.player === force.player_number){
 						points+= unit.unit_class.cost;
 					}
@@ -785,4 +787,4 @@ GameUIScene.updatePointsHUD = () => {
 	}		
 }
 
-*/
+/**/

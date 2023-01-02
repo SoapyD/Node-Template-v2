@@ -123,7 +123,7 @@ const game_maps = class {
 
                 let options = {
                     functionGroup: "core",  
-                    function: "moveMarker",
+                    function: "sendMoveMarker",
                     id: clientRoomHandler.core.room_name,
                     data: {
                         id: gameCore.data.id,

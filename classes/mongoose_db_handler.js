@@ -308,6 +308,10 @@ const mongoose_db_handler = class {
         // })  
         }
         else{
+            if(item.constructor.modelName == 'GameData'){
+                item.save_count += 1
+            }
+
             promises.push(item.save())
         }
         
@@ -319,6 +323,10 @@ const mongoose_db_handler = class {
     
     updateOne = async(options) => {
         let promises = [];
+
+        // if(options.model == 'GameData'){
+
+        // }
 
         if(options.params){
             options.params.forEach((item) => {

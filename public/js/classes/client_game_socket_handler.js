@@ -324,6 +324,35 @@ clientSocketHandler.moveMarker = (options) => {
         if(options.data.pointerX && options.data.pointerY){
             GameScene.markers[id].setVisible(!GameScene.game_maps.checkCollision(options.data.pointerX,options.data.pointerY)); 
         }
+
+        //CHECK TO SEE IF MARKER IS ON A UNIT
+        let unit_id = -1
+        gameCore.assets.units.forEach((unit) => {
+            if(
+                options.data.x + (gameCore.data.tile_size / 2) > unit.sprite_ghost.x - (unit.sprite_ghost.width / 2) &&
+                options.data.x + (gameCore.data.tile_size / 2) < unit.sprite_ghost.x + (unit.sprite_ghost.width / 2) &&
+                options.data.y + (gameCore.data.tile_size / 2) > unit.sprite_ghost.y - (unit.sprite_ghost.height / 2) &&
+                options.data.y + (gameCore.data.tile_size / 2) < unit.sprite_ghost.y + (unit.sprite_ghost.height / 2)                                
+            ){
+                unit_id = unit.core.id
+                GameUIScene.setUnitHUD(unit)
+
+                if(gameCore.data.selected_unit != -1){
+                    let selected_unit = gameCore.assets.units[gameCore.data.selected_unit];
+                    GameUIScene.setChanceHUD(selected_unit, unit)
+                }                    
+            }
+        })
+        if(unit_id == -1){
+            if(gameCore.data.selected_unit != -1){
+                let selected_unit = gameCore.assets.units[gameCore.data.selected_unit];
+                GameUIScene.setUnitHUD(selected_unit)
+            }else{
+                GameUIScene.hideUnitHUD()
+            }
+            GameUIScene.hideChanceHUD()
+        }
+
     }catch(e){
 
         let options = {
@@ -379,7 +408,9 @@ clientSocketHandler.resetSelection = (options) => {
                 gameCore.assets.units.forEach((unit) => {
                     if(unit.core.player == gameCore.data.player){
                         if(unit.core.id == options.data.selected_unit_id){                        
-                            runSelection(unit)                
+                            runSelection(unit)         
+                            GameUIScene.setUnitHUD(unit)
+                            gameCore.data.selected_unit = unit.core.id       
                         }else{
                             runDeSelection(unit)               
                         }

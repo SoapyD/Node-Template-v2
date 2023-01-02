@@ -1,21 +1,16 @@
 
-REJOIN GAME
+UI 
+----------------------------
+-pass status effects and special rules as text to client so they can be displayed (SRs currently show only as IDs)
+
+
+RELOAD GAME
 ----------------------------
 
--DONE -actually reconnect a player when they disconnect
--DONE -run a complete reload of units and data when a room is rejoined.
-
--Allow for a complete reload from a page refresh, allowing a user who get kicked out a game to very quickly get back in without 
-any issues.
-    -DONE -reload from refresh of page doesn't work for socket room because gamecore.data.id is blank,
-    the id for game_data would need to be saved to the room or vis versa in order to link them properly.
-    -DONE -Stop the socket room from reloading into a waiting room if a game is being rejoined
-    -DONE -Using the squad setup this.units array is spotty, just refault the insert of units into gameCore.assets
-    -DONE -Figure out why the mode button text isn't displaying properly.
-
-    -Redraw and targets, fight targets etc a unit has
-    -check and status effects still apply once a game is reloaded
-    -make sure any barriers still in the game are reloaded
+-Redraw all targets, fight targets etc a unit has
+-check and status effects still apply once a game is reloaded
+-make sure any barriers still in the game are reloaded
+-pass side data, setting the current side
 
 states
 ----------------------------
@@ -26,8 +21,16 @@ states
 the current mode once all players have readied up
 
 
+ARMY SELECTION
+----------------------------
+-In socket room, send list of factions available to user so they can be selected
 
-actions
+ARMY PLACEMENT
+----------------------------
+-implement the old army placement method
+
+
+ACTIONS
 ----------------------------
 
 FIGHTING
@@ -74,6 +77,27 @@ would likes
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+UI 
+----------------------------
+-DONE -put UI back into the game
+-DONE -when hovering over units, pass the unit id within hover range back to the client so chance percentages can be worked out
+-DONE -hide / show special rules when a unit is selected
+    -DONE -show this selected unit when not hovering over another unit 
+
+
+REJOIN GAME
+----------------------------
+-DONE -actually reconnect a player when they disconnect
+-DONE -run a complete reload of units and data when a room is rejoined.
+
+-Allow for a complete reload from a page refresh, allowing a user who get kicked out a game to very quickly get back in without 
+any issues.
+    -DONE -reload from refresh of page doesn't work for socket room because gamecore.data.id is blank,
+    the id for game_data would need to be saved to the room or vis versa in order to link them properly.
+    -DONE -Stop the socket room from reloading into a waiting room if a game is being rejoined
+    -DONE -Using the squad setup this.units array is spotty, just refault the insert of units into gameCore.assets
+    -DONE -Figure out why the mode button text isn't displaying properly.
 
 EFFECTS
     -DONE - Need to check for POISON status, apply damage and tick down health of effect        

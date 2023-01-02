@@ -142,10 +142,17 @@ const unitSchema = new mongoose.Schema({
 
 const gameSchema = new mongoose.Schema({
 	room_name: String
+	,save_count: {type: Number, default: 0}
 	,tile_size: Number
     ,acceptable_tiles: [Number]
     ,matrix: [[Number]]    
+	,created_date: {type: Date, default: Date.now}
+	,updateddate: {type: Date, default: Date.now}	
 
+	///////////////////////////////////////////////////////
+	// CORE RELOAD DATA
+	///////////////////////////////////////////////////////
+		
 	,mode: String
 	,game_state: {type: Number, default: 0}
 	,current_side: {type: Number, default: 0}	
@@ -188,9 +195,6 @@ const gameSchema = new mongoose.Schema({
 	}]
 	
 	,units: [unitSchema]
-
-   ,created_date: {type: Date, default: Date.now}
-   ,updateddate: {type: Date, default: Date.now}	
 	
 });
 

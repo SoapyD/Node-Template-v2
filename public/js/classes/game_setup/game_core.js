@@ -28,6 +28,7 @@ const game_core = class {
             side: -1,
             max_players: 2,
             max_sides: 2,
+            selected_unit: -1,
         }
         this.current_scene = {};
         this.current_uiscene = {};

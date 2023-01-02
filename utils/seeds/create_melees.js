@@ -25,7 +25,7 @@ exports.run = async() => {
                 range: range * 1
             },
             {
-                name: "bare-hands",
+                name: "bare hands",
                 cost: 0,
                 damage: 1,
                 ap: 0,

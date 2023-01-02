@@ -31,7 +31,7 @@
                     unit: "trooper",
                     gun: "blaster",
                     armour: "mid-tier",
-                    melee: "bare-hands",
+                    melee: "bare hands",
                     upgrades: [
                         {params:{name:"trooper rocket launcher"}},
                         {params:{name:"trooper assault cannon"}}
@@ -65,7 +65,7 @@
                     unit: "elite",
                     gun: "blaster",
                     armour: "elite",
-                    melee: "bare-hands",
+                    melee: "bare hands",
                     upgrades: [
                         {params:{name:"elite assault cannon"}},
                         {params:{name:"elite squad leader"}},
