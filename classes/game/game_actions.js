@@ -42,8 +42,11 @@ module.exports = class game_actions {
                     game_data.mode = 'fight';
                     break;     
                 case "fight":
+                    game_data.mode = 'sync';
+                    break;
+                case "sync":
                     game_data.mode = 'move';
-                    break; 
+                    break;                     
             }
 
             databaseHandler.updateData(game_data)

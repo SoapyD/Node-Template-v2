@@ -2,28 +2,44 @@
 UI 
 ----------------------------
 -pass status effects and special rules as text to client so they can be displayed (SRs currently show only as IDs)
+    -DONE -Special rules passed when units PLACED
+    -Status Effects 
+        -are saved to game_data when applied on server
+        -are not passed to client when initially applied
+        -are passed to client when game is reloaded
+        -NOT TESTED, are they passed to client when a complete reload occurs 
 
 
 RELOAD GAME
 ----------------------------
-
 -Redraw all targets, fight targets etc a unit has
 -check and status effects still apply once a game is reloaded
 -make sure any barriers still in the game are reloaded
 -pass side data, setting the current side
 
-states
-----------------------------
 
+STATES
+----------------------------
 -add in function to advance side so the turn can be passed on
 
 -implement a full set of moving states for actions, by which I mean, a switch that'll advance 
 the current mode once all players have readied up
 
+states
+    -Move
+    -Shoot
+    -Charge
+    -Fight
+    -Effects
+    -Reset
+    -End Turn
+
+
 
 ARMY SELECTION
 ----------------------------
 -In socket room, send list of factions available to user so they can be selected
+
 
 ARMY PLACEMENT
 ----------------------------
@@ -32,7 +48,6 @@ ARMY PLACEMENT
 
 ACTIONS
 ----------------------------
-
 FIGHTING
 -BUG -Right click on fighting is deletion all melee actions lined up, instead of just the last one
     -Also check shooting for this bug
@@ -40,14 +55,14 @@ FIGHTING
 -include a fighting bonus for units fighting the same target unit. +1 per additional fighter
     
 
-bugs
+BUGS
 ----------------------------
 -BUG -Couldn't remove a special ability from the squad list, only replace it
 -BUG -There may be a bug that appropriates damage to the wrong unit
 
 
 
-would likes
+WOULD LIKES
 ----------------------------
 -BARRAGE - have a random location close to selected area as the eventual target
 

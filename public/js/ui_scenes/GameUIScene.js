@@ -609,9 +609,13 @@ GameUIScene.setUnitHUD = (unit) => {
 
 		if(unit.core.alive === true){
 			element = GameUIScene.hud_special
-			element.setVisible(true);		
-	
-			element.setText("f_special",unit.special_rules)
+			element.setVisible(true);	
+			
+			let special_rules = []
+			unit.special_rules.forEach((rule) => {
+				special_rules.push(rule.name)
+			})
+			element.setText("f_special",special_rules)
 	
 			let status = ''
 			if(unit.core.poison){

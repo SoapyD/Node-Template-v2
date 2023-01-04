@@ -260,9 +260,14 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
 
             game_data = game_data[0];
 
+            let type = 'source';
+            if(options.source){
+                type = options.type;
+            }
+
             //RETURN POSITIONAL DATA TO PLAYERS
             let return_options = {
-                type: "source",
+                type: type,
                 id: options.id,
                 functionGroup: "core",
                 function: "reloadGameData",

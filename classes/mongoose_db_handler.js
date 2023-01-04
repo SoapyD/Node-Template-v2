@@ -74,7 +74,8 @@ const mongoose_db_handler = class {
                                                     {path: 'melee'},
                                                     {path: 'armour'},
                                                     ]                 
-                                            }
+                                            },
+                                            {path: 'special_rules',model: "SpecialRule"},                                           
                                         ]
                                 },
                                 {
@@ -88,7 +89,8 @@ const mongoose_db_handler = class {
                                             {path: 'armour'},
                                         ]                    
                                     }          
-                                }]                                
+                                }                               
+                                ]                                
                             }
                         },
                     ], 
@@ -149,6 +151,7 @@ const mongoose_db_handler = class {
                         {path: 'gun'},
                         {path: 'melee'},
                         {path: 'armour'},
+                        {path: 'special_rules',model: "SpecialRule"},                             
                     ]          
                 })
                 break;
@@ -172,7 +175,8 @@ const mongoose_db_handler = class {
                                         {path: 'melee'},
                                         {path: 'armour'},
                                         ]                 
-                                }
+                                },
+                                {path: 'special_rules',model: "SpecialRule"},                                 
                             ]
                     },
                     {

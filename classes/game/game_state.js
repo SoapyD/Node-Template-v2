@@ -173,6 +173,21 @@ module.exports = class game_state {
                     });
 
                 break;                                
+
+            case "sync":
+                // console.log("APPLY EFFECTS")
+                //LOOP THROUGH ALL UNITS AND SEE IF THEY'RE POSITION IS IN  AN EFFECT AREA
+                socketHandler.runReloadGameData(
+                null,
+                {
+                    id: options.id,
+                    type: 'room',
+                    data: {
+                        id: options.game_data.id
+                    }
+                });
+                break;
+
         }
 
         this.resetReady(options)

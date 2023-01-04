@@ -96,7 +96,11 @@ const particle = class {
 								}
 							}
 
-							target.destroy();
+							// target.destroy();
+
+							if (target) {
+								target.destroy();
+							  }
 						}
 					})
                 }
