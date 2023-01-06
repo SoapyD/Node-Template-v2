@@ -9,6 +9,9 @@ UI
         -are passed to client when game is reloaded
         -NOT TESTED, are they passed to client when a complete reload occurs 
 
+ERRORS
+----------------------------
+-errors aren't saving useful details or any for that matter
 
 RELOAD GAME
 ----------------------------
@@ -20,6 +23,9 @@ RELOAD GAME
 
 STATES
 ----------------------------
+-click location for the reset location of a unit with a path stops users from being able to select that unit for shooting later 
+(as the click location doesn't align to where the unit sprite is)
+
 -add in function to advance side so the turn can be passed on
 
 -implement a full set of moving states for actions, by which I mean, a switch that'll advance 

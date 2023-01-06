@@ -169,7 +169,14 @@ clientSocketHandler.reloadGameData = (options) => {
             GameScene.game_squad_setup.runPlacement();
             // gameCore.assets.units = GameScene.game_squad_setup.unit_list;     
             //SET MODE
-            clientSocketHandler.setMode(options);                   
+            // clientSocketHandler.setMode(options);        
+
+            gameCore.data.mode = options.data.mode;
+
+            if(GameUIScene.mode_button){
+                GameUIScene.mode_button.updateText(gameCore.data.mode)
+            }            
+
         }else{
             //ELSE TRANSITION TO GAME_SCENE WHICH SHOULD RELOAD UNITS AS STANDARD
             // gameCore.data.id = options.data.game_data_id;

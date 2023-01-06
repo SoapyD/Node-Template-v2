@@ -146,15 +146,33 @@ const game_squad_setup = class {
 
 			if(core.alive === true){
 
-				this.addUnit({
+				let c_unit = this.addUnit({
 					loaded: true,
 					core: core,
 					squad: squad,
 					universal_upgrades: universal_upgrades,
 					single_upgrade: single_upgrade
-				})				
+				})		
+				let created_unit = gameCore.assets.units[c_unit.core.id]
+
+				created_unit.core.path = core.path;
+				created_unit.core.targets = core.targets;
+				created_unit.core.fight_targets = core.fight_targets;				
+				
+				if(created_unit.core.targets.length > 0){
+					created_unit.drawTarget();
+				}
+				if(created_unit.core.fight_targets.length > 0){
+					created_unit.drawFightTarget();
+				}
+				if(created_unit.core.path.length > 0){
+					created_unit.resetColours();
+				}
+				
 			}
 		})		
+
+		// console.log(gameCore.assets.units[0].core.path)				
 	}
 
 	addUnit = (options) => {
@@ -254,7 +272,10 @@ const game_squad_setup = class {
 
 
 		// this.unit_list.push(new unit(unit_data));
-		gameCore.assets.units.push(new unit(unit_data));
+		let c_unit = new unit(unit_data)
+		gameCore.assets.units.push(c_unit);
+
+		return c_unit
 	}
 
 
