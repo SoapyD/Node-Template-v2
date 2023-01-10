@@ -50,6 +50,9 @@ module.exports = class game_actions {
             }
 
             databaseHandler.updateData(game_data)
+            this.reset({
+                game_data: game_data
+            })
 
             socketHandler.setMode({
                 id: options.id,
@@ -217,9 +220,9 @@ module.exports = class game_actions {
 
                 //UPDATE POSITIONS OF UNITS
                 game_data.units.forEach((unit) => {
-                    // unit.path = [];
-                    // unit.targets = [];
-                    // unit.fight_targets = [];
+                    unit.path = [];
+                    unit.targets = [];
+                    unit.fight_targets = [];
                     // unit.moved = false;
                     // unit.shoot = false;
                     // unit.charged = false;
@@ -677,7 +680,7 @@ module.exports = class game_actions {
 
                                 //UPDATE GAME DATA SO IT SAVES THE TARGET FOR THAT UNIT
                                 let update = {}
-                                update["units."+options.saved_unit.id+".fight_targets."+options.saved_unit.targets.length] = target; 
+                                update["units."+options.saved_unit.id+".fight_targets."+options.saved_unit.fight_targets.length] = target; 
     
                                 let update_options = 
                                 {

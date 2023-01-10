@@ -1,13 +1,4 @@
 
-UI 
-----------------------------
--pass status effects and special rules as text to client so they can be displayed (SRs currently show only as IDs)
-    -DONE -Special rules passed when units PLACED
-    -Status Effects 
-        -are saved to game_data when applied on server
-        -are not passed to client when initially applied
-        -are passed to client when game is reloaded
-        -NOT TESTED, are they passed to client when a complete reload occurs 
 
 ERRORS
 ----------------------------
@@ -15,29 +6,34 @@ ERRORS
 
 RELOAD GAME
 ----------------------------
--Redraw all targets, fight targets etc a unit has
+-DONE -Redraw all targets, fight targets etc a unit has
+-DONE -click location for the reset location of a unit with a path stops users from being able to select that unit for shooting later 
+(as the click location doesn't align to where the unit sprite is)
+    -This was being caused by actionHandler.reset not being able to reset paths and targets when a mode is changed
+
+-check redraw of paths and targets works with complete reload
 -check and status effects still apply once a game is reloaded
 -make sure any barriers still in the game are reloaded
 -pass side data, setting the current side
 
 
+
+
 STATES
 ----------------------------
--click location for the reset location of a unit with a path stops users from being able to select that unit for shooting later 
-(as the click location doesn't align to where the unit sprite is)
-
 -add in function to advance side so the turn can be passed on
 
 -implement a full set of moving states for actions, by which I mean, a switch that'll advance 
 the current mode once all players have readied up
 
-states
+STATES
     -Move
     -Shoot
     -Charge
     -Fight
     -Effects
     -Reset
+    -Sync
     -End Turn
 
 
@@ -56,7 +52,9 @@ ACTIONS
 ----------------------------
 FIGHTING
 -BUG -Right click on fighting is deletion all melee actions lined up, instead of just the last one
-    -Also check shooting for this bug
+    -It also allows users to apply any number of targets, which undoes previous ones
+    -Also doesn't show x/x targets aligned
+    -DONE -Also check shooting for this bug
 
 -include a fighting bonus for units fighting the same target unit. +1 per additional fighter
     

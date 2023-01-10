@@ -623,7 +623,7 @@ drawInfo(sprite)
 				}
 				break;
 			case "fight":
-				if(this.core.targets.fight_targets > 0){
+				if(this.core.fight_targets.length > 0){
 					string = this.core.fight_targets.length + "/" + this.melee_class[this.core.selected_melee].max_targets
 				}
 				break;				
@@ -1002,6 +1002,7 @@ drawFightTarget() {
 			})
 
 			this.path_graphic.strokePath();		
+			this.updateElements(this.sprite_ghost)			
 		}
 	}catch(e){
 

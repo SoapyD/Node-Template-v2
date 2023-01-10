@@ -617,12 +617,18 @@ GameUIScene.setUnitHUD = (unit) => {
 			})
 			element.setText("f_special",special_rules)
 	
-			let status = ''
-			if(unit.core.poison){
-				status += 'poisoned'
+			// let status = ''
+			// if(unit.core.poison){
+			// 	status += 'poisoned'
+			// }
+			let status_effects = []
+			if(unit.core.status_effects){
+				unit.core.status_effects.forEach((rule) => {
+					status_effects.push(rule.class.name)
+				})	
 			}
-	
-			element.setText("f_status",status)
+
+			element.setText("f_status",status_effects)
 		}
 
 	}catch(e){
