@@ -50,14 +50,7 @@ ARMY PLACEMENT
 
 ACTIONS
 ----------------------------
-FIGHTING
--BUG -Right click on fighting is deletion all melee actions lined up, instead of just the last one
-    -It also allows users to apply any number of targets, which undoes previous ones
-    -Also doesn't show x/x targets aligned
-    -DONE -Also check shooting for this bug
-
--include a fighting bonus for units fighting the same target unit. +1 per additional fighter
-    
+ 
 
 BUGS
 ----------------------------
@@ -76,7 +69,7 @@ WOULD LIKES
 
 -remove NULL moving and shooting elements so they don't tax the socket emit
 
-
+-include a fighting bonus for units fighting the same target unit. +1 per additional fighter
 
 
 
@@ -96,6 +89,14 @@ WOULD LIKES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+
+FIGHTING
+-BUG -Right click on fighting is deletion all melee actions lined up, instead of just the last one
+    -DONE -Also check shooting for this bug
+    -DONE -It also allows users to apply any number of targets, which undoes previous ones
+    -DONE -Also doesn't show x/x targets aligned
+   
 
 UI 
 ----------------------------
