@@ -172,7 +172,8 @@ const game_squad_setup = class {
 			}
 		})		
 
-		// console.log(gameCore.assets.units[0].core.path)				
+		// console.log(gameCore.assets.units_preload[0].targets)
+		// console.log(gameCore.assets.units[0].core.targets)				
 	}
 
 	addUnit = (options) => {

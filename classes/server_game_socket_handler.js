@@ -216,17 +216,23 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 ]
             })        
 
-
             game_data = await databaseHandler.findData({
                 model: "GameData"
                 ,search_type: "findOne"
                 ,params: {_id: options.data.id}
             }, false)         
 
-            this.setMode({
+            let mode_options = {
                 id: options.id,
                 game_data: game_data[0]
-            })
+            }
+            if(options.data.update.disableReset){
+                mode_options.disableReset = 1
+            }else{
+                mode_options.disableReset = 0
+            }
+
+            this.setMode(mode_options)
         }
         catch(e){
             let options = {
@@ -264,6 +270,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             if(options.source){
                 type = options.type;
             }
+
+            // console.log(game_data.units[0].targets)
 
             //RETURN POSITIONAL DATA TO PLAYERS
             let return_options = {
@@ -316,6 +324,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 data: {
                     message: "Set Mode",
                     mode: options.game_data.mode,
+                    disableReset: options.disableReset
                 }
             }
             this.sendMessage(return_options)     
@@ -342,7 +351,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
         catch(e){
             let options = {
                 "class": "game_socket_handler",
-                "function": "setMode",
+                "function": "changeMode",
                 "e": e
             }
             errorHandler.log(options)

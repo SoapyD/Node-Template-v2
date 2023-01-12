@@ -4,18 +4,24 @@ ERRORS
 ----------------------------
 -errors aren't saving useful details or any for that matter
 
+
+
 RELOAD GAME
 ----------------------------
 -DONE -Redraw all targets, fight targets etc a unit has
 -DONE -click location for the reset location of a unit with a path stops users from being able to select that unit for shooting later 
 (as the click location doesn't align to where the unit sprite is)
-    -This was being caused by actionHandler.reset not being able to reset paths and targets when a mode is changed
+    -REASON -This was being caused by actionHandler.reset not being able to reset paths and targets when a mode is changed
 
 -check redraw of paths and targets works with complete reload
+    -It isn't working but think this may be due to a reset being run when the mode is reset
+    -set mode is run by the server after the saveunit method id run
+
 -check and status effects still apply once a game is reloaded
 -make sure any barriers still in the game are reloaded
+    -Make sure they reload with the right life value
 -pass side data, setting the current side
-
+-make sure selected unit is still highlighted
 
 
 
@@ -54,6 +60,9 @@ ACTIONS
 
 BUGS
 ----------------------------
+-DONE -user_data object doesn't exist in socket room.
+    -FIX -Move this to clientRoomHandler.user.id instead
+
 -BUG -Couldn't remove a special ability from the squad list, only replace it
 -BUG -There may be a bug that appropriates damage to the wrong unit
 

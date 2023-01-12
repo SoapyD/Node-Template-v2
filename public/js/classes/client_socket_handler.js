@@ -130,7 +130,8 @@ const client_socket_handler = class {
                         action: action
                         ,room_name: clientRoomHandler.core.room_name
                         ,password: clientRoomHandler.core.password
-                        ,users: [user_data._id]
+                        // ,users: [user_data._id]
+                        ,users: [clientRoomHandler.user.id]
                         ,game_id: gameCore.data.id
                     }     
                 }    

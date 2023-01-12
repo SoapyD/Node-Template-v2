@@ -162,6 +162,8 @@ clientSocketHandler.reloadGameData = (options) => {
         clientSocketHandler.setupGameData(options)
 
         gameCore.assets.units_preload = options.data.units
+        // console.log(options.data.units[0].targets)
+        // console.log(gameCore.assets.units_preload[0].targets)
         
         //IF GAMECORE CURRENT SCENE IS GAME_SCENE, RELOAD UNITS
         if(gameCore.current_scene.scene.key == 'GameScene'){
@@ -169,9 +171,10 @@ clientSocketHandler.reloadGameData = (options) => {
             GameScene.game_squad_setup.runPlacement();
             // gameCore.assets.units = GameScene.game_squad_setup.unit_list;     
             //SET MODE
-            // clientSocketHandler.setMode(options);        
+            options.data.disableReset = 1;
+            clientSocketHandler.setMode(options);        
 
-            gameCore.data.mode = options.data.mode;
+            // gameCore.data.mode = options.data.mode;
 
             if(GameUIScene.mode_button){
                 GameUIScene.mode_button.updateText(gameCore.data.mode)
@@ -234,6 +237,10 @@ clientSocketHandler.saveGame = () => {
             let data = {
                 // id: gameCore.data.id,
             }
+            if(gameCore.assets.units_preload.length > 0){
+                data.disableReset = 1;
+            }
+
             data.units = [];
             gameCore.assets.units.forEach((unit) => {
                 //THIS IS THE REASON WHY UNITS AREN'T BEING SAVED CORRECTLY
@@ -270,7 +277,9 @@ clientSocketHandler.saveGame = () => {
 
 clientSocketHandler.setMode = (options) => {
     try{
-        gameCore.resetAll();
+        if(!options.data.disableReset){
+            gameCore.resetAll();
+        }
         gameCore.data.mode = options.data.mode;
 
         if(GameUIScene.mode_button){
@@ -280,7 +289,7 @@ clientSocketHandler.setMode = (options) => {
 
         let options = {
             "class": "clientGameSocketHandler",
-            "function": "moveMarker",
+            "function": "setMode",
             "e": e
         }
         errorHandler.log(options)
@@ -303,7 +312,7 @@ clientSocketHandler.changeMode = (options) => {
 
         let options = {
             "class": "clientGameSocketHandler",
-            "function": "moveMarker",
+            "function": "changeMode",
             "e": e
         }
         errorHandler.log(options)
@@ -507,7 +516,7 @@ clientSocketHandler.readyUp = (options) => {
 
         let options = {
             "class": "clientGameSocketHandler",
-            "function": "moveMarker",
+            "function": "readyUp",
             "e": e
         }
         errorHandler.log(options)
@@ -586,7 +595,7 @@ clientSocketHandler.setPath = (options) => {
 
         let options = {
             "class": "clientGameSocketHandler",
-            "function": "moveMarker",
+            "function": "setPath",
             "e": e
         }
         errorHandler.log(options)
@@ -612,7 +621,7 @@ clientSocketHandler.setPotentialPaths = (options) => {
 
         let options = {
             "class": "clientGameSocketHandler",
-            "function": "moveMarker",
+            "function": "setPotentialPaths",
             "e": e
         }
         errorHandler.log(options)
@@ -732,7 +741,7 @@ clientSocketHandler.moveUnit = (options) => {
 
         let options = {
             "class": "clientGameSocketHandler",
-            "function": "moveMarker",
+            "function": "moveUnit",
             "e": e
         }
         errorHandler.log(options)
@@ -799,7 +808,7 @@ clientSocketHandler.setShootingTargets = (options) => {
 
         let options = {
             "class": "clientGameSocketHandler",
-            "function": "moveMarker",
+            "function": "setShootingTargets",
             "e": e
         }
         errorHandler.log(options)
@@ -904,7 +913,7 @@ clientSocketHandler.setFightTargets = (options) => {
 
         let options = {
             "class": "clientGameSocketHandler",
-            "function": "moveMarker",
+            "function": "setFightTargets",
             "e": e
         }
         errorHandler.log(options)
