@@ -207,7 +207,14 @@ const game_core = class {
     }
 
 
-    resetAll = () => {
+    resetAll = (options) => {
+
+        if(options.data.cohesion_resets){
+            options.data.cohesion_resets.forEach((cohesion_reset) => {
+                gameCore.assets.units[cohesion_reset.id].core.cohesion_check = cohesion_reset.cohesion_check
+            })
+        }
+
         this.assets.units.forEach((unit) => {
             if (unit.core.alive){
                 drawPath(
@@ -223,6 +230,8 @@ const game_core = class {
                 unit.drawTarget();
                 unit.core.fight_targets = [];
                 unit.drawFightTarget();
+
+                unit.updateElements(unit.sprite)
             }
         })
 

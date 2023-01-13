@@ -226,11 +226,11 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 id: options.id,
                 game_data: game_data[0]
             }
-            if(options.data.update.disableReset){
-                mode_options.disableReset = 1
-            }else{
-                mode_options.disableReset = 0
-            }
+            // if(options.data.update.disableReset){
+            //     mode_options.disableReset = 1
+            // }else{
+            //     mode_options.disableReset = 0
+            // }
 
             this.setMode(mode_options)
         }
@@ -324,7 +324,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 data: {
                     message: "Set Mode",
                     mode: options.game_data.mode,
-                    disableReset: options.disableReset
+                    // disableReset: options.disableReset
                 }
             }
             this.sendMessage(return_options)     
@@ -524,6 +524,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 functionGroup: "core",
                 function: "resetAll",
                 data: {
+                    cohesion_resets: options.cohesion_resets
                 }
             }
 

@@ -171,7 +171,7 @@ clientSocketHandler.reloadGameData = (options) => {
             GameScene.game_squad_setup.runPlacement();
             // gameCore.assets.units = GameScene.game_squad_setup.unit_list;     
             //SET MODE
-            options.data.disableReset = 1;
+            // options.data.disableReset = 1;
             clientSocketHandler.setMode(options);        
 
             // gameCore.data.mode = options.data.mode;
@@ -237,9 +237,9 @@ clientSocketHandler.saveGame = () => {
             let data = {
                 // id: gameCore.data.id,
             }
-            if(gameCore.assets.units_preload.length > 0){
-                data.disableReset = 1;
-            }
+            // if(gameCore.assets.units_preload.length > 0){
+            //     data.disableReset = 1;
+            // }
 
             data.units = [];
             gameCore.assets.units.forEach((unit) => {
@@ -277,9 +277,9 @@ clientSocketHandler.saveGame = () => {
 
 clientSocketHandler.setMode = (options) => {
     try{
-        if(!options.data.disableReset){
-            gameCore.resetAll();
-        }
+        // if(!options.data.disableReset){
+        //     gameCore.resetAll();
+        // }
         gameCore.data.mode = options.data.mode;
 
         if(GameUIScene.mode_button){
@@ -450,27 +450,7 @@ clientSocketHandler.resetAll = (options) => {
 
 
     try{
-        // console.log("RESET ALL")
-        // gameCore.assets.units.forEach((unit) => {
-        //     if (unit.core.alive){
-        //         drawPath(
-        //             unit.core.id
-        //             ,{ data:
-        //                 {
-        //                     path: []
-        //                 }
-        //             }
-        //         )
-
-        //         unit.core.targets = [];
-        //         unit.drawTarget();
-        //         unit.core.fight_targets = [];
-        //         unit.drawFightTarget();
-        //     }
-        // })
-
-        // gameCore.resetTempSprites();
-        gameCore.resetAll()
+        gameCore.resetAll(options)
 
     }catch(e){
 

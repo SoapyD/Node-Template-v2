@@ -2,21 +2,12 @@
 
 ERRORS
 ----------------------------
--errors aren't saving useful details or any for that matter
+
 
 
 
 RELOAD GAME
 ----------------------------
--DONE -Redraw all targets, fight targets etc a unit has
--DONE -click location for the reset location of a unit with a path stops users from being able to select that unit for shooting later 
-(as the click location doesn't align to where the unit sprite is)
-    -REASON -This was being caused by actionHandler.reset not being able to reset paths and targets when a mode is changed
-
--check redraw of paths and targets works with complete reload
-    -It isn't working but think this may be due to a reset being run when the mode is reset
-    -set mode is run by the server after the saveunit method id run
-
 -check and status effects still apply once a game is reloaded
 -make sure any barriers still in the game are reloaded
     -Make sure they reload with the right life value
@@ -56,15 +47,21 @@ ARMY PLACEMENT
 
 ACTIONS
 ----------------------------
- 
+
+
 
 BUGS
 ----------------------------
--DONE -user_data object doesn't exist in socket room.
-    -FIX -Move this to clientRoomHandler.user.id instead
-
 -BUG -Couldn't remove a special ability from the squad list, only replace it
+
 -BUG -There may be a bug that appropriates damage to the wrong unit
+
+-BUG -databaseHandler.updateData in actions.reset() is causing multiple errors. Can't save() document 
+    multiple times in pararrel
+
+-BUG -Selecting a new unit when selecting shooting targets resets the draw targets
+
+-BUG -errors aren't saving useful details or any for that matter
 
 
 
@@ -98,6 +95,23 @@ WOULD LIKES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -Need to reset complete reload path generations and the like as I've now seperated setMode and resetAll 
+
+-DONE -user_data object doesn't exist in socket room.
+    -FIX -Move this to clientRoomHandler.user.id instead
+-DONE -complete reload in move seems to mess up cohesion checks when paths are reset after setMode is run
+    -check if cohesion checks are run when reset removes paths and such
+    -they were not, had to check for any squads affected by path resets then pass the resulting cohesion update_options
+    back to each client.
+
+-DONE -Redraw all targets, fight targets etc a unit has
+-DONE -click location for the reset location of a unit with a path stops users from being able to select that unit for shooting later 
+(as the click location doesn't align to where the unit sprite is)
+    -REASON -This was being caused by actionHandler.reset not being able to reset paths and targets when a mode is changed
+-DONE -check redraw of paths and targets works with complete reload
+    -It isn't working but think this may be due to a reset being run when the mode is reset
+    -set mode is run by the server after the saveunit method id run
 
 
 FIGHTING
