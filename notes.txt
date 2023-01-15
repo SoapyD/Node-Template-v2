@@ -3,6 +3,15 @@
 ERRORS
 ----------------------------
 
+ACTIONS
+----------------------------
+
+
+BUGS
+----------------------------
+-BUG -If there's a selected unit and move selected, the resend potential paths.
+
+-BUG -errors aren't saving useful details or any for that matter
 
 
 
@@ -45,23 +54,6 @@ ARMY PLACEMENT
 -implement the old army placement method
 
 
-ACTIONS
-----------------------------
-
-
-
-BUGS
-----------------------------
--BUG -Couldn't remove a special ability from the squad list, only replace it
-
--BUG -There may be a bug that appropriates damage to the wrong unit
-
--BUG -databaseHandler.updateData in actions.reset() is causing multiple errors. Can't save() document 
-    multiple times in pararrel
-
--BUG -Selecting a new unit when selecting shooting targets resets the draw targets
-
--BUG -errors aren't saving useful details or any for that matter
 
 
 
@@ -95,6 +87,19 @@ WOULD LIKES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -Couldn't remove a special ability from the squad list, only replace it
+    -FIXED -updated controller to check for missing array saves then add them in to overwrite those removed array elements
+
+-DONE -Selecting a new unit when selecting shooting targets resets the draw targets
+    -FIXED -This was part of the reset selected unit process. DrawPath() uses the same graphic as targets
+
+-DONE -databaseHandler.updateData in actions.reset() is causing multiple errors. Can't save() document 
+    multiple times in pararrel
+    -FIXED -This is resolved by removing the updateData action in 'select mode' as it's immediately followed by the reset
+
+-DONE -There may be a bug that appropriates damage to the wrong unit
+    -CANCELLED -Can't see any evidence of this
 
 -DONE -Need to reset complete reload path generations and the like as I've now seperated setMode and resetAll 
 

@@ -37,6 +37,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 id: options.id,
                 functionGroup: "core",
                 function: "startGameRoom", 
+                data : {
+                    message: 'Start Game Room'
+                }
             }        
 
             this.sendMessage(return_options)             
@@ -162,6 +165,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 function: "setupGameData",
                 scene: 'GameScene',
                 data: {
+                    message: 'Setup Game Data',
                     id: game_datas[0]._id,
                     forces: game_datas[0].forces
                 }
@@ -176,7 +180,10 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 functionGroup: "core",
                 function: "transitionScene",
                 scene: 'GameScene',
-                uiscene: 'StartUIScene'   
+                uiscene: 'StartUIScene',
+                data: {
+                    message: 'Transition Scene'
+                }   
             }        
 
             this.sendMessage(return_options) 
@@ -504,6 +511,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 function: "resetSelection",
                 data: options.data
             }
+            return_options.data.message = 'Reset Selection'
 
             this.sendMessage(return_options)        
         }
@@ -524,6 +532,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 functionGroup: "core",
                 function: "resetAll",
                 data: {
+                    message: 'Reset All',
                     cohesion_resets: options.cohesion_resets
                 }
             }
@@ -627,7 +636,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 functionGroup: "core",
                 function: "setPath",
                 data: {
-                    // message: "Left Click",
+                    message: "Set Path",
                     ids: options.process.ids,
                     path: options.process.path,
                     squad_cohesion_info: options.squad_cohesion_info
@@ -858,7 +867,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 functionGroup: "core",
                 function: "setShootingTargets",
                 data: {
-                    message: "Set Shooting Tatgets",
+                    message: "Set Shooting Targets",
                     unit: options.unit,
                     // path: options.path,
                     targets: options.targets,

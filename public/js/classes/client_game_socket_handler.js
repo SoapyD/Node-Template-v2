@@ -407,7 +407,9 @@ clientSocketHandler.resetSelection = (options) => {
             })
         }
         const runDeSelection = (unit) => {
-            unit.drawPath(gameCore.presets.deselectMove)      
+            if(unit.core.path.length > 0){
+                unit.drawPath(gameCore.presets.deselectMove)      
+            }
                             
             unit.drawCohesion({
                 sprite: unit.sprite_ghost
@@ -415,25 +417,19 @@ clientSocketHandler.resetSelection = (options) => {
                 ,colour_fail: gameCore.presets.deselectCohesionFail                
             })      
         }        
+                      
+        gameCore.assets.units.forEach((unit) => {
+            if(unit.core.player == gameCore.data.player){
+                if(unit.core.id == options.data.selected_unit_id){                        
+                    runSelection(unit)         
+                    GameUIScene.setUnitHUD(unit)
+                    gameCore.data.selected_unit = unit.core.id       
+                }else{
+                    runDeSelection(unit)               
+                }
+            }
+        })                
 
-        // switch(gameCore.data.mode){
-        //     case "move":
-        //     case "charge":        
-        //     case "shoot":                                    
-                //RESET PATHS
-                gameCore.assets.units.forEach((unit) => {
-                    if(unit.core.player == gameCore.data.player){
-                        if(unit.core.id == options.data.selected_unit_id){                        
-                            runSelection(unit)         
-                            GameUIScene.setUnitHUD(unit)
-                            gameCore.data.selected_unit = unit.core.id       
-                        }else{
-                            runDeSelection(unit)               
-                        }
-                    }
-                })                
-            // break;      
-        // }        
 
     }catch(e){
 
@@ -589,12 +585,13 @@ clientSocketHandler.setPotentialPaths = (options) => {
     // console.log(options.data)
 
     try{
-        // let unit = gameCore.assets.units[options.data.id]
-        gameCore.live_tiles = options.data.live_tiles
-        gameCore.drawLiveTiles()
-
-        if(options.data.alert_message){
-            GameScene.showMessage(options.data.alert_message)
+        if(gameCore.data.mode == 'move' || gameCore.data.mode == 'charge'){
+            gameCore.live_tiles = options.data.live_tiles
+            gameCore.drawLiveTiles()
+    
+            if(options.data.alert_message){
+                GameScene.showMessage(options.data.alert_message)
+            }
         }
 
     }catch(e){

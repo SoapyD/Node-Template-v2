@@ -49,7 +49,8 @@ module.exports = class game_actions {
                     break;                     
             }
 
-            databaseHandler.updateData(game_data)
+            //TURNED OFF UPDATE HERE AS THERE'S ONE IN THE RESET PROC
+            // databaseHandler.updateData(game_data)
             this.reset({
                 id: options.id,
                 game_data: game_data

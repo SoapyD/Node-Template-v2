@@ -579,11 +579,13 @@ updateElements(sprite){
 		this.drawHealth(sprite);
 		this.drawFightRadius();
 
-		this.drawCohesion({
-			sprite: sprite
-			,colour_pass: gameCore.presets.deselectCohesionPass
-			,colour_fail: gameCore.presets.deselectCohesionFail  			
-		})
+		if(this.core.id != gameCore.data.selected_unit){
+			this.drawCohesion({
+				sprite: sprite
+				,colour_pass: gameCore.presets.deselectCohesionPass
+				,colour_fail: gameCore.presets.deselectCohesionFail  			
+			})
+		}
 	}catch(e){
 
 		let options = {
@@ -986,7 +988,7 @@ drawSymbol(){
 drawFightTarget() {	
 
 	try{	
-		if (this.core.fight_targets){
+		if (this.core.fight_targets.length){
 			
 			this.resetShoot();
 

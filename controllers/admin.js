@@ -270,10 +270,22 @@ exports.update = async(req,res) => {
 			params: []
 		}
 		options.params.push(params)
+
+        //CHECK THE SAVE DATA FOR ANY ARRAYS THAT DON'T HAVE ANY VALUES SAVED
+        //IF SO, MAKE A BLANK ARRAY ELEMENT FOR THAT MISSING KEY
+        let model_info = route_info[0][parseInt(item)]
+        model_info.index.forEach((key) => {
+            console.log(key.column_name)
+            if(!params[key.column_name.toLowerCase()] && !key.readonly){
+                if(key.value.isMongooseArray){
+                    params[key.column_name.toLowerCase()] = [];
+                }
+            }
+        })
 	
 		let updated = await databaseHandler.updateData(record[0], options)
 	
-        req.flash("success", "Army Updated"); 
+        req.flash("success", route.model+" Updated"); 
 		res.redirect("/admin/"+item)	
 	}catch(err){
 		req.flash("error", "There was an error trying to save your army list"); 
