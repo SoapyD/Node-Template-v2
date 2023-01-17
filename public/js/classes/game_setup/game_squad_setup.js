@@ -193,7 +193,14 @@ const game_squad_setup = class {
                 life: barrier_info.life,
                 barrier: barrier_info.barrier_class
             })
-        })		
+        })
+
+		//RESET SELECTED UNIT
+		clientSocketHandler.resetSelection({
+			data: {
+				selected_unit_id: gameCore.data.selected_unit
+			}
+		})
 
 	}
 

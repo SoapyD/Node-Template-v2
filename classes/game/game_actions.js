@@ -858,84 +858,16 @@ module.exports = class game_actions {
             switch(options.game_data.mode){
                 case "move":
                 case "charge":
-
-                /*
-                    //REMOVE PATH FROM SELECTED UNIT 
-                    //CHECK TO SEE IF UNIT RESET CAUSES ANY OTHER UNITS TO RESET
-                    let unitCheck = (unit, game_data) => {
-                        let check_array = []
-                        let update = {};
-                        unit.path = []; //RESET PATH SO UNIT tileX POS IS USED
-                        check_array.push(unit)
-                        for(let i=0;i<1000;i++){
-                            let new_check_array = [];
-                            check_array.forEach((check_unit) => {
-
-                                let check_pos = {
-                                    x: check_unit.tileX,
-                                    y: check_unit.tileY,                                
-                                }
-                                update["units."+check_unit.id+".path"] = [];
-
-                                //CHECK COHERANCY FOR THE UNIT
-                                let squad = utils.cohesionCheck({
-                                    game_data: game_data,
-                                    unit: check_unit
-                                });
-
-                                //ADD COHESION CHECK
-                                squad.forEach((squad_unit) => {
-                                    update["units."+squad_unit.id+".cohesion_check"] = squad_unit.cohesion_check;
-                                    squad_cohesion_info.push({
-                                        id: squad_unit.id
-                                        ,cohesion_check: squad_unit.cohesion_check
-                                    })        
-                                })
-
-                                reset_move_ids.push(check_unit.id)
-
-                                let clashed_units = _.filter(options.game_data.units, (unit) => {
-                                    let range = collisionHandler.getUnitTileRange(unit)
-                                    return (
-                                        range.min.x <= check_pos.x && range.min.y <= check_pos.y
-                                        && range.max.x >= check_pos.x && range.max.y >= check_pos.y
-                                        && unit.id !== check_unit.id
-                                        && unit.path.length > 0
-                                    )
-                                  })  
-
-                                if(clashed_units.length > 0){
-                                    clashed_units.forEach((clash)=>{
-                                        new_check_array.push(clash)
-                                    })
-                                }
-                            })
-
-                            if(new_check_array.length > 0){
-                                //ADD NEW CHECK
-                                check_array = new_check_array
-                            }else{
-                                return update
-                            }
-
-                        }
-                    }
-                */
-                // update = unitCheck(unit, options.game_data)
-                // console.log(update)
-
-                let return_info = this.resetPath(unit, options.game_data)
-                update = return_info.update
-                squad_cohesion_info = return_info.squad_cohesion_info
-                reset_move_ids = return_info.reset_move_ids
-
+                    let return_info = this.resetPath(unit, options.game_data)
+                    update = return_info.update
+                    squad_cohesion_info = return_info.squad_cohesion_info
+                    reset_move_ids = return_info.reset_move_ids
                 break; 
                 case "shoot":
                     //REMOVE LAST TARGET FROM UNIT
                     new_targets = unit.targets
                     new_targets.pop()
                     update["units."+unit.id+".targets"] = new_targets;
-                    // update["units."+unit.id+".potential_targets"] = unit.potential_targets.pop();
                     //SEND DATA TO CLIENTS
                 break;     
                 case "fight":

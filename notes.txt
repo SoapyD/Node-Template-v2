@@ -5,7 +5,11 @@ ERRORS
 
 ACTIONS
 ----------------------------
--Effects needs to tick down life of barriers and update the client side
+
+RELOAD GAME
+----------------------------
+
+
 
 
 BUGS
@@ -13,14 +17,6 @@ BUGS
 -BUG -If there's a selected unit and move selected, the resend potential paths.
 
 -BUG -errors aren't saving useful details or any for that matter
-
-
-
-RELOAD GAME
-----------------------------
--pass side data, setting the current side
-
--make sure selected unit is still highlighted
 
 
 
@@ -68,7 +64,8 @@ WOULD LIKES
 
 -include a fighting bonus for units fighting the same target unit. +1 per additional fighter
 
-
+-Add a limiter on barriers for collisions.barrier so only barriers like "blunt" can be affected by bullets
+    -DONE -check BLUNTing action actually appears when it affects a bullet
 
 
 
@@ -86,6 +83,12 @@ WOULD LIKES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -make sure selected unit is still highlighted
+
+-DONE -pass side data, setting the current side
+
+-DONE -Effects needs to tick down life of barriers and update the client side
 
 -DONE -make sure any barriers still in the game are reloaded
     -DONE -Make sure they reload with the right life value

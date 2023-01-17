@@ -293,6 +293,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     barriers: game_data.barriers,
                     players: game_data.players,
                     id: options.data.id,
+                    current_side: game_data.current_side,
+                    reloading_data: 1,
                     message: 'reloading game data'
                 }
             }        
@@ -1260,6 +1262,19 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     }
                 })
 
+                let new_barriers = []
+                let updated_barriers = []                
+
+                //AGE BARRIERS AND KILL THEM OFF IF THEY'RE NO LONGER NEEDED
+                game_data.barriers.forEach((barrier, i) => {
+                    barrier.life -= 1
+                    if(barrier.life > 0){
+                        new_barriers.push(barrier)
+                    }
+                    updated_barriers.push(barrier);
+                })
+                game_data.barriers = new_barriers;
+
                 //LOOP THROUGH SPECIAL EFFECTS, LIKE REGEN
 
                 databaseHandler.updateData(game_data)
@@ -1271,7 +1286,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     function: "generateEffects",
                     data: {
                         units_status_affected: units_affected,
-                        units_specials_affected: units_specials                        
+                        units_specials_affected: units_specials,
+                        updated_barriers: updated_barriers                  
                     }
                 }
 

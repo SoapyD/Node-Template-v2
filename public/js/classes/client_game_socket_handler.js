@@ -129,6 +129,16 @@ clientSocketHandler.setupGameData = (options) => {
                 }
             })
         }
+        if(options.data.reloading_data){
+            gameCore.data.current_side = options.data.current_side
+
+            //SET SELECTED UNIT
+            if(options.data.players){
+                //FIND OUT WHICH FORCE CLIENT USER IS
+                let player_data = options.data.players[gameCore.data.player];
+                gameCore.data.selected_unit = player_data.selected_unit;
+            }
+        }
     }catch(e){
 
         let options = {
@@ -393,7 +403,6 @@ clientSocketHandler.moveMarker = (options) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 
 clientSocketHandler.resetSelection = (options) => {
-
 
     try{
 
@@ -1001,7 +1010,18 @@ clientSocketHandler.drawPopup = (options) => {
                 })
             }
 
-    
+            if(options.data.updated_barriers){
+                options.data.updated_barriers.forEach((barrier_info, i) => {
+                    let barrier = gameCore.assets.barriers[i];
+
+                    barrier.life = barrier_info.life;
+                    barrier.updateText();         
+                    if(barrier_info.life <= 0){
+                        barrier.kill();
+                    }                               
+                })            
+            }
+
         }catch(e){
     
             let options = {
