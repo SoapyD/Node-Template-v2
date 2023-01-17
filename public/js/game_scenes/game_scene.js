@@ -104,10 +104,12 @@ GameScene.resetTempSprites = () => {
 
 GameScene.showMessage = (text) => {
 	let options = {
-		scene: GameScene.scene,
+		scene: GameUIScene.scene,
 		pos: {
-			x: GameScene.rectangle.x,
-			y: GameScene.rectangle.y
+			// x: GameScene.rectangle.x,
+			// y: GameScene.rectangle.y
+			x: gameCore.config.width / 2,
+			y: gameCore.config.height / 2,			
 		},
 		text: text
 	}

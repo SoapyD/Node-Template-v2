@@ -3,21 +3,21 @@
 ERRORS
 ----------------------------
 
-ACTIONS
-----------------------------
-
 RELOAD GAME
 ----------------------------
 
 
 
+ACTIONS
+----------------------------
+-Add unit readiness option to game UI.
+
 
 BUGS
 ----------------------------
--BUG -If there's a selected unit and move selected, the resend potential paths.
+-BUG -If there's a selected unit and move selected, then resend potential paths.
 
 -BUG -errors aren't saving useful details or any for that matter
-
 
 
 STATES
@@ -83,6 +83,9 @@ WOULD LIKES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -popup appearing on game world and not UI, so is scrolling when the map is scrolled
+    -Moved thie functionality to generate in GameUIScene instead
 
 -DONE -make sure selected unit is still highlighted
 

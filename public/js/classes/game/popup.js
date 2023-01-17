@@ -2,7 +2,7 @@ const popup = class {
 	constructor(options) {	
 		
 		let text_style = { 
-			font: "16px Arial",
+			font: "48px Arial",
 			fill: "#ff0044",
 			align: "center",
 			stroke: "#000000",

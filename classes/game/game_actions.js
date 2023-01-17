@@ -33,20 +33,23 @@ module.exports = class game_actions {
                     game_data.mode = 'shoot';
                     break;
                 case "shoot":
-                    game_data.mode = 'effects';
-                    break;     
-                case "effects":
                     game_data.mode = 'charge';
-                    break;                         
+                    break;                       
                 case "charge":
                     game_data.mode = 'fight';
-                    break;     
+                    break;                              
                 case "fight":
-                    game_data.mode = 'sync';
+                    game_data.mode = 'effects';
                     break;
+                case "effects":
+                    game_data.mode = 'sync';
+                    break;                      
                 case "sync":
+                    game_data.mode = 'end turn';
+                    break;   
+                case "end turn":
                     game_data.mode = 'move';
-                    break;                     
+                    break;                                         
             }
 
             //TURNED OFF UPDATE HERE AS THERE'S ONE IN THE RESET PROC

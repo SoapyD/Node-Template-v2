@@ -188,7 +188,7 @@ clientSocketHandler.reloadGameData = (options) => {
 
             if(GameUIScene.mode_button){
                 GameUIScene.mode_button.updateText(gameCore.data.mode)
-            }            
+            }
 
         }else{
             //ELSE TRANSITION TO GAME_SCENE WHICH SHOULD RELOAD UNITS AS STANDARD
@@ -295,6 +295,9 @@ clientSocketHandler.setMode = (options) => {
         if(GameUIScene.mode_button){
             GameUIScene.mode_button.updateText(gameCore.data.mode)
         }
+
+        //SHOW POPUP
+        GameScene.showMessage(gameCore.data.mode+' mode selected')        
     }catch(e){
 
         let options = {

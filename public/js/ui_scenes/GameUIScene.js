@@ -58,9 +58,9 @@ var GameUIScene = new Phaser.Class({
     update: async function (time, delta)
     {
 
-		let console_text = "";
-		console_text += 'Mode: '+gameCore.data.mode_state+'\r'
-		console_text += 'Actions: '+GameScene.active_actions+'\r\r'
+		let console_text = "DEV CONSOLE"+'\r';
+		console_text += '////////////////////////'+'\r'
+		// console_text += 'Mode: '+gameCore.data.mode_state+'\r'
 
 		GameUIScene.debug_console.updateText(console_text)
 
