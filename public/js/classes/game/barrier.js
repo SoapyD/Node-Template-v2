@@ -67,10 +67,14 @@ const barrier = class {
         this.life--;
         this.updateText()
         if (this.life <= 0){
-            this.alive = false;
-            this.sprite.destroy();
-            this.text.destroy();
+            this.kill();
         }
+    }
+
+    kill() {
+        this.alive = false;
+        this.sprite.destroy();
+        this.text.destroy();
     }
 
     checkCollisions = () => {

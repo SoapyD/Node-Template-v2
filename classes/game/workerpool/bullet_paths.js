@@ -126,6 +126,7 @@ runProcess = async(workerData) => {
                 if(attacker_gun.barrier){
                     let barrier = {
                         barrier_class: attacker_gun.barrier.id
+                        ,unit_origin_id: item.origin
                         ,life: attacker_gun.barrier.life
                         ,x: item.pos.x * game_data.tile_size
                         ,y: item.pos.y * game_data.tile_size                                    

@@ -275,7 +275,7 @@ exports.update = async(req,res) => {
         //IF SO, MAKE A BLANK ARRAY ELEMENT FOR THAT MISSING KEY
         let model_info = route_info[0][parseInt(item)]
         model_info.index.forEach((key) => {
-            console.log(key.column_name)
+            // console.log(key.column_name)
             if(!params[key.column_name.toLowerCase()] && !key.readonly){
                 if(key.value.isMongooseArray){
                     params[key.column_name.toLowerCase()] = [];

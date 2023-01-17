@@ -290,6 +290,8 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     mode: game_data.mode,
                     forces: game_data.forces,
                     units: game_data.units,
+                    barriers: game_data.barriers,
+                    players: game_data.players,
                     id: options.data.id,
                     message: 'reloading game data'
                 }

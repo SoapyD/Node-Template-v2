@@ -9,9 +9,11 @@ const game_core = class {
             btn_sprite: [],
             units: [],
             bullets: [],
-            units_preload: [],
             forces: [],
-            barriers: []           
+            barriers: [],
+            
+            units_preload: [],
+            barrier_preload: [],                        
         }
 
         this.data = {

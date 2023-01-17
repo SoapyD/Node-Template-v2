@@ -5,7 +5,6 @@ const barrierSchema = new mongoose.Schema({
     name: String
     ,description: String
 	,cost: Number
-	
     ,blast_radius: Number
     ,blast_sprite: String
     ,life: Number

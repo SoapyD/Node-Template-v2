@@ -191,7 +191,8 @@ const gameSchema = new mongoose.Schema({
 		,x: {type: Number, default: -1}
 		,y: {type: Number, default: -1}
 		,tileX: {type: Number, default: -1}
-		,tileY: {type: Number, default: -1}							
+		,tileY: {type: Number, default: -1}
+		,unit_origin_id: {type: Number, default: -1}						
 	}]
 	
 	,units: [unitSchema]

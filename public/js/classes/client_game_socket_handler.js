@@ -162,8 +162,8 @@ clientSocketHandler.reloadGameData = (options) => {
         clientSocketHandler.setupGameData(options)
 
         gameCore.assets.units_preload = options.data.units
-        // console.log(options.data.units[0].targets)
-        // console.log(gameCore.assets.units_preload[0].targets)
+        gameCore.assets.barrier_preload = options.data.barriers        
+        
         
         //IF GAMECORE CURRENT SCENE IS GAME_SCENE, RELOAD UNITS
         if(gameCore.current_scene.scene.key == 'GameScene'){

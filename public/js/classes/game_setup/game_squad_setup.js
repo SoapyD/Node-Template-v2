@@ -173,7 +173,28 @@ const game_squad_setup = class {
 		})		
 
 		// console.log(gameCore.assets.units_preload[0].targets)
-		// console.log(gameCore.assets.units[0].core.targets)				
+		// console.log(gameCore.assets.units[0].core.targets)	
+		
+		//RELOAD BARRIERS
+
+        //KILL ALL BARRIERS
+        if(gameCore.assets.barriers.length > 0){
+            gameCore.assets.barriers.forEach((barrier) => {
+                barrier.kill();
+            })
+        }
+        gameCore.assets.barrier_preload.forEach((barrier_info) => {
+            let unit = gameCore.assets.units[barrier_info.unit_origin_id];
+            new barrier({
+                unit: unit,
+                scene: gameCore.current_scene,
+                x: barrier_info.x, 
+                y: barrier_info.y,
+                life: barrier_info.life,
+                barrier: barrier_info.barrier_class
+            })
+        })		
+
 	}
 
 	addUnit = (options) => {

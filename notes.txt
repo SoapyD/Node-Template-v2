@@ -5,6 +5,7 @@ ERRORS
 
 ACTIONS
 ----------------------------
+-Effects needs to tick down life of barriers and update the client side
 
 
 BUGS
@@ -17,10 +18,8 @@ BUGS
 
 RELOAD GAME
 ----------------------------
--check and status effects still apply once a game is reloaded
--make sure any barriers still in the game are reloaded
-    -Make sure they reload with the right life value
 -pass side data, setting the current side
+
 -make sure selected unit is still highlighted
 
 
@@ -87,6 +86,11 @@ WOULD LIKES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -make sure any barriers still in the game are reloaded
+    -DONE -Make sure they reload with the right life value
+
+-DONE -check and status effects still apply once a game is reloaded
 
 -DONE -Couldn't remove a special ability from the squad list, only replace it
     -FIXED -updated controller to check for missing array saves then add them in to overwrite those removed array elements
