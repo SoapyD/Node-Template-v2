@@ -167,7 +167,9 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 data: {
                     message: 'Setup Game Data',
                     id: game_datas[0]._id,
-                    forces: game_datas[0].forces
+                    forces: game_datas[0].forces,
+                    current_side: game_datas[0].current_side,
+                    players: game_data[0].players
                 }
             }        
             this.sendMessage(return_options) 
@@ -278,6 +280,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 type = options.type;
             }
 
+
             // console.log(game_data.units[0].targets)
 
             //RETURN POSITIONAL DATA TO PLAYERS
@@ -294,7 +297,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     players: game_data.players,
                     id: options.data.id,
                     current_side: game_data.current_side,
-                    reloading_data: 1,
+                    // reloading_data: 1,
                     message: 'reloading game data'
                 }
             }        
@@ -433,6 +436,21 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             if(game_data[0]){
                 options.game_data = game_data[0];
                 stateHandler.readyUp(options)
+
+
+                let return_options =  {
+                    type: "room",
+                    id: options.id,                
+                    functionGroup: "core",
+                    function: "readyUp",
+                    data: {
+                        message: 'Ready Up',
+                        player: options.data.player
+                    }
+                }
+    
+                this.sendMessage(return_options)  
+
             }
         }
         catch(e){

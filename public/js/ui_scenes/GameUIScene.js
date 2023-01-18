@@ -92,7 +92,7 @@ GameUIScene.loadSingleButton = (scene) => {
 			label:  "+",
 			array: gameCore.assets.btn_sprite,
 
-			clickAction: clientSocketHandler.readyUp,
+			clickAction: clientSocketHandler.runReadyUp,
 			callbackParams: {},
 		}
 		

@@ -217,11 +217,30 @@ module.exports = class game_actions {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
 
-    reset = (options) => {
+    reset = async(options) => {
 
         try{
             if(options.game_data){
                 let game_data = options.game_data;
+
+                //reset all ready status' to false for players
+                let update_options = 
+                {
+                    model: "GameData"
+                    ,params: []
+                }   
+
+                game_data.players.forEach((player, i) => {
+                    let update = {}
+                    update["players."+i+".ready"] = false; 
+                    update_options.params.push(                {
+                        filter: {_id: game_data.id}, 
+                        value: {$set: update}
+                    })
+                })
+
+                await databaseHandler.updateOne(update_options)
+
 
                 //KEEP TRACK OF SIDE AND SQUADS HAVING PATHS RESET
                 let cohesion_check_units = []

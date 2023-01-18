@@ -119,6 +119,8 @@ clientSocketHandler.startGameRoom = () => {
 
 clientSocketHandler.setupGameData = (options) => {
     try{
+        gameCore.data.current_side = options.data.current_side
+
         if(options.data.forces){
             gameCore.data.id = options.data.id
             gameCore.assets.forces = options.data.forces
@@ -129,16 +131,27 @@ clientSocketHandler.setupGameData = (options) => {
                 }
             })
         }
-        if(options.data.reloading_data){
-            gameCore.data.current_side = options.data.current_side
 
-            //SET SELECTED UNIT
-            if(options.data.players){
-                //FIND OUT WHICH FORCE CLIENT USER IS
-                let player_data = options.data.players[gameCore.data.player];
-                gameCore.data.selected_unit = player_data.selected_unit;
-            }
+        // if(options.data.reloading_data){
+        //SET SELECTED UNIT
+        if(options.data.players){
+            gameCore.assets.players = options.data.players;
+            //FIND OUT WHICH FORCE CLIENT USER IS
+            let player_data = options.data.players[gameCore.data.player];
+            gameCore.data.selected_unit = player_data.selected_unit;
+
+            gameCore.assets.players.forEach((player, i) => {
+                let force = gameCore.assets.forces[i]
+                if(force.side == gameCore.data.current_side){
+                    if(player.ready){
+                        GameUIScene.setForcesHUD(i, "ready", true, false)
+                    }else{
+                        GameUIScene.setForcesHUD(i, "unready", true, true)
+                    }
+                }
+            })            
         }
+        // }
     }catch(e){
 
         let options = {
@@ -484,8 +497,7 @@ clientSocketHandler.resetAll = (options) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
-clientSocketHandler.readyUp = (options) => {
-
+clientSocketHandler.runReadyUp = (options) => {
 
     try{
         let options = {
@@ -504,12 +516,35 @@ clientSocketHandler.readyUp = (options) => {
 
         let options = {
             "class": "clientGameSocketHandler",
+            "function": "runReadyUp",
+            "e": e
+        }
+        errorHandler.log(options)
+    }        
+}
+
+
+clientSocketHandler.readyUp = (options) => {
+
+    try{
+        // gameCore.data.
+        // console.log("READY UP!!!")
+        let player_id = options.data.player
+        gameCore.assets.players[player_id].ready = true
+
+        GameUIScene.setForcesHUD(player_id, "ready", true, false)
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
             "function": "readyUp",
             "e": e
         }
         errorHandler.log(options)
     }        
 }
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      

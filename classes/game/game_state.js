@@ -8,26 +8,26 @@ module.exports = class game_state {
 	constructor(options) {	
     }
 
-    resetReady = (options) => {
+    // resetReady = (options) => {
 
-        //reset all ready status' to false for players
-        let update_options = 
-        {
-            model: "GameData"
-            ,params: []
-        }   
+    //     //reset all ready status' to false for players
+    //     let update_options = 
+    //     {
+    //         model: "GameData"
+    //         ,params: []
+    //     }   
 
-        options.game_data.players.forEach((player, i) => {
-            let update = {}
-            update["players."+i+".ready"] = false; 
-            update_options.params.push(                {
-                filter: {_id: options.game_data.id}, 
-                value: {$set: update}
-            })
-        })
+    //     options.game_data.players.forEach((player, i) => {
+    //         let update = {}
+    //         update["players."+i+".ready"] = false; 
+    //         update_options.params.push(                {
+    //             filter: {_id: options.game_data.id}, 
+    //             value: {$set: update}
+    //         })
+    //     })
 
-        databaseHandler.updateOne(update_options)
-    }
+    //     databaseHandler.updateOne(update_options)
+    // }
 
     readyUp = async(options) => {
         try{        
@@ -190,7 +190,7 @@ module.exports = class game_state {
 
         }
 
-        this.resetReady(options)
+        // this.resetReady(options)
     }
 
 }

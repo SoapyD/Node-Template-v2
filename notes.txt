@@ -10,7 +10,11 @@ RELOAD GAME
 
 ACTIONS
 ----------------------------
--Add unit readiness option to game UI.
+-Make sure end turn passed over readying unit UI popups
+
+GameSceneUI
+----------------------------
+-Make sure that any deaths record the correct score for the attacking unit
 
 
 BUGS
@@ -83,6 +87,12 @@ WOULD LIKES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -Set current side for players so ready/unready banner will display
+-DONE -Add unit readiness option to game UI.
+-DONE -Pass player data back to clients
+-DONE -Pass back ready status for players back to all clients
+-DONE -Make sure ready status for players is sent back and displayed by clients
 
 -DONE -popup appearing on game world and not UI, so is scrolling when the map is scrolled
     -Moved thie functionality to generate in GameUIScene instead

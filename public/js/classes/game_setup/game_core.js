@@ -10,6 +10,7 @@ const game_core = class {
             units: [],
             bullets: [],
             forces: [],
+            players: [],
             barriers: [],
             
             units_preload: [],
@@ -216,6 +217,14 @@ const game_core = class {
                 gameCore.assets.units[cohesion_reset.id].core.cohesion_check = cohesion_reset.cohesion_check
             })
         }
+
+        this.assets.players.forEach((player, i) => {
+            player.ready = false;
+            let force = this.assets.forces[i]
+            if(force.side == gameCore.data.current_side){
+                GameUIScene.setForcesHUD(i, "unready", true, true)
+            }
+        })
 
         this.assets.units.forEach((unit) => {
             if (unit.core.alive){
