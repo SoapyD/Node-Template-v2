@@ -5,7 +5,14 @@ ERRORS
 
 RELOAD GAME
 ----------------------------
+-maybe save unit direction so it can be redrawn when a complete reload occurs.
 
+
+SPRITE-ANIMATIONS
+----------------------------
+-set sprite depth depending on Y position
+-set tile depth depending on Y position
+-create an example weapon sprite loaded on top of the existing sprite
 
 
 ACTIONS
@@ -87,6 +94,10 @@ WOULD LIKES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -when a plug takes a path past a unit then ends movement outside of combat range, it still shows them as in combat
+at the end of the path
+    -Fixed - check on client side wasn't checking to see if clashing unit array had any entries, only that it existed
 
 -DONE -Set current side for players so ready/unready banner will display
 -DONE -Add unit readiness option to game UI.

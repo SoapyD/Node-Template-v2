@@ -2,11 +2,12 @@ module.exports = class game_maps {
 	constructor(options) {	
 
         this.tile_size = 0;
+        this.tileset = 0;
         this.acceptable_tiles = [];
         this.matrix = [];   
 
         this.data = {};
-        this.layer = 0;
+        this.layer = 1;
     }
 
     setup = async() => {
@@ -36,8 +37,9 @@ module.exports = class game_maps {
         const fs = require("fs-extra")
 
         const path = require("path");
-        const fullPath = path.resolve("./assets/map2.json");
-        // this.data = await fs.readJson(fullPath);
+        // const fullPath = path.resolve("./assets/map2.json");
+        const fullPath = path.resolve("./assets/table_1.json");
+
         promises.push(this.data = await fs.readJson(fullPath))
 
         return Promise.all(promises)
@@ -75,12 +77,12 @@ module.exports = class game_maps {
 
     setAcceptableTiles = () => {
         
-        this.acceptable_tiles = [];
+        this.acceptable_tiles = [0];
 
-        for(let i=0;i<this.data.tilesets[this.layer].tilecount;i++)
+        for(let i=0;i<this.data.tilesets[this.tileset].tilecount;i++)
         {
             let add_acceptable = true;
-            this.data.tilesets[this.layer].tiles.forEach((tile) => {
+            this.data.tilesets[this.tileset].tiles.forEach((tile) => {
                 if(tile.id === i){
                     if (tile.properties){
                         tile.properties.forEach((property) => {

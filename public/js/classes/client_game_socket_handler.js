@@ -370,19 +370,21 @@ clientSocketHandler.moveMarker = (options) => {
         //CHECK TO SEE IF MARKER IS ON A UNIT
         let unit_id = -1
         gameCore.assets.units.forEach((unit) => {
-            if(
-                options.data.x + (gameCore.data.tile_size / 2) > unit.sprite_ghost.x - (unit.sprite_ghost.width / 2) &&
-                options.data.x + (gameCore.data.tile_size / 2) < unit.sprite_ghost.x + (unit.sprite_ghost.width / 2) &&
-                options.data.y + (gameCore.data.tile_size / 2) > unit.sprite_ghost.y - (unit.sprite_ghost.height / 2) &&
-                options.data.y + (gameCore.data.tile_size / 2) < unit.sprite_ghost.y + (unit.sprite_ghost.height / 2)                                
-            ){
-                unit_id = unit.core.id
-                GameUIScene.setUnitHUD(unit)
-
-                if(gameCore.data.selected_unit != -1){
-                    let selected_unit = gameCore.assets.units[gameCore.data.selected_unit];
-                    GameUIScene.setChanceHUD(selected_unit, unit)
-                }                    
+            if(unit.sprite_ghost){
+                if(
+                    options.data.x + (gameCore.data.tile_size / 2) > unit.sprite_ghost.x - (unit.sprite_ghost.width / 2) &&
+                    options.data.x + (gameCore.data.tile_size / 2) < unit.sprite_ghost.x + (unit.sprite_ghost.width / 2) &&
+                    options.data.y + (gameCore.data.tile_size / 2) > unit.sprite_ghost.y - (unit.sprite_ghost.height / 2) &&
+                    options.data.y + (gameCore.data.tile_size / 2) < unit.sprite_ghost.y + (unit.sprite_ghost.height / 2)                                
+                ){
+                    unit_id = unit.core.id
+                    GameUIScene.setUnitHUD(unit)
+    
+                    if(gameCore.data.selected_unit != -1){
+                        let selected_unit = gameCore.assets.units[gameCore.data.selected_unit];
+                        GameUIScene.setChanceHUD(selected_unit, unit)
+                    }                    
+                }
             }
         })
         if(unit_id == -1){
@@ -690,8 +692,25 @@ clientSocketHandler.moveUnit = (options) => {
                 x: {value: game_pos.x, duration: 200},
                 y: {value: game_pos.y, duration: 200},
                 delay: 0,
-                angle: {value: unit.checkAngle(unit.sprite_ghost, game_pos), duration: 0},
+                onStart: (tween) => {
+                    let dir = unit.checkSpriteDirection(unit.sprite_ghost, game_pos)
+                    if(dir != ''){
+                        unit.sprite_ghost.play(unit.spritesheet+'_moving_'+dir, true);
+                        unit.sprite.play(unit.spritesheet+'_moving_'+dir, true); 
+                        unit.saved_dir = dir                       
+                    }
+                },
+                onComplete: (tween) => {
+                    let dir = unit.saved_dir
+                    if(dir != ''){
+                        unit.sprite_ghost.play(unit.spritesheet+'_idle_'+dir, true);
+                        unit.sprite.play(unit.spritesheet+'_idle_'+dir, true);                        
+                    }
+                }                
+                // angle: {value: unit.checkAngle(unit.sprite_ghost, game_pos), duration: 0},
             }
+
+            tween_data._destination = game_pos;
 
             return tween_data
         }
@@ -733,10 +752,11 @@ clientSocketHandler.moveUnit = (options) => {
                     unit.wound({damage:position.damage})                    
                 }
                 if(position.last_pos == true){
-                    unit.core.in_combat = true
-                    unit.drawSymbol()
                     
-                    if(position.clashing_units){
+                    if(position.clashing_units.length > 0){
+                        unit.core.in_combat = true
+                        unit.drawSymbol()
+
                         position.clashing_units.forEach((clashing_unit_id) => {
                             let clashing_unit = gameCore.assets.units[clashing_unit_id]
                             clashing_unit.core.in_combat = true
@@ -753,7 +773,7 @@ clientSocketHandler.moveUnit = (options) => {
                     unit.updateElements(unit.sprite_ghost)
                     unit.sprite.x = unit.sprite_ghost.x
                     unit.sprite.y = unit.sprite_ghost.y
-                    unit.sprite.angle = unit.sprite_ghost.angle
+                    // unit.sprite.angle = unit.sprite_ghost.angle
                     // unit.updateUnitElements(unit.sprite_ghost);
                 })
 
@@ -968,8 +988,8 @@ clientSocketHandler.generateMelee = (options) => {
                     x: target.x * gameCore.data.tile_size,
                     y: target.y * gameCore.data.tile_size,                    
                 }
-                let angle = Phaser.Math.Angle.BetweenPoints(unit.sprite, game_pos);
-                unit.sprite.angle = angle;
+                // let angle = Phaser.Math.Angle.BetweenPoints(unit.sprite, game_pos);
+                // unit.sprite.angle = angle;
 
                 // console.log(target)
 				let target_unit = gameCore.assets.units[target.target_id];

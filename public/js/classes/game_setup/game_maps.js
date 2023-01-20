@@ -44,8 +44,10 @@ const game_maps = class {
     //  #####  #######    #     #####  #             #     # #     # #       
 
     preLoadTileMap = () => {
-		this.scene.load.image('tileset', './img/game/maps/gridtiles.png');
-		this.scene.load.tilemapTiledJSON('map', '../../img/game/maps/map2.json');
+		// this.scene.load.image('tileset', './img/game/maps/gridtiles.png');
+		// this.scene.load.tilemapTiledJSON('map', '../../img/game/maps/map2.json');
+		this.scene.load.image('tileset', './img/game/maps/modern_exterior_tiles_32x32.png');
+		this.scene.load.tilemapTiledJSON('map', '../../img/game/maps/table_1.json');        
     }
 
     setupMap = () => {
@@ -53,8 +55,16 @@ const game_maps = class {
         this.parent.map = this.scene.make.tilemap({ key: 'map'});
         // The first parameter is the name of the tileset in Tiled and the second parameter is the key
         // of the tileset image used when loading the file in preload.
-        var tiles = this.parent.map.addTilesetImage('tiles', 'tileset');
-        this.parent.map.createStaticLayer(0, tiles, 0,0);		
+        var tileset = this.parent.map.addTilesetImage('exterior_tileset', 'tileset');
+        // this.parent.map.createStaticLayer(0, tiles, 0,0);		
+
+        // Parameters: layer name (or index) from Tiled, tileset, x, y
+        const belowLayer = this.parent.map.createLayer("Below Player", tileset, 0, 0);
+        const worldLayer = this.parent.map.createLayer("World", tileset, 0, 0);
+        const aboveLayer = this.parent.map.createLayer("Above Player", tileset, 0, 0);
+
+        aboveLayer.setDepth(10);
+
     }
     
 	// getTileID = function(x,y){
@@ -101,25 +111,7 @@ const game_maps = class {
         if(this.parent.tile_position.x != this.parent.old_tile_position.x 
             || this.parent.tile_position.y != this.parent.old_tile_position.y)
         {
-            if(gameCore.data.player !== -1){
-                // let options = {
-                //     functionGroup: "core",  
-                //     function: "messageRoom",
-                //     id: clientRoomHandler.core.room_name,
-                //     data: {
-                //         functionGroup: "core",
-                //         function: "moveMarker",
-                //         message: "Move Marker",
-                //         data: {
-                //             i: gameCore.data.player,
-                //             x: this.parent.map.tileToWorldX(pointerTileX),
-                //             y: this.parent.map.tileToWorldY(pointerTileY),
-                //             pointerX: pointerTileX,
-                //             pointerY: pointerTileY,                    
-                //         }
-                //     }
-                // }				
-                // clientSocketHandler.messageServer(options)    
+            if(gameCore.data.player !== -1){   
 
                 let options = {
                     functionGroup: "core",  
@@ -156,13 +148,14 @@ const game_maps = class {
 	checkCollision = function(x,y){
         let tile;
         // if(this.parent.map){
-        tile = this.parent.map.getTileAt(x, y);
+        // tile = this.parent.map.getTileAt(x, y, false, 'World');
+        tile = this.parent.map.getTileAt(x, y, false, 'World');
         // }
 		if (tile){
 			return tile.properties.collide == true; //DON'T SHOW MARKER IF IT COLLIDES WITH A COLLIDABLE TILE		
 		}
 		else{
-			return true; //DON'T SHOW THE MARKER IF IT'S NOT RETURNING TILE DATA
+			return false; //DON'T SHOW THE MARKER IF IT'S NOT RETURNING TILE DATA
 		}
 	};
 	

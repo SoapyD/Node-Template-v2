@@ -47,22 +47,31 @@ const unit = class {
 
 		//SPRITES
 		this.spritesheet = this.unit_class.spritesheet;
-		this.sprite = options.scene.physics.add.image(this.core.x,this.core.y,this.spritesheet).setScale(0.8); //.setInteractive();
-		this.sprite.setImmovable(true)
+		// this.sprite = options.scene.add.sprite(this.core.x,this.core.y,this.spritesheet, 0);
+		this.sprite = options.scene.add.sprite(this.core.x,this.core.y);
+		// this.sprite = options.scene.physics.add.image(this.core.x,this.core.y,this.spritesheet).setScale(0.8); //.setInteractive();
+		
+		// this.sprite.setImmovable(true)
+		this.sprite.setOrigin(0.5,1);
 		this.sprite.setDepth(this.depth_sprite);
-		this.sprite.angle = this.core.angle;
+		// this.sprite.angle = this.core.angle;
 		this.sprite.parent = this
 		// GameScene.unit_collisions[this.core.side].add(this.sprite)
-		
+		this.sprite.play(this.spritesheet+'_idle_south', true);
 
-		this.sprite_ghost = options.scene.add.image(this.core.x,this.core.y,this.spritesheet).setInteractive().setScale(0.8);
+		// this.sprite_ghost = options.scene.add.image(this.core.x,this.core.y,this.spritesheet).setInteractive().setScale(0.8);
+		// this.sprite_ghost = options.scene.add.sprite(this.core.x,this.core.y,this.spritesheet, 0);
+		this.sprite_ghost = options.scene.add.sprite(this.core.x,this.core.y);
+		this.sprite_ghost.setOrigin(0.5,1);
 		this.sprite_ghost.alpha = 1; //0.5;
-		this.sprite_ghost.angle = this.core.angle;
 		this.sprite_ghost.parent = this;
 		this.sprite_ghost.is_ghost = true;
 		this.sprite_ghost.setDepth(this.depth_sprite_ghost);
-		// this.sprite_ghost.on('pointerup', this.selectHander)
+		this.sprite_ghost.play(this.spritesheet+'_idle_south', true);
 		
+		// this.sprite_ghost.angle = this.core.angle;
+
+		this.saved_dir = ''
 
 		//action sprite
 		this.sprite_action = options.scene.add.image(this.core.x,this.core.y,"symbols").setScale(0.08 * (this.unit_class.size + 1.5))		
@@ -182,7 +191,7 @@ resetActions() {
 		if(this.sprite_ghost){
 			this.sprite_ghost.x = this.sprite.x;
 			this.sprite_ghost.y = this.sprite.y;
-			this.sprite_ghost.angle = this.sprite.angle;
+			// this.sprite_ghost.angle = this.sprite.angle;
 			this.sprite_ghost.alpha = 1;			
 		}
 
@@ -275,7 +284,7 @@ resetGhost() {
 		if(this.sprite_ghost){
 			this.sprite_ghost.x = this.sprite.x;
 			this.sprite_ghost.y = this.sprite.y;
-			this.sprite_ghost.angle = this.sprite.angle;
+			// this.sprite_ghost.angle = this.sprite.angle;
 			this.sprite_ghost.alpha = 1;
 		}
 		this.sprite.setTint(this.colour)
@@ -336,33 +345,62 @@ async delay(ms) {
 }		
 
 
-checkAngle(start_pos, end_pos) {
+checkSpriteDirection(start_pos, end_pos) {
 	try{
-		let angle = 0
+		let dir = ''
 		if(start_pos.x < end_pos.x){
-			angle = 0;
+			dir = 'east';
 		}
 		if(start_pos.x > end_pos.x){
-			angle = 180;
+			dir = 'west';
 		}				
 		if(start_pos.y < end_pos.y){
-			angle = 90;
+			dir = 'south';
 		}
 		if(start_pos.y > end_pos.y){
-			angle = -90;
+			dir = 'north';
 		}		
 		
-		return angle;
+		return dir;
 	}catch(e){
 
 		let options = {
 			"class": "unit",
-			"function": "checkAngle",
+			"function": "checkSpriteDirection",
 			"e": e
 		}
 		errorHandler.log(options)
 	}		
 }	
+
+
+// checkAngle(start_pos, end_pos) {
+// 	try{
+// 		let angle = 0
+// 		if(start_pos.x < end_pos.x){
+// 			angle = 0;
+// 		}
+// 		if(start_pos.x > end_pos.x){
+// 			angle = 180;
+// 		}				
+// 		if(start_pos.y < end_pos.y){
+// 			angle = 90;
+// 		}
+// 		if(start_pos.y > end_pos.y){
+// 			angle = -90;
+// 		}		
+		
+// 		return angle;
+// 	}catch(e){
+
+// 		let options = {
+// 			"class": "unit",
+// 			"function": "checkAngle",
+// 			"e": e
+// 		}
+// 		errorHandler.log(options)
+// 	}		
+// }	
 
 
 checkSpecialRule(name) {
@@ -696,7 +734,7 @@ drawHealth(sprite)
 		}		
 		
 		
-		let angle = (270 / this.unit_class.health) * this.core.health;
+		// let angle = (180 / this.unit_class.health) * this.core.health;
 		
 		let fill_colour = 0x2ECC40; //green
 		if (this.core.health <= this.unit_class.health / 2) 
@@ -716,7 +754,7 @@ drawHealth(sprite)
 		this.bar_graphic.lineStyle(7, fill_colour, 0.75);
 		// this.bar_graphic.arc(pos.x, pos.y, width / 2, Phaser.Math.DegToRad(angle), Phaser.Math.DegToRad(0), true)
 		
-		let segment_size = 270 / this.unit_class.health;
+		let segment_size = (180 + 10) / this.unit_class.health;
 		for (let i=0;i<this.core.health;i++){
 			//  Without this the arc will appear closed when stroked
 			this.bar_graphic.beginPath();			
@@ -770,12 +808,14 @@ drawPath(colours) {
 
 			let pos = this.core.path[this.core.path.length - 1];
 
-			let angle = this.checkAngle(this.core.path[this.core.path.length - 2], this.core.path[this.core.path.length - 1])
-
+			// let angle = this.checkAngle(this.core.path[this.core.path.length - 2], this.core.path[this.core.path.length - 1])
+			let dir = this.checkSpriteDirection(this.core.path[this.core.path.length - 2], this.core.path[this.core.path.length - 1])			
+			
 			if(this.sprite_ghost){
 				this.sprite_ghost.x = pos.x * gameCore.data.tile_size;
 				this.sprite_ghost.y = pos.y * gameCore.data.tile_size;
-				this.sprite_ghost.angle = angle;
+				// this.sprite_ghost.angle = angle;
+				this.sprite_ghost.play(this.spritesheet+'_idle_'+dir, true);
 
 				this.updateElements(this.sprite_ghost)
 
@@ -787,7 +827,7 @@ drawPath(colours) {
 			if(this.sprite_ghost){
 				this.sprite_ghost.x = this.sprite.x;
 				this.sprite_ghost.y = this.sprite.y;
-				this.sprite_ghost.angle = this.sprite.angle;
+				// this.sprite_ghost.angle = this.sprite.angle;
 
 				this.updateElements(this.sprite_ghost)
 

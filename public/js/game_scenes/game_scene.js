@@ -26,6 +26,7 @@ var GameScene = new Phaser.Class({
 
     create: function()
     {
+		GameScene.game_assets.createAnimations()
 		GameScene.game_assets.loadSound();
 		// GameScene.game_setup.setupSquads();		
 		GameScene.game_maps.setupTable();
