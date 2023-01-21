@@ -1,5 +1,7 @@
 
 
+-highlight units in the same squad to make fixing coherancy easier.
+
 ERRORS
 ----------------------------
 
@@ -10,8 +12,8 @@ RELOAD GAME
 
 SPRITE-ANIMATIONS
 ----------------------------
--set sprite depth depending on Y position
--set tile depth depending on Y position
+-resetting movememnt needs to recalculate sprite direction
+-check how shooting affects direction
 -create an example weapon sprite loaded on top of the existing sprite
 
 
@@ -29,6 +31,8 @@ BUGS
 -BUG -If there's a selected unit and move selected, then resend potential paths.
 
 -BUG -errors aren't saving useful details or any for that matter
+
+-BUG -shouldn't be able to select to move a unit into an enemy units sprite
 
 
 STATES
@@ -78,7 +82,8 @@ WOULD LIKES
 -Add a limiter on barriers for collisions.barrier so only barriers like "blunt" can be affected by bullets
     -DONE -check BLUNTing action actually appears when it affects a bullet
 
-
+-figure a new way for stopping markers appearing off the edge of the map now that 0 tiles are 
+showing as true in checkCollision
 
 
 //////////////////////////////////////////////////////////////////////
@@ -94,6 +99,9 @@ WOULD LIKES
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -set sprite depth depending on Y position
+-DONE -set tile depth depending on Y position
 
 -DONE -when a plug takes a path past a unit then ends movement outside of combat range, it still shows them as in combat
 at the end of the path

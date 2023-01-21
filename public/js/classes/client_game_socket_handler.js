@@ -700,11 +700,17 @@ clientSocketHandler.moveUnit = (options) => {
                         unit.saved_dir = dir                       
                     }
                 },
+                onUpdate: (tween) => {
+                    unit.sprite_ghost.setDepth(unit.depth_sprite_ghost + (gameCore.data.map_depth_itts * unit.sprite_ghost.y));
+                },
                 onComplete: (tween) => {
                     let dir = unit.saved_dir
                     if(dir != ''){
                         unit.sprite_ghost.play(unit.spritesheet+'_idle_'+dir, true);
-                        unit.sprite.play(unit.spritesheet+'_idle_'+dir, true);                        
+                        unit.sprite.play(unit.spritesheet+'_idle_'+dir, true);      
+                        
+                        unit.sprite.setDepth(unit.depth_sprite + (gameCore.data.map_depth_itts * unit.sprite.y));
+                        unit.sprite_ghost.setDepth(unit.depth_sprite_ghost + (gameCore.data.map_depth_itts * unit.sprite_ghost.y));
                     }
                 }                
                 // angle: {value: unit.checkAngle(unit.sprite_ghost, game_pos), duration: 0},

@@ -53,6 +53,9 @@ const game_maps = class {
     setupMap = () => {
         // Display map
         this.parent.map = this.scene.make.tilemap({ key: 'map'});
+        gameCore.data.map_height = this.parent.map.height;
+        gameCore.data.map_width = this.parent.map.width;
+        gameCore.data.map_depth_itts = 1 / (gameCore.data.map_height * gameCore.data.tile_size);
         // The first parameter is the name of the tileset in Tiled and the second parameter is the key
         // of the tileset image used when loading the file in preload.
         var tileset = this.parent.map.addTilesetImage('exterior_tileset', 'tileset');
@@ -63,6 +66,7 @@ const game_maps = class {
         const worldLayer = this.parent.map.createLayer("World", tileset, 0, 0);
         const aboveLayer = this.parent.map.createLayer("Above Player", tileset, 0, 0);
 
+        worldLayer.setDepth(3);
         aboveLayer.setDepth(10);
 
     }
@@ -155,6 +159,7 @@ const game_maps = class {
 			return tile.properties.collide == true; //DON'T SHOW MARKER IF IT COLLIDES WITH A COLLIDABLE TILE		
 		}
 		else{
+            //USED TO BE 'TRUE' BUT ZERO TILES ARE TRIGGERING THIS RETURN
 			return false; //DON'T SHOW THE MARKER IF IT'S NOT RETURNING TILE DATA
 		}
 	};

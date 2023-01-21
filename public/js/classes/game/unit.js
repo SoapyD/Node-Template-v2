@@ -28,18 +28,26 @@ const unit = class {
 
 		// this.unit_selected = false // TO BE USED SPECIFICALLY FOR DRAWING CALLS THAT ALLOW FOR HIGHLIGHTING SELECTED UNITS
 
-		this.depth_sprite_flash = 6;		
-		this.depth_sprite = 4;
-		this.depth_sprite_ghost = 5;
+		// this.depth_sprite_flash = 6;		
 		// this.depth_sprite_symbol = 10;
-		this.depth_sprite_action = 10;
-		this.depth_path = 9;
-		this.depth_explosion = 1;
-		this.depth_health = 2;
+
+
+		//BELOW THE UNIT
 		this.depth_cohesion = 1;
 		this.depth_fight_radius = 1.5;
-		this.depth_text = 20;
+		this.depth_health = 2;
+
+		//WORLD TILES ARE DEPTH 3
+
+		//IN THE WORLD
+		this.depth_sprite = 4;
+		this.depth_sprite_ghost = 5;
+		
+		this.depth_explosion = 9;
+		this.depth_path = 9;
+		this.depth_sprite_action = 10;
 		this.depth_text_box = 10;
+		this.depth_text = 20;
 		
 		
 		this.core.x += gameCore.data.tile_size * this.unit_class.sprite_offset;
@@ -53,7 +61,7 @@ const unit = class {
 		
 		// this.sprite.setImmovable(true)
 		this.sprite.setOrigin(0.5,1);
-		this.sprite.setDepth(this.depth_sprite);
+		this.sprite.setDepth(this.depth_sprite + (gameCore.data.map_depth_itts * this.core.y));
 		// this.sprite.angle = this.core.angle;
 		this.sprite.parent = this
 		// GameScene.unit_collisions[this.core.side].add(this.sprite)
@@ -66,7 +74,7 @@ const unit = class {
 		this.sprite_ghost.alpha = 1; //0.5;
 		this.sprite_ghost.parent = this;
 		this.sprite_ghost.is_ghost = true;
-		this.sprite_ghost.setDepth(this.depth_sprite_ghost);
+		this.sprite_ghost.setDepth(this.depth_sprite_ghost + (gameCore.data.map_depth_itts * this.core.y));
 		this.sprite_ghost.play(this.spritesheet+'_idle_south', true);
 		
 		// this.sprite_ghost.angle = this.core.angle;
@@ -816,6 +824,7 @@ drawPath(colours) {
 				this.sprite_ghost.y = pos.y * gameCore.data.tile_size;
 				// this.sprite_ghost.angle = angle;
 				this.sprite_ghost.play(this.spritesheet+'_idle_'+dir, true);
+				this.sprite_ghost.setDepth(this.depth_sprite_ghost + (gameCore.data.map_depth_itts * this.sprite_ghost.y));
 
 				this.updateElements(this.sprite_ghost)
 

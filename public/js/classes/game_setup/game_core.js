@@ -25,6 +25,9 @@ const game_core = class {
             turn_number: 0,          
             
             tile_size: 32,
+            map_height: 0,
+            map_depth_itts: 0,
+            map_width: 0,            
             
             current_side: -1,
             player: -1,
