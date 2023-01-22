@@ -43,6 +43,9 @@ const game_squad_setup = class {
 				for(let i=0;i<squad_data.size; i++){
 				// for(let i=0;i<2; i++){					
 
+					let x = (12+(i*2));
+					let y = (3 + (force.side * 3));					
+
 					let core = {
 						id: gameCore.assets.units.length,
 						side: force.side, //this can be used if each side has multiple players
@@ -50,10 +53,10 @@ const game_squad_setup = class {
 						squad: squad_id, //this can be used for squad checks like unit cohesion
 						
 						angle: 0,
-						x: (9+(i*2)) * this.tile_size,
-						y: (3 + (force.side * 2)) * this.tile_size,
-						tileX: (5+(i*2)),
-						tileY: (3+ force.side),												
+						x: x * this.tile_size,
+						y: y * this.tile_size,
+						tileX: x,
+						tileY: y,												
 						
 						alive: false,
 		

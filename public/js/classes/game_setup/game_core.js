@@ -272,12 +272,14 @@ const game_core = class {
             this.resetTempSprites();
         }
         
+        let draw_depth = 100;
+
         if(this.live_tiles){
             this.live_tiles.forEach((tile, i)=> {
                 this.temp_sprites.push(
                     this.current_scene.physics.add.image(
                         tile.x * gameCore.data.tile_size,
-                        tile.y * gameCore.data.tile_size,"marker").setDepth(0)
+                        tile.y * gameCore.data.tile_size,"marker").setDepth(draw_depth)
                 )
 
                 if(colour){

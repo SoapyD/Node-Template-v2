@@ -12,6 +12,8 @@ const workerpool = require('workerpool');
 const pool_potentialpath = workerpool.pool(__dirname + '/workerpool/potential_paths.js');
 const pool_pathfinder = workerpool.pool(__dirname + '/workerpool/pathfinder.js');
 
+const test_potentialpath = require(__dirname + '/test_processes/potential_paths2.js');
+
 
 
 module.exports = class game_actions {
@@ -383,7 +385,7 @@ module.exports = class game_actions {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    getPotentialPaths = (options) => {
+    getPotentialPaths = async(options) => {
 
         try{
             let worker_options = {
@@ -404,19 +406,22 @@ module.exports = class game_actions {
             }
 
             if(options.saved_unit.shot == false || utils.functions.checkArray(options.saved_unit.special_rules,'name','swift')){            
+                
+                let result = await test_potentialpath.runProcess(worker_options)
+                socketHandler.returnPotentialPaths(result)
+                /*
                 // run registered functions on the worker via exec
                 pool_potentialpath.exec('runProcess', [worker_options])
                     .then(function (result) {
-    
-                        // console.log('Result: ' + result); // outputs 55
                         socketHandler.returnPotentialPaths(result)
                     })
                     .catch(function (err) {
-                    console.error(err);
+                        console.error(err);
                     })
                     .then(function () {
-                    pool.terminate(); // terminate all workers when done
+                        pool.terminate(); // terminate all workers when done
                     });
+                */
             }else{
                 socketHandler.returnPotentialPaths({
                     id: options.parent.socket.id
