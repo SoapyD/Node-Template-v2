@@ -155,6 +155,30 @@ module.exports = class game_collisions {
     return false;
   }
 
+	getUnitTiles = (options) => {
+		let unit_tiles = []
+	
+		options.game_data.units.forEach((unit) => {
+			if(unit.id != options.id){
+				let info = this.getUnitTileRange(unit);
+	
+				let map_width = options.game_data.matrix[0].length;            
+	
+				for(let x=info.min.x; x<=info.max.x;x+=1){
+					for(let y=info.min.y; y<=info.max.y;y+=1){
+						unit_tiles.push({
+							x: x,
+							y: y,
+							pos: (map_width * y) + x
+						})
+					}                
+				}
+			}
+		})
+	
+		return unit_tiles;
+	}
+
 
   //GET THE RANGE OF TILES A UNIT OCCUPIES
   getUnitTileRange = (unit, tile_size=0) => {

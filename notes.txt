@@ -101,6 +101,14 @@ showing as true in checkCollision
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
+-DONE - create a new potential paths method as the old one is horribly slow.
+    -start at the saved unit space then, each pass, add in the N,S,E,W positions.
+    It then gradually branches out to each surrounding tile until it reaches the max movement distance
+    -as each surrounding tile is calculated, check to see if it has acceptable tils and don't clash with other unit tiles 
+
+-DONE -Make existing pathfinder process more efficient by using the same acceptable tile and unit tile check as the new 
+potential paths method.
+
 -DONE -set sprite depth depending on Y position
 -DONE -set tile depth depending on Y position
 

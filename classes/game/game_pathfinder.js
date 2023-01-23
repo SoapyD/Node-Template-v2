@@ -4,7 +4,7 @@ const collisions = require("./collisions")
 let collisionHandler = new collisions.game_collisions();
 
 const pathProcess = class {
-    constructor(options) {
+    constructor(options, parent) {
 
 		if(options.callback){
 			this.callback = options.callback;
@@ -36,15 +36,17 @@ const pathProcess = class {
 			y: 0
 		},			
 
-		
 		this.open = [];
 		this.closed = [];
         this.path_found = false;
 		this.path = [];
 
-		
+		this.selected_unit = parent.game_data.units[this.id];
+		this.selected_unit_info = collisionHandler.getUnitTileRange(this.selected_unit);		
+
+
 		this.current_checks = 0;
-		this.max_checks = 10000;
+		this.max_checks = 200;
     }
 }
 
@@ -57,6 +59,12 @@ module.exports = class game_pathfinder {
         this.height = this.grid.length,
 		this.acceptable_tiles = options.acceptable_tiles;	
 		
+		this.game_data = options.setup_data.game_data
+		this.unit_tiles = collisionHandler.getUnitTiles({
+			game_data: this.game_data,
+			id: options.setup_data.id    
+		});
+
 		
 		this.current_checks = 0;
 		this.total_checks = 0;
@@ -73,7 +81,7 @@ module.exports = class game_pathfinder {
 		
 		//this.bound_unit = this.id;
 		// this.game_data = options.game_data;
-        let process = new pathProcess(options)
+        let process = new pathProcess(options, this)
 
 		//add start pos to open list, first needs converting into a node
 		let start_node = {
@@ -89,8 +97,6 @@ module.exports = class game_pathfinder {
 	twoPointDistance = (pos_start, pos_end) => {
 		return Math.sqrt(Math.pow(pos_start.x - pos_end.x, 2) + Math.pow(pos_start.y - pos_end.y, 2))
 	}
-	
-
 
 	update() {
 
@@ -164,11 +170,11 @@ module.exports = class game_pathfinder {
 					// let saved_node;
 					nodes.forEach((node) => {
 						
+						//CHECK THE SURROUNDING CELLS OF NODE, DEPENDING ON UNIT DIMENSIONS
 						let skip = this.checkCell(process, node)
 
 						//if neighbour non traversable or neighbour is in closed list
-						if(skip === true || process.closed.some(e => JSON.stringify(e.pos) === JSON.stringify(node.pos))){                    
-						// if(node.cell !== 1 || this.closed.some(e => JSON.stringify(e.pos) === JSON.stringify(node.pos))){
+						if(skip === true || process.closed.some(e => JSON.stringify(e.pos) === JSON.stringify(node.pos))){
 							let test = ""
 						}
 						else{
@@ -311,7 +317,7 @@ module.exports = class game_pathfinder {
 						}
 						nodes.push(node)
 					}
-				}		
+				}	
 			}
 		}		
 		
@@ -320,69 +326,96 @@ module.exports = class game_pathfinder {
 
 	checkCell(process, node){
 
-		let skip = false;
-		if(!this.acceptable_tiles.includes(node.cell)){
-			skip = true;
-		}
+		//CHECK TO SEE IF NODE AND UNIT AREA CLASHES WITH UNITS OR NON-ACCEPTABLE TILES
+		let tile_x = node.pos.x;
+		let tile_y = node.pos.y;
+		let info = process.selected_unit_info;
+		let map_height = this.game_data.matrix.length;
+		let map_width = this.game_data.matrix[0].length; 		
 
-		if(skip === false){
-			
-			//CHECK CELL CHECK SLIGHTLY DIFFERENTLY DEPENDING ON THE SPRITE OFFSET VALUE
-
-			if(process.sprite_offset === 0){
-				for(let x=-process.obj_size;x<=0;x++){
-					for(let y=-process.obj_size;y<=0;y++){
-						let pos = {
-							x: node.pos.x + x,
-							y: node.pos.y + y
-						}
-
-						if(pos.x >= 0 && pos.x < this.width 
-							&& pos.y >= 0 && pos.y < this.height){					
-							let check_cell = this.grid[pos.y][pos.x]
-
-							if(!this.acceptable_tiles.includes(check_cell)){
-								skip = true;
-								break;
-							}					
-						}
-						else{
-							skip = true;
-							break;
-						}
-					}
-				}				
-			}			
-			
-			if(process.sprite_offset === 0.5){
-				for(let x=-process.obj_size;x<=process.obj_size;x++){
-					for(let y=-process.obj_size;y<=process.obj_size;y++){
-						let pos = {
-							x: node.pos.x + x,
-							y: node.pos.y + y
-						}
-
-						if(pos.x >= 0 && pos.x < this.width 
-							&& pos.y >= 0 && pos.y < this.height){					
-							let check_cell = this.grid[pos.y][pos.x]
-
-							if(!this.acceptable_tiles.includes(check_cell)){
-								skip = true;
-								break;
-							}					
-						}
-						else{
-							skip = true;
-							break;
-						}
-					}
-				}				
+		for(let y=tile_y+info.min_offset.y; y<=tile_y+info.max_offset.y;y+=1){   
+			for(let x=tile_x+info.min_offset.x; x<=tile_x+info.max_offset.x;x+=1){
+	
+				if(x >= 0 && y >= 0 && x < map_width && y < map_height){            
+	
+					let unit_tile_found = this.unit_tiles.some(i => i.x === x && i.y === y);   
+					if(unit_tile_found === true){
+						return true
+					}    
+	
+					// console.log('y',y,'x',x)
+					let cell = this.grid[y][x];
+					if(!this.acceptable_tiles.includes(cell)){
+						return true;
+					}	
+				}
+				else{
+					return true;
+				}
+				
 			}
 		}
+	
+		return false;
+
+
+		/*
+		if(!this.acceptable_tiles.includes(node.cell)){
+			return true;
+		}
+
+		//CHECK CELL CHECK SLIGHTLY DIFFERENTLY DEPENDING ON THE SPRITE OFFSET VALUE
+
+		if(process.sprite_offset === 0){
+			for(let x=-process.obj_size;x<=0;x++){
+				for(let y=-process.obj_size;y<=0;y++){
+					let pos = {
+						x: node.pos.x + x,
+						y: node.pos.y + y
+					}
+
+					if(pos.x >= 0 && pos.x < this.width 
+						&& pos.y >= 0 && pos.y < this.height){					
+						let check_cell = this.grid[pos.y][pos.x]
+
+						if(!this.acceptable_tiles.includes(check_cell)){
+							return true
+						}					
+					}
+					else{
+						return true
+					}
+				}
+			}				
+		}			
+		
+		if(process.sprite_offset === 0.5){
+			for(let x=-process.obj_size;x<=process.obj_size;x++){
+				for(let y=-process.obj_size;y<=process.obj_size;y++){
+					let pos = {
+						x: node.pos.x + x,
+						y: node.pos.y + y
+					}
+
+					if(pos.x >= 0 && pos.x < this.width 
+						&& pos.y >= 0 && pos.y < this.height){					
+						let check_cell = this.grid[pos.y][pos.x]
+
+						if(!this.acceptable_tiles.includes(check_cell)){
+							return true;
+						}					
+					}
+					else{
+						return true;
+					}
+				}
+			}				
+		}
+		*/
 
 		//CHECK TO SEE IF NODE INTERSECTS ANOTHER UNIT, IF SO, SKIP IT
 		//HAD TO TURN THIS OFF AS IT MASSIVELY SLOWS THINGS DOWN
-		if(skip === false){
+		// if(skip === false){
 			// let unit = this.game_data.units[this.process_list[0].id];
 			
 			// unit.tileX = node.pos.x;
@@ -399,9 +432,9 @@ module.exports = class game_pathfinder {
 			// }
 
 			// console.log(skip)
-		}
+		// }
 
-		return skip
+		return false
 	}    
 
 }

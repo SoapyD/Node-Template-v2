@@ -1,11 +1,11 @@
 
-const workerpool = require('workerpool');
+// const workerpool = require('workerpool');
 var game_pathfinder = require("../game_pathfinder")
 
-const databaseClass = require('../../mongoose_db_handler');
-let databaseHandler = new databaseClass();
+// const databaseClass = require('../../mongoose_db_handler');
+// let databaseHandler = new databaseClass();
 
-runProcess = async(workerData) => {
+exports.runProcess = async(workerData) => {
 
     let game_datas = await databaseHandler.findData({
         model: "GameData"
@@ -34,6 +34,6 @@ runProcess = async(workerData) => {
 }
 
 // runProcess(workerData)
-workerpool.worker({
-    runProcess: runProcess
-});
+// workerpool.worker({
+//     runProcess: runProcess
+// });

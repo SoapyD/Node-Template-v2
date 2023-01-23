@@ -1,32 +1,4 @@
 
-var game_pathfinder = require("../game_pathfinder")
-
-
-const getUnitTiles = (workerData) => {
-    let unit_tiles = []
-
-    workerData.setup_data.game_data.units.forEach((unit) => {
-        if(unit.id != workerData.setup_data.id){
-            let info = collisionHandler.getUnitTileRange(unit);
-
-            // let map_height = workerData.setup_data.game_data.matrix.length;
-            let map_width = workerData.setup_data.game_data.matrix[0].length;            
-
-            for(let x=info.min.x; x<=info.max.x;x+=1){
-                for(let y=info.min.y; y<=info.max.y;y+=1){
-                    unit_tiles.push({
-                        x: x,
-                        y: y,
-                        pos: (map_width * y) + x
-                    })
-                }                
-            }
-        }
-    })
-
-    return unit_tiles;
-}
-
 
 const checkTileClash = (options) => {
 
@@ -182,7 +154,10 @@ exports.runProcess = async(workerData) => {
     game_data = game_datas[0]
     workerData.setup_data.game_data = game_data;    
 
-    let unit_tiles = getUnitTiles(workerData);
+    let unit_tiles = collisionHandler.getUnitTiles({
+        game_data: workerData.setup_data.game_data,
+        id: workerData.setup_data.id    
+    });
     
     let live_tiles = [];
     let check_tiles = getCheckTiles(workerData, unit_tiles)

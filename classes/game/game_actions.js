@@ -13,7 +13,7 @@ const pool_potentialpath = workerpool.pool(__dirname + '/workerpool/potential_pa
 const pool_pathfinder = workerpool.pool(__dirname + '/workerpool/pathfinder.js');
 
 const test_potentialpath = require(__dirname + '/test_processes/potential_paths2.js');
-
+const test_pathfinder = require(__dirname + '/test_processes/pathfinder.js');
 
 
 module.exports = class game_actions {
@@ -445,7 +445,7 @@ module.exports = class game_actions {
         }   
     }
 
-    getPath = (options) => {
+    getPath = async(options) => {
 
         try{
             let worker_options = {
@@ -466,6 +466,8 @@ module.exports = class game_actions {
                     ,y_end: (options.player.pointerY)                              
                 }
             }
+
+            // let result = await test_pathfinder.runProcess(worker_options)
 
             // run registered functions on the worker via exec
             pool_pathfinder.exec('runProcess', [worker_options])
