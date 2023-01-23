@@ -94,7 +94,18 @@ const game_assets = class {
 			{key: 'dread_moving_east', spritesheet: 'dread', start: 1, end: 6},
 			{key: 'dread_moving_north', spritesheet: 'dread', start: 1, end: 6},
 			{key: 'dread_moving_south', spritesheet: 'dread', start: 1, end: 6},
-			{key: 'dread_moving_west', spritesheet: 'dread', start: 1, end: 6},															
+			{key: 'dread_moving_west', spritesheet: 'dread', start: 1, end: 6},		
+			
+			
+			{key: 'tank_assault_idle_east', spritesheet: 'trooper_blaster', start: 56, end: 61},
+			{key: 'tank_assault_idle_north', spritesheet: 'trooper_blaster', start: 62, end: 67},
+			{key: 'tank_assault_idle_west', spritesheet: 'trooper_blaster', start: 68, end: 73},
+			{key: 'tank_assault_idle_south', spritesheet: 'trooper_blaster', start: 74, end: 79},
+			
+			{key: 'tank_assault_moving_east', spritesheet: 'trooper_blaster', start: 112, end: 117},
+			{key: 'tank_assault_moving_north', spritesheet: 'trooper_blaster', start: 118, end: 123},
+			{key: 'tank_assault_moving_west', spritesheet: 'trooper_blaster', start: 124, end: 129},
+			{key: 'tank_assault_moving_south', spritesheet: 'trooper_blaster', start: 130, end: 135},			
 		]
 
 

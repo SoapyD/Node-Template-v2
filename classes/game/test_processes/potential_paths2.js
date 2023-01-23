@@ -9,7 +9,7 @@ const getUnitTiles = (workerData) => {
         if(unit.id != workerData.setup_data.id){
             let info = collisionHandler.getUnitTileRange(unit);
 
-            let map_height = workerData.setup_data.game_data.matrix.length;
+            // let map_height = workerData.setup_data.game_data.matrix.length;
             let map_width = workerData.setup_data.game_data.matrix[0].length;            
 
             for(let x=info.min.x; x<=info.max.x;x+=1){
@@ -28,7 +28,68 @@ const getUnitTiles = (workerData) => {
 }
 
 
+const checkTileClash = (options) => {
+
+    //CHECK EACH TILESET, IF ANY CHECK FAILS, END THE CHECK BY RETURNING A CLASH = TRUE result
+    let tile_x = options.x;
+    let tile_y = options.y;
+
+    //ONLY THE TRAVEL-TO TILE NEEDS CHECKING HERE AS THESE ONLY ENSURE THE SAME SPACE ISN'T CHECKED MORE THAN ONCE
+    let closed_check = options.closed_tiles.some(i => i.x === tile_x && i.y === tile_y);
+    if(closed_check === true){
+        return true
+    }
+
+    let open_check = options.open_tiles.some(i => i.x === tile_x && i.y === tile_y); 
+    if(open_check === true){
+        return true
+    }
+
+    let next_check = options.next_tiles.some(i => i.x === tile_x && i.y === tile_y);         
+    if(next_check === true){
+        return true
+    } 
+
+
+    //THE ENTIRE AREA OF THE SPRITE FOOT IS CHECKED HERE AS THEY INVOLVE CLASHING WITH OTHER UNITS AND
+    //NON-ACCEPTABLE TILES
+    let info = options.selected_unit_info;
+    let map_height = options.workerData.setup_data.game_data.matrix.length;
+    let map_width = options.workerData.setup_data.game_data.matrix[0].length;  
+
+
+    for(let y=tile_y+info.min_offset.y; y<=tile_y+info.max_offset.y;y+=1){   
+        for(let x=tile_x+info.min_offset.x; x<=tile_x+info.max_offset.x;x+=1){
+
+            if(x >= 0 && y >= 0 && x < map_width && y < map_height){            
+
+                let unit_tile_found = options.unit_tiles.some(i => i.x === x && i.y === y);   
+                if(unit_tile_found === true){
+                    return true
+                }    
+
+                // console.log('y',y,'x',x)
+                let cell = options.workerData.grid[y][x];
+                if(!options.workerData.acceptable_tiles.includes(cell)){
+                    return true;
+                }	
+            }
+            else{
+                return true;
+            }
+            
+        }
+    }
+
+    return false;
+
+}
+
+
 const getCheckTiles = (workerData, unit_tiles) => {
+
+    let selected_unit = workerData.setup_data.game_data.units[workerData.setup_data.id];
+    let selected_unit_info = collisionHandler.getUnitTileRange(selected_unit);
 
     // let check_tiles = []
     let closed_tiles = [];
@@ -57,27 +118,20 @@ const getCheckTiles = (workerData, unit_tiles) => {
                 for(let x=open_tile.x-1; x<=open_tile.x+1; x+=1){
 
                     if(skip != true){                        
-                        if(x >= 0 && y >= 0 && x < map_width && y < map_height){
-    
-                            if(closed_tiles.length == 35){
-                                let t = 0
-                            }
-    
-                            let closed_check = closed_tiles.some(i => i.x === x && i.y === y);
-                            let open_check = open_tiles.some(i => i.x === x && i.y === y); 
-                            let next_check = next_tiles.some(i => i.x === x && i.y === y);         
-                            let unit_tile_found = unit_tiles.some(i => i.x === x && i.y === y);   
+                        if(x >= 0 && y >= 0 && x < map_width && y < map_height){	
                             
-                            let cell = workerData.grid[y][x];
-                            let acceptable_tile = false
-                            if(workerData.acceptable_tiles.includes(cell)){
-                                acceptable_tile = true;
-                            }			
+                            let tile_clash = checkTileClash({
+                                selected_unit_info: selected_unit_info,
+                                x: x,
+                                y: y,
+                                workerData: workerData,
+                                closed_tiles: closed_tiles,
+                                open_tiles: open_tiles,
+                                next_tiles: next_tiles,
+                                unit_tiles: unit_tiles,
+                            })
 
-
-                            if(closed_check === false && open_check === false && 
-                                next_check === false && unit_tile_found == false &&
-                                acceptable_tile === true){
+                            if(tile_clash === false){
                                 next_tiles.push({
                                     x: x,
                                     y: y
@@ -117,7 +171,7 @@ const getCheckTiles = (workerData, unit_tiles) => {
 
 exports.runProcess = async(workerData) => {
 
-    const gamePathfinder = new game_pathfinder(workerData)
+    // const gamePathfinder = new game_pathfinder(workerData)
 
     let game_datas = await databaseHandler.findData({
         model: "GameData"
@@ -131,7 +185,6 @@ exports.runProcess = async(workerData) => {
     let unit_tiles = getUnitTiles(workerData);
     
     let live_tiles = [];
-    // let check_tiles = getSpiralMatrix(1, (endX - startX) + 1, startX, startY);
     let check_tiles = getCheckTiles(workerData, unit_tiles)
     
     check_tiles.forEach((check_tile) => {

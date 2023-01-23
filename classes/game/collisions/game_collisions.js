@@ -182,6 +182,15 @@ module.exports = class game_collisions {
         x: -1,
         y: -1,
     }
+    let min_offset = {
+      x: -1,
+      y: -1,
+    }
+    let max_offset = {
+        x: -1,
+        y: -1,
+    }
+
     let mid = {
       x: -1,
       y: -1,
@@ -189,6 +198,10 @@ module.exports = class game_collisions {
     let mid_game = {
       x: -1,
       y: -1,
+    }
+    let mid_tile_pos = {
+      x: -1,
+      y: -1
     }                
 
     if(unit.sprite_offset === 0){
@@ -196,6 +209,10 @@ module.exports = class game_collisions {
         min.y = pos.y - unit.size;            
         max.x = pos.x
         max.y = pos.y        
+        min_offset.x = -unit.size;
+        min_offset.y = -unit.size;
+        max_offset.x = 0;
+        max_offset.y = 0;                
 
         mid.x = ((max.x - min.x) / 2) + min.x;
         mid.y = ((max.y - min.y) / 2) + min.y;        
@@ -207,9 +224,17 @@ module.exports = class game_collisions {
         max.x = pos.x + unit.size;
         max.y = pos.y + unit.size;       
         
+        min_offset.x = -unit.size;
+        min_offset.y = -unit.size;
+        max_offset.x = unit.size;
+        max_offset.y = unit.size;
+
         mid.x = ((max.x - min.x) / 2) + min.x + unit.sprite_offset;
         mid.y = ((max.y - min.y) / 2) + min.y + unit.sprite_offset;        
     }
+
+    mid_tile_pos.x = ((max.x - min.x) / 2) + min.x;
+    mid_tile_pos.y = ((max.y - min.y) / 2) + min.y;    
 
     mid_game.x = mid.x * tile_size;
     mid_game.y = mid.y * tile_size;    
@@ -218,7 +243,10 @@ module.exports = class game_collisions {
         min: min,
         max: max,
         mid: mid,
+        min_offset: min_offset,
+        max_offset: max_offset,
         mid_game: mid_game,
+        mid_tile_pos: mid_tile_pos,
         dim: {
           w: max.x - min.x,
           h: max.y - min.y,
