@@ -36,6 +36,8 @@ module.exports = class circle {
         let distX = this.x - circle.x;
         let distY = this.y - circle.y;
         let distance = Math.sqrt( (distX*distX) + (distY*distY) );
+
+        // console.log(distance,this.r+circle.r)
         
         // if the distance is less than the sum of the circle's
         // radii, the circles are touching!

@@ -61,6 +61,7 @@ const unit = class {
 		
 		// this.sprite.setImmovable(true)
 		this.sprite.setOrigin(0.5,1);
+		// this.sprite.setScale(0.5);
 		this.sprite.setDepth(this.depth_sprite + (gameCore.data.map_depth_itts * this.core.y));
 		// this.sprite.angle = this.core.angle;
 		this.sprite.parent = this
@@ -71,6 +72,7 @@ const unit = class {
 		// this.sprite_ghost = options.scene.add.sprite(this.core.x,this.core.y,this.spritesheet, 0);
 		this.sprite_ghost = options.scene.add.sprite(this.core.x,this.core.y);
 		this.sprite_ghost.setOrigin(0.5,1);
+		// this.sprite_ghost.setScale(0.5);
 		this.sprite_ghost.alpha = 1; //0.5;
 		this.sprite_ghost.parent = this;
 		this.sprite_ghost.is_ghost = true;

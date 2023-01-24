@@ -44,7 +44,7 @@ const game_squad_setup = class {
 				// for(let i=0;i<2; i++){					
 
 					let x = (12+(i*2));
-					let y = (3 + (force.side * 3));					
+					let y = (3 + (force.side * 6));					
 
 					let core = {
 						id: gameCore.assets.units.length,

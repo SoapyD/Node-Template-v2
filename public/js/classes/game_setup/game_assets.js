@@ -43,7 +43,7 @@ const game_assets = class {
 		//UNIT SPRITES
 		// this.scene.load.image('trooper_blaster', '../../img/game/units/trooper_blaster.png');		
 		this.scene.load.spritesheet('trooper_blaster', '../../img/game/units/test.png', { frameWidth: 32, frameHeight: 64 });
-		this.scene.load.spritesheet('dread', '../../img/game/units/dread.png', { frameWidth: 64, frameHeight: 96 });
+		this.scene.load.spritesheet('dread', '../../img/game/units/dread.png', { frameWidth: 64, frameHeight: 64 });
 
 		// this.scene.load.image('trooper_rocket', '../../img/game/units/trooper_rocket.png');
 		// this.scene.load.image('trooper_laser_cannon', '../../img/game/units/trooper_laser_cannon.png');
@@ -57,7 +57,7 @@ const game_assets = class {
 		// this.scene.load.image('elite_claws', '../../img/game/units/elite_claws.png');						
 
 
-		// this.scene.load.image('tank_assault', '../../img/game/units/tank_assault.png');
+		this.scene.load.spritesheet('tank_assault', '../../img/game/units/tank_assault.png', { frameWidth: 96, frameHeight: 96 });
 		// this.scene.load.image('dread_assault_fist', '../../img/game/units/dread_assault_fist.png');
     }
 
@@ -87,25 +87,25 @@ const game_assets = class {
 			{key: 'trooper_blaster_moving_west', spritesheet: 'trooper_blaster', start: 124, end: 129},
 			{key: 'trooper_blaster_moving_south', spritesheet: 'trooper_blaster', start: 130, end: 135},	
 			
-			{key: 'dread_idle_east', spritesheet: 'dread', start: 1, end: 6},
-			{key: 'dread_idle_north', spritesheet: 'dread', start: 1, end: 6},
-			{key: 'dread_idle_south', spritesheet: 'dread', start: 1, end: 6},
-			{key: 'dread_idle_west', spritesheet: 'dread', start: 1, end: 6},	
-			{key: 'dread_moving_east', spritesheet: 'dread', start: 1, end: 6},
-			{key: 'dread_moving_north', spritesheet: 'dread', start: 1, end: 6},
-			{key: 'dread_moving_south', spritesheet: 'dread', start: 1, end: 6},
-			{key: 'dread_moving_west', spritesheet: 'dread', start: 1, end: 6},		
+			{key: 'dread_idle_east', spritesheet: 'dread', start: 1, end: 2},
+			{key: 'dread_idle_north', spritesheet: 'dread', start: 1, end: 2},
+			{key: 'dread_idle_south', spritesheet: 'dread', start: 1, end: 2},
+			{key: 'dread_idle_west', spritesheet: 'dread', start: 1, end: 2},	
+			{key: 'dread_moving_east', spritesheet: 'dread', start: 1, end: 2},
+			{key: 'dread_moving_north', spritesheet: 'dread', start: 1, end: 2},
+			{key: 'dread_moving_south', spritesheet: 'dread', start: 1, end: 2},
+			{key: 'dread_moving_west', spritesheet: 'dread', start: 1, end: 2},		
 			
 			
-			{key: 'tank_assault_idle_east', spritesheet: 'trooper_blaster', start: 56, end: 61},
-			{key: 'tank_assault_idle_north', spritesheet: 'trooper_blaster', start: 62, end: 67},
-			{key: 'tank_assault_idle_west', spritesheet: 'trooper_blaster', start: 68, end: 73},
-			{key: 'tank_assault_idle_south', spritesheet: 'trooper_blaster', start: 74, end: 79},
+			{key: 'tank_assault_idle_east', spritesheet: 'tank_assault', start: 0, end: 0},
+			{key: 'tank_assault_idle_north', spritesheet: 'tank_assault', start: 1, end: 1},
+			{key: 'tank_assault_idle_west', spritesheet: 'tank_assault', start: 2, end: 2},
+			{key: 'tank_assault_idle_south', spritesheet: 'tank_assault', start: 3, end: 3},
 			
-			{key: 'tank_assault_moving_east', spritesheet: 'trooper_blaster', start: 112, end: 117},
-			{key: 'tank_assault_moving_north', spritesheet: 'trooper_blaster', start: 118, end: 123},
-			{key: 'tank_assault_moving_west', spritesheet: 'trooper_blaster', start: 124, end: 129},
-			{key: 'tank_assault_moving_south', spritesheet: 'trooper_blaster', start: 130, end: 135},			
+			{key: 'tank_assault_moving_east', spritesheet: 'tank_assault', start: 1, end: 2},
+			{key: 'tank_assault_moving_north', spritesheet: 'tank_assault', start: 1, end: 2},
+			{key: 'tank_assault_moving_west', spritesheet: 'tank_assault', start: 1, end: 2},
+			{key: 'tank_assault_moving_south', spritesheet: 'tank_assault', start: 1, end: 2},			
 		]
 
 

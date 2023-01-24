@@ -35,6 +35,7 @@ BUGS
 
 -BUG -shouldn't be able to select to move a unit into an enemy units sprite
 
+-BUG -Final right click on fight targets set up doesn't clear clas target
 
 STATES
 ----------------------------

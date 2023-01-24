@@ -272,12 +272,12 @@ module.exports = class game_collisions {
         mid_game: mid_game,
         mid_tile_pos: mid_tile_pos,
         dim: {
-          w: max.x - min.x,
-          h: max.y - min.y,
+          w: (max.x - min.x) + 1,
+          h: (max.y - min.y) + 1,
         },          
         dim_games: {
-          w: (max.x - min.x) * tile_size,
-          h: (max.y - min.y) * tile_size,
+          w: ((max.x - min.x)+1) * tile_size,
+          h: ((max.y - min.y)+1) * tile_size,
         }          
 
     }
@@ -289,7 +289,8 @@ module.exports = class game_collisions {
     return _.filter(options.game_data.units, (unit) => {
       let range = this.getUnitTileRange(unit)
       // console.log(unit.sprite_offset)
-      // console.log(range)
+      // console.log('x:', options.check_pos.x, 'min:', range.min.x, ',max',range.max.x)
+      // console.log('y:', options.check_pos.y, 'min:', range.min.y, ',max',range.max.y)      
       
       return (
           range.min.x <= options.check_pos.x && range.min.y <= options.check_pos.y
