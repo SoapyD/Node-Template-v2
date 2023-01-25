@@ -33,9 +33,6 @@ BUGS
 
 -BUG -errors aren't saving useful details or any for that matter
 
--BUG -shouldn't be able to select to move a unit into an enemy units sprite
-
--BUG -Final right click on fight targets set up doesn't clear clas target
 
 STATES
 ----------------------------
@@ -101,6 +98,12 @@ showing as true in checkCollision
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+-DONE -Final right click on fight targets set up doesn't clear clas target
+    -drawFightTargets was checking for a length on the fight_targets array, which fails if length is zero
+
+-DONE -shouldn't be able to select to move a unit into an enemy units sprite
+    -Fixed by adding unit footprint check to movement
 
 -DONE - create a new potential paths method as the old one is horribly slow.
     -start at the saved unit space then, each pass, add in the N,S,E,W positions.

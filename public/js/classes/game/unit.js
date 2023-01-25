@@ -1039,7 +1039,7 @@ drawSymbol(){
 drawFightTarget() {	
 
 	try{	
-		if (this.core.fight_targets.length){
+		if (this.core.fight_targets){
 			
 			this.resetShoot();
 
