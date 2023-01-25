@@ -220,7 +220,7 @@ module.exports = class game_actions {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
 
     reset = async(options) => {
-
+        
         try{
             if(options.game_data){
                 let game_data = options.game_data;

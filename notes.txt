@@ -27,12 +27,6 @@ GameSceneUI
 -Make sure that any deaths record the correct score for the attacking unit
 
 
-BUGS
-----------------------------
--BUG -If there's a selected unit and move selected, then resend potential paths.
-
--BUG -errors aren't saving useful details or any for that matter
-
 
 STATES
 ----------------------------
@@ -64,6 +58,18 @@ ARMY PLACEMENT
 
 
 
+
+
+BUGS
+----------------------------
+-BUG -If there's a selected unit and move selected, then resend potential paths.
+
+-BUG -errors aren't saving useful details or any for that matter
+
+-BUG -reset in actions causes MAJOR slow-down on client side
+
+-BUG -reset in actions sometimes causes a save error in line 290. Always shows:
+    modifiedPaths:['units','units.0','units.0.path','save_data']
 
 
 WOULD LIKES
