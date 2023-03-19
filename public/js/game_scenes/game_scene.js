@@ -15,7 +15,7 @@ var GameScene = new Phaser.Class({
     {		
 		GameScene.scene = this.scene.get('GameScene')
 		gameCore.current_scene = this.scene.get('GameScene');
-		GameScene.loading_screen = new game_loading_screen({scene: GameScene.scene, launch_uiscene: "GameUIScene" }) //launch_uiscene: "ArmySetupUIScene" 
+		GameScene.loading_screen = new game_loading_screen({scene: GameScene.scene, launch_uiscene: "ArmySetupUIScene" }) //launch_uiscene: "ArmySetupUIScene" 
 
 		GameScene.game_assets = new game_assets({scene: GameScene.scene, parent: GameScene})
 		GameScene.game_maps = new game_maps({scene: GameScene.scene, parent: GameScene})
@@ -58,8 +58,8 @@ var GameScene = new Phaser.Class({
 				//PLACE UNITS LOOP		
 				
 				//RUN TEMP PROCESS TO SAVE THE POSITIONS OF UNITS WHERE THEY ARE
-				clientSocketHandler.saveGame();
-				gameCore.data.game_state++;
+				// clientSocketHandler.saveGame();
+				// gameCore.data.game_state++;
 				break;			
 			case 1:
 				// gameFunctions.current_uiscene.scene.start("GameUIScene")

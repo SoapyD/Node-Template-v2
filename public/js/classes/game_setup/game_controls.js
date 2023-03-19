@@ -53,12 +53,14 @@ const game_controls = class {
         this.parent.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     
         //SET BOUNDS TO THE CAMERA MOVEMENT
+
         let offset = 200;
         this.scene.cameras.main.setBounds(
             -offset, 
             -offset, 
-            this.parent.map.width * gameCore.tile_size + (offset * 2), 
-            this.parent.map.height * gameCore.tile_size + (offset * 2));	
+            this.parent.map.width * gameCore.data.tile_size + (offset * 2), 
+            this.parent.map.height * gameCore.data.tile_size + (offset * 2)
+            );	
         
         
         this.scene.cameras.main.zoom = 1.75;

@@ -2,6 +2,7 @@
 
 exports.resetRooms = async() => {
     let list = [
+        {model: "Error"},        
         {model: "Room"}, 
     ]   
     await databaseHandler.removeData(list);   
@@ -13,6 +14,7 @@ exports.resetTables = async() => {
     
     //REMOVE ALL DATA FOR MODELS WE WANT TO RESET
     let list = [
+    {model: "Error"},
     {model: "Room"},
     {model: "Army"},
 

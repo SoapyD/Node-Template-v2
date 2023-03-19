@@ -645,10 +645,14 @@ GameUIScene.setUnitHUD = (unit) => {
 GameUIScene.hideUnitHUD = () => {
 	try{	
 		let element = GameUIScene.hud_unit
-		element.setVisible(false);
+		if(element){
+			element.setVisible(false);
+		}
 
 		element = GameUIScene.hud_special
-		element.setVisible(false);
+		if(element){
+			element.setVisible(false);
+		}
 	}catch(e){
 
 		let options = {
@@ -671,21 +675,23 @@ GameUIScene.hideUnitHUD = () => {
 GameUIScene.setChanceHUD = (selected_unit, target_unit) => {
 	try{	
 		let element = GameUIScene.hud_chance
-		element.setVisible(true);
-
-		let mel_chance = target_unit.armour_class.value - (selected_unit.melee_class[selected_unit.core.selected_melee].ap + selected_unit.unit_class.fighting_bonus);
-		let gun_chance = target_unit.armour_class.value - (selected_unit.gun_class[selected_unit.core.selected_gun].ap + selected_unit.unit_class.shooting_bonus);
-
-		let max_roll_value = 20
-		if(selected_unit.cohesion_check === false && selected_unit.unit_class.cohesion > 0){
-			max_roll_value = 10;
+		if(element){
+			element.setVisible(true);
+	
+			let mel_chance = target_unit.armour_class.value - (selected_unit.melee_class[selected_unit.core.selected_melee].ap + selected_unit.unit_class.fighting_bonus);
+			let gun_chance = target_unit.armour_class.value - (selected_unit.gun_class[selected_unit.core.selected_gun].ap + selected_unit.unit_class.shooting_bonus);
+	
+			let max_roll_value = 20
+			if(selected_unit.cohesion_check === false && selected_unit.unit_class.cohesion > 0){
+				max_roll_value = 10;
+			}
+	
+			mel_chance = Math.round(100-((mel_chance / max_roll_value) * 100),2) + '%'
+			gun_chance = Math.round(100-((gun_chance / max_roll_value) * 100),2) + '%'
+	
+			element.setText("f_mel_chance",mel_chance)
+			element.setText("f_gun_chance",gun_chance)
 		}
-
-		mel_chance = Math.round(100-((mel_chance / max_roll_value) * 100),2) + '%'
-		gun_chance = Math.round(100-((gun_chance / max_roll_value) * 100),2) + '%'
-
-		element.setText("f_mel_chance",mel_chance)
-		element.setText("f_gun_chance",gun_chance)
 	}catch(e){
 
 		let options = {
@@ -700,7 +706,9 @@ GameUIScene.setChanceHUD = (selected_unit, target_unit) => {
 GameUIScene.hideChanceHUD = () => {
 	try{	
 		let element = GameUIScene.hud_chance
-		element.setVisible(false);
+		if(element){
+			element.setVisible(false);
+		}
 	}catch(e){
 
 		let options = {

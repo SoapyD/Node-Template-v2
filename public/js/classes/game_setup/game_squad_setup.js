@@ -10,7 +10,7 @@ const game_squad_setup = class {
 		this.forces = options.forces;
         this.tile_size = options.tile_size;
         
-        this.runPlacement();
+        // this.runPlacement();
 	}
 
     runPlacement = () => {
