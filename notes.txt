@@ -60,6 +60,8 @@ ARMY PLACEMENT
 
 BUGS
 ----------------------------
+-BUG -can't edit army core data, says there's a deletion error when I try to
+
 -BUG -If there's a selected unit and move selected, then resend potential paths.
 
 -BUG -errors aren't saving useful details or any for that matter

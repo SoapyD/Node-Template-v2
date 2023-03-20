@@ -486,18 +486,41 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 ,search_type: "findOne"
                 ,params: {_id: options.data.id}
             }, true)
-            
-            if(game_data[0]){
 
-                options.game_data = game_data[0]
+            game_data = game_data[0]
+            
+            if(game_data){
+                options.game_data = game_data
                 options.socket = socket
 
-                if(options.data.button === 'left-mouse'){
-                    actionHandler.checkUnitSelection(options)
+                switch(game_data.game_state){
+                    //SETUP ARMY
+                    case 0:
+                        if(options.data.button === 'left-mouse'){
+                            let return_options =  {
+                                type: "source",
+                                id: options.id,                
+                                functionGroup: "core",
+                                function: "setUnitPlacement",
+                                data: {
+                                    message: "Set Unit Placement"
+                                }
+                            }
+                            this.sendMessage(return_options)  
+                        }                        
+                        break;
+                    //MAIN GAME
+                    case 1:
+                        if(options.data.button === 'left-mouse'){
+                            actionHandler.checkUnitSelection(options)
+                        }
+                        if(options.data.button === 'right-mouse'){
+                            actionHandler.rightClick(options)
+                        }                        
+                        break                        
                 }
-                if(options.data.button === 'right-mouse'){
-                    actionHandler.rightClick(options)
-                }
+
+
 
             }
    
