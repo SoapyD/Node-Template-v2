@@ -8,6 +8,19 @@ RELOAD GAME
 ----------------------------
 
 
+SINGLE SCREEN MULTIPLAYER
+----------------------------
+-gameCore.data.player to change the player
+-gameCore.data.side
+-gameCore.getSideColour
+
+gameCore.data.player = 1
+gameCore.data.side = 1
+ArmySetupUIScene.scene.state = 0
+
+-reset various states
+    -ArmySetupUIScene
+
 
 SPRITE-ANIMATIONS
 ----------------------------

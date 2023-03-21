@@ -86,7 +86,7 @@ GameUIScene.loadSingleButton = (scene) => {
 		options = {
 			scene: scene, 
 			x: gameCore.config.width,
-			y: 25,
+			y: 75,
 			height: 50,
 			width: 250,
 			label:  "+",
@@ -104,7 +104,7 @@ GameUIScene.loadSingleButton = (scene) => {
 		options = {
 			scene: scene, 
 			x: gameCore.config.width,
-			y: 75,
+			y: 125,
 			height: 50,
 			width: 250,
 			label:  "change mode",

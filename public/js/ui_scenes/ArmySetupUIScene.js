@@ -25,6 +25,38 @@ var ArmySetupUIScene = new Phaser.Class({
         this.state = 0
         this.squad_id = 0
         this.set_squads = []
+        this.saved_squads = []
+
+        const changeSide = () => {
+            gameCore.data.player += 1
+            gameCore.data.side += 1
+            if(gameCore.data.player >= gameCore.assets.forces.length){
+                gameCore.data.player = 0
+                gameCore.data.side = 0                
+            }else{
+                ArmySetupUIScene.scene.state = 0
+                ArmySetupUIScene.scene.squad_id = 0
+            }
+        }
+
+		let options;
+		
+		options = {
+			scene: ArmySetupUIScene.scene, 
+			x: gameCore.config.width,
+			y: 25,
+			height: 50,
+			width: 250,
+			label:  "Change Side",
+			array: gameCore.assets.btn_sprite,
+
+			clickAction: changeSide,
+			callbackParams: {},
+		}
+		
+		created_button = new button(options)
+		gameCore.assets.btn_sprite.push(created_button)
+
     },
 
     update: function (time, delta)
@@ -100,6 +132,9 @@ var ArmySetupUIScene = new Phaser.Class({
                         if(pos == 1 && unit_count<this.squad_info.size){
                             
                             let sprite = GameScene.scene.add.sprite(0,0);
+                            let colours = gameCore.getSideColour(gameCore.data.side);
+                            sprite.setTint(colours.colour)
+
                             sprite.setOrigin(0.5,1);
                             sprite.setDepth(0);
                             sprite.play(unit.spritesheet+'_idle_south', true);
@@ -134,9 +169,34 @@ var ArmySetupUIScene = new Phaser.Class({
                 if(this.squad_id < force.army.squads.length){
                     this.state = 0
                 }else{
-                    console.log("PLACEMENT FINISHED, WAITING FOR OTHER PLAYERS")
+                    console.log("NO MORE UNITS TO PLACE")
                     this.state += 1
                 }
+                // console.log("STATE", this.state)
+                // console.log("ID", this.squad_id)
+                // console.log("SIZE", force.army.squads.length)    
+                break            
+            //SEND SQUAD PLACEMENT
+            case 3:
+                let squad_placement = []
+                this.set_squads.forEach((squad) => {
+                    let matrix = []
+                    squad.forEach((unit) => {
+                        matrix.push({
+                            x: unit.sprite.x
+                            ,y: unit.sprite.y
+                        })
+                    })
+                    squad_placement.push(matrix)
+                })
+
+                clientSocketHandler.sendSquadPlacement(squad_placement)
+                console.log("PLACEMENT FINISHED, WAITING FOR OTHER PLAYERS")
+                
+                this.saved_squads.push(this.set_squads)
+                this.set_squads = []
+                this.state += 1;  
+                break;                
         }
                     
     }

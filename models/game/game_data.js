@@ -170,6 +170,12 @@ const gameSchema = new mongoose.Schema({
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User"
 		}	
+		,squad_placement: [
+			[{
+				x: Number
+				,y: Number 
+			}]
+		]		
 	}]
 
 	,players: [{

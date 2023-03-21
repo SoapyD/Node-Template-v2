@@ -182,7 +182,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 functionGroup: "core",
                 function: "transitionScene",
                 scene: 'GameScene',
-                uiscene: 'StartUIScene',
+                // uiscene: 'StartUIScene',
                 data: {
                     message: 'Transition Scene'
                 }   
@@ -200,6 +200,72 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
             errorHandler.log(options)
         }	
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  #####  ####### ####### #     # ######           #    ######  #     # #     # 
+    // #     # #          #    #     # #     #         # #   #     # ##   ##  #   #  
+    // #       #          #    #     # #     #        #   #  #     # # # # #   # #   
+    //  #####  #####      #    #     # ######  ##### #     # ######  #  #  #    #    
+    //       # #          #    #     # #             ####### #   #   #     #    #    
+    // #     # #          #    #     # #             #     # #    #  #     #    #    
+    //  #####  #######    #     #####  #             #     # #     # #     #    #  
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+
+    setSquadPlacement = async(socket, options) => {
+        try{
+
+            // console.log(options)
+
+            let game_data = await databaseHandler.findData({
+                model: "GameData"
+                ,search_type: "findOne"
+                ,params: {_id: options.data.id}
+            }, false)
+            
+            game_data = game_data[0]
+            if(game_data){
+                game_data.forces[options.data.player].squad_placement = options.data.squad_placement
+                game_data.players[options.data.player].ready = true
+
+                game_data.save()
+
+                //CHECK IF ALL PLAYERS READY
+                let all_ready = true
+                game_data.players.forEach((player) => {
+                    if(player.ready === false){ // && player.side == game_data.current_side){
+                        all_ready = false;
+                    }
+                })
+
+                if(all_ready){
+                    let return_options = {
+                        type: "room",
+                        id: options.id,
+                        functionGroup: "core",
+                        function: "transitionScene",
+                        // scene: 'GameScene',
+                        uiscene: 'GameUIScene',
+                        data: {
+                            message: 'Transition Scene'
+                        }   
+                    }        
+        
+                    this.sendMessage(return_options)                     
+                }
+            }
+
+        }
+        catch(e){
+            let options = {
+                "class": "game_socket_handler",
+                "function": "saveUnitData",
+                "e": e
+            }
+            errorHandler.log(options)
+        }	        
+    }    
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,7 +461,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         value: {$set: options.data.update}
                     }
                 ]
-            })            
+            })
 
             //RETURN POSITIONAL DATA TO PLAYERS
             let return_options = {
@@ -519,11 +585,7 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                         }                        
                         break                        
                 }
-
-
-
-            }
-   
+            }   
         }
         catch(e){
             let options = {

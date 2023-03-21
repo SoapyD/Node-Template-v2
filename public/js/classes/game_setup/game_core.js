@@ -197,8 +197,12 @@ const game_core = class {
     
     
     uiSceneTransition = (options) => {
+        // console.log("UI TRANSITION")
+        // console.log(options)
         this.current_uiscene.scene.stop()
-        // this.current_uiscene.scene.start(options.uiscene)	
+        if(options.uiscene){
+            this.current_uiscene.scene.start(options.uiscene)	
+        }
     }
 
 

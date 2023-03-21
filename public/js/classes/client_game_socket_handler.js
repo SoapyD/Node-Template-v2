@@ -15,10 +15,12 @@ clientSocketHandler.transitionScene = (options) => {
 
 
     try{
-        if(options.uiscene){
-            gameCore.uiSceneTransition(options)
+        // if(options.uiscene){
+        gameCore.uiSceneTransition(options)
+        // }
+        if(options.scene){
+            gameCore.sceneTransition(options)
         }
-        gameCore.sceneTransition(options)
 
     }catch(e){
 
@@ -180,12 +182,39 @@ clientSocketHandler.setUnitPlacement = () => {
 
     try{
         // console.log("LEFT CLICK")
+        // console.log('placement state:',ArmySetupUIScene.scene.state)
         ArmySetupUIScene.scene.state += 1;
     }catch(e){
 
         let options = {
             "class": "clientGameSocketHandler",
             "function": "setUnitPlacement",
+            "e": e
+        }
+        errorHandler.log(options)
+    }           
+}
+
+clientSocketHandler.sendSquadPlacement = (squad_placement) => {
+
+    try{
+        let options = {
+            functionGroup: "core",  
+            function: "setSquadPlacement",
+            id: clientRoomHandler.core.room_name,
+            data: {
+                id: gameCore.data.id,
+                player: gameCore.data.player,
+                squad_placement: squad_placement
+            }     
+        }                
+
+        clientSocketHandler.messageServer(options)
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "sendSquadPlacement",
             "e": e
         }
         errorHandler.log(options)
