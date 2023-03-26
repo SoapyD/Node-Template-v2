@@ -29,6 +29,8 @@ const game_squad_setup = class {
 			force.army.squads.forEach((squad_data, squad_id) => {
 				let squad = squad_data.squad;
 
+				let squad_placement = force.squad_placement[squad_id];
+
 				//CHECK TO SEE IF ANY OF THE UPPGRADES NEED TO GET APPLIED TO ALL UNITS IN THE SQUAD
 				let universal_upgrades = [];
 				let single_upgrades = [];
@@ -43,8 +45,10 @@ const game_squad_setup = class {
 				for(let i=0;i<squad_data.size; i++){
 				// for(let i=0;i<2; i++){					
 
-					let x = (12+(i*2));
-					let y = (3 + (force.side * 6));					
+					// let x = (12+(i*2));
+					// let y = (3 + (force.side * 6));					
+
+					let unit_placement = squad_placement[i];
 
 					let core = {
 						id: gameCore.assets.units.length,
@@ -53,10 +57,14 @@ const game_squad_setup = class {
 						squad: squad_id, //this can be used for squad checks like unit cohesion
 						
 						angle: 0,
-						x: x * this.tile_size,
-						y: y * this.tile_size,
-						tileX: x,
-						tileY: y,												
+						// x: x * this.tile_size,
+						// y: y * this.tile_size,
+						// tileX: x,
+						// tileY: y,
+						x: unit_placement.x,
+						y: unit_placement.y,
+						tileX: (unit_placement.x / this.tile_size) - 1,
+						tileY: (unit_placement.y / this.tile_size) - 1,												
 						
 						alive: false,
 		

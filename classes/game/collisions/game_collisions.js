@@ -288,7 +288,7 @@ module.exports = class game_collisions {
     // console.log(options.check_pos)
     return _.filter(options.game_data.units, (unit) => {
       let range = this.getUnitTileRange(unit)
-      // console.log(unit.sprite_offset)
+      // console.log(range)
       // console.log('x:', options.check_pos.x, 'min:', range.min.x, ',max',range.max.x)
       // console.log('y:', options.check_pos.y, 'min:', range.min.y, ',max',range.max.y)      
       

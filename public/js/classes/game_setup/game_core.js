@@ -6,6 +6,8 @@ const game_core = class {
         this.presets = {}
 
         this.assets = {
+            squad_sprites: [],
+
             btn_sprite: [],
             units: [],
             bullets: [],
@@ -22,7 +24,8 @@ const game_core = class {
             mode: '',
             game_state: 0,
             mode_state: 0,
-            turn_number: 0,          
+            turn_number: 0,
+            used_change_side: 0,       
             
             tile_size: 32,
             map_height: 0,
@@ -198,7 +201,13 @@ const game_core = class {
     
     uiSceneTransition = (options) => {
         // console.log("UI TRANSITION")
-        // console.log(options)
+        // console.log(this.current_uiscene)
+        if (this.data.used_change_side) { 
+            console.log("RESET USED")
+            // safe to use the function
+            gameCore.resetSide();
+        }
+
         this.current_uiscene.scene.stop()
         if(options.uiscene){
             this.current_uiscene.scene.start(options.uiscene)	
@@ -266,6 +275,24 @@ const game_core = class {
     // █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████ 
     // ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██ 
     // ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████ 
+
+    resetSide = () => {
+        console.log("RUNNING RESET SIDE")
+        this.data.player = 0
+        this.data.side = 0         
+    }
+
+    changeSide = () => {
+        this.data.used_change_side = 1
+        this.data.player += 1
+        this.data.side += 1
+        if(this.data.player >= this.assets.forces.length){
+            this.resetSide()                
+        }else{
+            ArmySetupUIScene.scene.state = 0
+            ArmySetupUIScene.scene.squad_id = 0
+        }
+    }
 
     resetTempSprites = () => {
         this.temp_sprites.forEach((sprite) => {

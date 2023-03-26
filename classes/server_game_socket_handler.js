@@ -222,14 +222,12 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 model: "GameData"
                 ,search_type: "findOne"
                 ,params: {_id: options.data.id}
-            }, false)
+            })
             
             game_data = game_data[0]
             if(game_data){
                 game_data.forces[options.data.player].squad_placement = options.data.squad_placement
                 game_data.players[options.data.player].ready = true
-
-                game_data.save()
 
                 //CHECK IF ALL PLAYERS READY
                 let all_ready = true
@@ -240,6 +238,12 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                 })
 
                 if(all_ready){
+                    game_data.game_state = 1;
+                    game_data.players.forEach((player) => {
+                        player.ready = false;
+                    })
+                    game_data.save()
+                    //TRANSITION THE UI
                     let return_options = {
                         type: "room",
                         id: options.id,
@@ -253,6 +257,28 @@ module.exports = class server_game_socket_handler extends server_socket_handler 
                     }        
         
                     this.sendMessage(return_options)                     
+
+                    //SEND MATRIX DATA FOR ALL PLAYERS AND DEPLOY UNITS
+                    return_options = {};
+                    // let squad_placements = []
+                    // game_data.forces.forEach((force) => {
+                    //     squad_placements.push(force.squad_placement)
+                    // }) 
+
+                    return_options = {
+                        type: "room",
+                        id: options.id,
+                        functionGroup: "core",
+                        function: "deployUnits",
+                        data: {
+                            message: 'Deploy Units'
+                            ,forces: game_data.forces
+                        }   
+                    }        
+        
+                    this.sendMessage(return_options)
+                }else{
+                    game_data.save()
                 }
             }
 

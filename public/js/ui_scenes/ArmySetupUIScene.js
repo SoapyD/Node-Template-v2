@@ -25,19 +25,7 @@ var ArmySetupUIScene = new Phaser.Class({
         this.state = 0
         this.squad_id = 0
         this.set_squads = []
-        this.saved_squads = []
-
-        const changeSide = () => {
-            gameCore.data.player += 1
-            gameCore.data.side += 1
-            if(gameCore.data.player >= gameCore.assets.forces.length){
-                gameCore.data.player = 0
-                gameCore.data.side = 0                
-            }else{
-                ArmySetupUIScene.scene.state = 0
-                ArmySetupUIScene.scene.squad_id = 0
-            }
-        }
+        gameCore.assets.squad_sprites = []
 
 		let options;
 		
@@ -50,13 +38,13 @@ var ArmySetupUIScene = new Phaser.Class({
 			label:  "Change Side",
 			array: gameCore.assets.btn_sprite,
 
-			clickAction: changeSide,
+			clickAction: gameCore.changeSide,
 			callbackParams: {},
 		}
 		
 		created_button = new button(options)
 		gameCore.assets.btn_sprite.push(created_button)
-
+		gameCore.current_uiscene = this.scene.get('ArmySetupUIScene');
     },
 
     update: function (time, delta)
@@ -156,8 +144,8 @@ var ArmySetupUIScene = new Phaser.Class({
             case 1:
                 if(GameScene.tile_position){
                     this.squad_matrix.forEach((unit) => {
-                        unit.sprite.x = GameScene.tile_position.x + (gameCore.data.tile_size / 2) + unit.offset.x
-                        unit.sprite.y = GameScene.tile_position.y + (gameCore.data.tile_size / 2) + unit.offset.y                    
+                        unit.sprite.x = GameScene.tile_position.x + unit.offset.x  + (gameCore.data.tile_size / 2)
+                        unit.sprite.y = GameScene.tile_position.y + unit.offset.y + (gameCore.data.tile_size / 2)                    
                     })
                 }
                 break;
@@ -193,11 +181,12 @@ var ArmySetupUIScene = new Phaser.Class({
                 clientSocketHandler.sendSquadPlacement(squad_placement)
                 console.log("PLACEMENT FINISHED, WAITING FOR OTHER PLAYERS")
                 
-                this.saved_squads.push(this.set_squads)
+                gameCore.assets.squad_sprites.push(this.set_squads)
                 this.set_squads = []
                 this.state += 1;  
                 break;                
         }
                     
     }
+
 });

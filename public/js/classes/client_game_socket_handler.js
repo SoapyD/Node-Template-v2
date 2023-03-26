@@ -222,6 +222,36 @@ clientSocketHandler.sendSquadPlacement = (squad_placement) => {
 }
 
 
+clientSocketHandler.deployUnits = (options) => {
+
+    try{
+        // console.log("DEPLOY")
+        //DELETE SQUAD SPRITES
+        gameCore.assets.squad_sprites.forEach((forces) => {
+            forces.forEach((squad)=> {
+                squad.forEach((unit) => {
+                    unit.sprite.destroy();
+                })
+            })
+        })
+        gameCore.assets.squad_sprites = []
+        gameCore.assets.forces = options.data.forces
+
+        GameScene.game_squad_setup.forces = gameCore.assets.forces
+        GameScene.game_squad_setup.runPlacement();
+        gameCore.data.game_state++;
+
+    }catch(e){
+
+        let options = {
+            "class": "clientGameSocketHandler",
+            "function": "deployUnits",
+            "e": e
+        }
+        errorHandler.log(options)
+    }           
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ######  ####### #       #######    #    ######         #####     #    #     # ####### ######     #    #######    #    

@@ -50,8 +50,8 @@ const unit = class {
 		this.depth_text = 20;
 		
 		
-		this.core.x += gameCore.data.tile_size * this.unit_class.sprite_offset;
-		this.core.y += gameCore.data.tile_size * this.unit_class.sprite_offset;				
+		// this.core.x += gameCore.data.tile_size * this.unit_class.sprite_offset;
+		// this.core.y += gameCore.data.tile_size * this.unit_class.sprite_offset;				
 
 		//SPRITES
 		this.spritesheet = this.unit_class.spritesheet;

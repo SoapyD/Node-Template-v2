@@ -63,6 +63,7 @@ var GameScene = new Phaser.Class({
 				break;			
 			case 1:
 				// gameFunctions.current_uiscene.scene.start("GameUIScene")
+				clientSocketHandler.saveGame();
 				gameCore.data.game_state++;
 				break;			
 
